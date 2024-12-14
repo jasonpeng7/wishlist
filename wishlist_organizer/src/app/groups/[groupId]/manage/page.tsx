@@ -4,6 +4,7 @@ import { supabase } from '../../../../../utils/supabase';
 import { revalidatePath } from 'next/cache';
 import DeleteGroupButton from '@/app/components/DeleteGroup';
 import NavBar from '@/app/components/navbar';
+import Link from 'next/link';
 
 interface GroupDetails {
   id: string;
@@ -145,14 +146,14 @@ export default async function ManageGroupPage({
   }
 
   return (
-    <div className="font-raleway mb-[25px] relative z-10">
+    <div className="font-raleway mb-[50px] relative z-10">
       <NavBar/>
-      <div className='flex pt-[100px] px-[100px] mb-8 justify-center'>
+      <div className='flex pt-[100px] px-[50px] md:px-[100px] mb-8 justify-center'>
         <h1 className="text-2xl font-bold text-primary_text">Manage {group.name}</h1>
       </div>
     
       {/* Invite Code Section */}
-      <section className="mb-8 px-[100px]">
+      <section className="mb-8 px-[50px] md:px-[100px]">
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Invite Code</h2>
 
         <div className="bg-dark_gray p-6 rounded-lg justify-between">
@@ -176,7 +177,7 @@ export default async function ManageGroupPage({
       </section>
 
       {/* Members Section */}
-      <section className="px-[100px] mb-8">
+      <section className="px-[50px] md:px-[100px] mb-8">
 
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Members ({memberDetails.length})</h2>
         <div className="rounded-lg overflow-hidden">
@@ -247,12 +248,20 @@ export default async function ManageGroupPage({
       </section>
 
       {/* Group Setting Section */}
-      <section className="mb-8 font-raleway text-primary_text px-[100px]">
+      <section className="mb-8 font-raleway text-primary_text px-[50px] md:px-[100px]">
         <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-dark_gray p-6 rounded-lg">
             <DeleteGroupButton groupId={group.id} deleteGroup={deleteGroup}/>
         </div>
       </section>
+
+      <div className='flex justify-end px-[50px] md:px-[100px]' >
+        <Link 
+        href="/groups"
+        className='px-4 py-2 text-primary_text bg-midnight_blue rounded-lg'>
+          Back
+        </Link>
+      </div>
 
     </div>
   );
