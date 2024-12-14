@@ -21,14 +21,24 @@ export default function NavBar () {
     </div>
     <div className='flex gap-x-[25px] items-center font-raleway font-medium'>
         <Link              
-            href={pathName === "/groups/create" ? "/wishlists" : pathName === "/groups/join" ? "/wishlists" : pathName === "/wishlists" ? "/dashboard" : pathName === "/groups" ? "/dashboard" : "/wishlists"}             
-            className="bg-primary_text px-4 py-2 rounded-full transition-colors text-xs flex items-center h-[32px]"         
+            href=
+            {pathName === "/groups/create" ? "/wishlists" : 
+            pathName === "/groups/join" ? "/wishlists" : 
+            pathName === "/wishlists" ? "/dashboard" : 
+            pathName === "/groups" ? "/dashboard" : 
+            "/wishlists"}             
+            className="bg-bone px-4 py-2 rounded-full transition-colors text-xs flex items-center h-[32px]"         
             >             
-            {pathName === "/groups/create" ? "All Wishlists" : pathName.includes("/groups/join") ? "All Wishlists": pathName.includes("/wishlists") ? "Dashboard" : pathName.includes("/groups") ? "Dashboard" : "All Wishlists"}         
+            {pathName === "/groups/create" ? "All Wishlists" : 
+            pathName.includes("/groups/join") ? "All Wishlists": 
+            pathName.includes("/wishlists") ? "Dashboard" : 
+            pathName.includes("/groups") ? "Dashboard" : 
+            "All Wishlists"}         
+
         </Link>
         <Link
             href={pathName === "/groups" ? "/wishlists": pathName === "/groups/create" ? "/groups" : pathName === "/groups/join" ? "/dashboard" : "/groups"}
-            className='bg-primary_text px-4 py-2 rounded-full transition-colors text-xs flex items-center h-[32px]'
+            className='bg-bone px-4 py-2 rounded-full transition-colors text-xs flex items-center h-[32px]'
         >
             {pathName === "/groups" ? "All Wishlists" : 
             pathName.includes("/groups/create") ? "Your Group" : 
