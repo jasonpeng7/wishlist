@@ -18,7 +18,7 @@ export default function DeleteGroupButton({
   };
 
   return (
-    <div className="h-screen">
+    <div className="">
       <h3 className="text-lg font-medium text-red-600 mb-2">Warning</h3>
       <p className="text-sm text-gray-600 mb-4">
         Once you delete a group, there is no going back. Please be certain.
