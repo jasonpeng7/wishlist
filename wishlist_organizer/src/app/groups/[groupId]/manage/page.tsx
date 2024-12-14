@@ -219,15 +219,15 @@ export default async function ManageGroupPage({
               {memberDetails.map((member) => (
                 <div key={member.user_id} className="border-b border-dark_gray p-4 space-y-2">
                   <div className="space-y-1 ">
-                    <div className="text-sm text-primary_text">Name</div>
+                    <div className="text-sm text-primary_text">Name:</div>
                     <div>{member.user.name}</div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-sm text-primary_text">Email</div>
+                    <div className="text-sm text-primary_text">Email:</div>
                     <div className="break-all">{member.user.email}</div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-sm text-primary_text">Role</div>
+                    <div className="text-sm text-primary_text">Role:</div>
                     <div className="capitalize">{member.role}</div>
                   </div>
                 </div>
