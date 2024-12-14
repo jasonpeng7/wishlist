@@ -255,7 +255,7 @@ export default async function ManageGroupPage({
         </div>
       </section>
 
-      <div className='flex justify-end px-[50px] md:px-[100px]' >
+      <div className='flex justify-end px-[50px] md:px-[100px] font-raleway' >
         <Link 
         href="/groups"
         className='px-4 py-2 text-primary_text bg-midnight_blue rounded-lg'>
