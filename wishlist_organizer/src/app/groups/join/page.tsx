@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { supabase } from '../../../../utils/supabase';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import NavBar from '@/app/components/navbar';
 
 export default async function JoinGroupPage() {
   const user = await currentUser();
@@ -73,36 +74,40 @@ export default async function JoinGroupPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-6">Join a Group</h1>
-      
-      <form action={joinGroup} className="space-y-4">
-        <div>
-          <label htmlFor="code" className="block text-sm font-medium text-gray-700">
-            Enter Invite Code
-          </label>
-          <input
-            type="text"
-            id="code"
-            name="code"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-            placeholder="Enter code"
-            required
-          />
-        </div>
+    <div>
+        <NavBar/>
+        <div className="max-w-lg mx-auto px-[20px] pt-[100px] bg-midnight_blue h-screen">
+        <h1 className="text-2xl font-bold mb-6">Join a Group</h1>
         
-        <button
-          type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Join Group
-        </button>
-        <Link
-        href='/groups'
-        className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'>
-        Back
-        </Link>
-      </form>
+        <form action={joinGroup} className="space-y-4">
+            <div>
+            <label htmlFor="code" className="block text-sm font-medium text-gray-700">
+                Enter Invite Code
+            </label>
+            <input
+                type="text"
+                id="code"
+                name="code"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                placeholder="Enter code"
+                required
+            />
+            </div>
+            
+            <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+            Join Group
+            </button>
+            <Link
+            href='/groups'
+            className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'>
+            Back
+            </Link>
+        </form>
+        </div>
     </div>
+
   );
 }
