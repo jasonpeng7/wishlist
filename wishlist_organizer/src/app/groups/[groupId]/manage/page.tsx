@@ -145,7 +145,7 @@ export default async function ManageGroupPage({
   }
 
   return (
-    <div className="font-raleway mb-[25px]">
+    <div className="font-raleway mb-[25px] relative z-10">
       <NavBar/>
       <div className='flex pt-[100px] px-[100px] mb-8 justify-center'>
         <h1 className="text-2xl font-bold text-primary_text">Manage {group.name}</h1>
@@ -181,7 +181,7 @@ export default async function ManageGroupPage({
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Members ({memberDetails.length})</h2>
         <div className="rounded-lg overflow-hidden">
           <div className="min-w-full">
-            <div className="bg-dark_gray opacity-90 ">
+            <div className="bg-dark_gray opacity-90">
               <div className='hidden md:flex justify-between text-primary_text'>
                 <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Name
@@ -193,10 +193,8 @@ export default async function ManageGroupPage({
                   Role
                 </h1>
               </div>
-              <h1 className='flex px-6 py-3 md:hidden justify-center items-center text-primary_text font-raleway text-xs font-medium'>
-                DETAILS
-              </h1>
             </div>
+
             <div className="bg-washed_gray w-full">
             <div className="w-full">
             {/* Desktop view - row layout */}
@@ -214,6 +212,9 @@ export default async function ManageGroupPage({
 
             {/* Mobile view - column layout */}
             <div className="md:hidden font-raleway">
+            <h1 className='bg-dark_gray opacity-90 md:hidden px-6 py-3 text-center text-primary_text font-raleway text-xs font-medium'>
+              DETAILS
+            </h1>
               {memberDetails.map((member) => (
                 <div key={member.user_id} className="border-b border-dark_gray p-4 space-y-2">
                   <div className="space-y-1 ">
