@@ -9,7 +9,7 @@ export default function NavBar () {
     const pathName = usePathname();
 
     return(
-    <nav className="fixed w-full flex justify-between gap-x-[25px] items-center bg-washed_gray px-[20px] h-[60px]">
+    <nav className="fixed w-full flex justify-between gap-x-[25px] items-center bg-washed_gray px-[20px] h-[60px] z-50">
     <div className='flex-shrink-0'>
       <Image   
               src="/logo.svg" 
