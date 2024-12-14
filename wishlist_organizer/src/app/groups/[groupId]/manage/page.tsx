@@ -2,6 +2,7 @@ import { currentUser, clerkClient } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { supabase } from '../../../../../utils/supabase';
 import { revalidatePath } from 'next/cache';
+import DeleteGroupButton from '@/app/components/DeleteGroup';
 
 interface GroupDetails {
   id: string;
@@ -115,6 +116,33 @@ export default async function ManageGroupPage({
     revalidatePath(`/groups/${groupId}/manage`);
   }
 
+  async function deleteGroup(formData: FormData) {
+    'use server'
+
+    const groupId = formData.get('groupId') as string;
+
+    const {error: userGroupsError} = await supabase 
+        .from('user_groups')
+        .delete()
+        .eq('group_id', groupId)
+    
+    if (userGroupsError) {
+        console.error('Error deleting user_groups: ', userGroupsError);
+        return;
+    }
+
+    const {error: GroupError}  = await supabase
+        .from('groups')
+        .delete()
+        .eq('id', groupId)
+        
+    if(GroupError) {
+        console.error('Error deleting group: ', GroupError)
+    }
+
+    redirect('/groups');    
+  }
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Manage {group.name}</h1>
@@ -142,10 +170,10 @@ export default async function ManageGroupPage({
       </section>
       
       {/* Group Settings Section */}
-      <section className="mb-8">
+      <section className="mb-8 font-raleway">
         <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
         <div className="bg-white p-6 rounded-lg shadow">
-          {/* Add group settings form here */}
+            <DeleteGroupButton groupId={group.id} deleteGroup={deleteGroup}/>
         </div>
       </section>
 
