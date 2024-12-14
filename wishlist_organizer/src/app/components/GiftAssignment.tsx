@@ -27,6 +27,18 @@ export default function GiftAssignment({
       setIsUpdating(true);
       
       if (!isChecked) {
+        // Check if anyone has claimed item
+        const {data: existingAssignments} = await supabase
+            .from('gift_assignments')
+            .select('*')
+            .eq('wishlist_item_id', itemId)
+            .eq('status', 'will_get');
+        
+        if(existingAssignments && existingAssignments.length > 0) {
+            alert('Someone else has already claimed this item!');
+            window.location.reload();
+            return;
+        }
         // Add new assignment
         const { error } = await supabase
           .from('gift_assignments')
@@ -44,7 +56,8 @@ export default function GiftAssignment({
           .delete()
           .match({ 
             wishlist_item_id: itemId,
-            assigned_to: userId 
+            assigned_to: userId, 
+            status: 'will_get'
           });
 
         if (error) throw error;
