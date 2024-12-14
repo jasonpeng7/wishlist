@@ -76,12 +76,12 @@ export default async function JoinGroupPage() {
   return (
     <div>
         <NavBar/>
-        <div className="max-w-lg mx-auto px-[20px] pt-[100px] bg-midnight_blue h-screen">
-        <h1 className="text-2xl font-bold mb-6">Join a Group</h1>
+        <div className="max-w-lg mx-auto px-[20px] pt-[100px] bg-midnight_blue h-screen font-raleway">
+        <h1 className="text-2xl font-bold mb-6 text-primary_text">Join a Group</h1>
         
         <form action={joinGroup} className="space-y-4">
             <div>
-            <label htmlFor="code" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="code" className="block text-sm font-medium text-primary_text">
                 Enter Invite Code
             </label>
             <input
@@ -94,17 +94,19 @@ export default async function JoinGroupPage() {
             />
             </div>
             
-            <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-            >
-            Join Group
-            </button>
-            <Link
-            href='/groups'
-            className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'>
-            Back
-            </Link>
+            <div className='flex justify-end'>
+              <Link
+                href='/groups'
+                className='text-primary_text hover:text-washed_gray px-4 py-2'>
+                Back
+              </Link>
+              <button 
+                type="submit"
+                className="max-w-fit bg-washed_gray text-white px-4 py-2 rounded"
+                >
+                Join Group
+              </button>
+            </div>
         </form>
         </div>
     </div>
