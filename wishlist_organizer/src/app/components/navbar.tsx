@@ -25,6 +25,8 @@ export default function NavBar () {
             {pathName === "/groups/create" ? "/wishlists" : 
             pathName === "/groups/join" ? "/wishlists" : 
             pathName === "/wishlists" ? "/dashboard" : 
+            pathName.includes("/groups") && pathName.includes("/manage") ? "/dashboard" :
+            pathName.match(/^\/groups\/[\w-]+$/) ? "/dashboard" :
             pathName === "/groups" ? "/dashboard" : 
             "/wishlists"}             
             className="bg-bone px-4 py-2 rounded-full transition-colors text-xs flex items-center h-[32px]"         
@@ -32,6 +34,7 @@ export default function NavBar () {
             {pathName === "/groups/create" ? "All Wishlists" : 
             pathName.includes("/groups/join") ? "All Wishlists": 
             pathName.includes("/wishlists") ? "Dashboard" : 
+            pathName.includes("/groups") && pathName.includes("/manage") ? "Dashboard" :
             pathName.includes("/groups") ? "Dashboard" : 
             "All Wishlists"}         
 
