@@ -64,17 +64,17 @@ export default async function GroupsPage() {
       <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] mx-[100px] text-primary_text">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">My Groups</h1>
 
-        <div className="space-x-4 flex items-center">
+        <div className="space-x-4 flex items-stretch">
             <Link
                 href="/groups/create"
-                className="bg-primary_text text-white px-6 py-2 rounded-md text-dark_gray"
+                className="flex w-1/2 bg-primary_text hover:bg-midnight_blue transition-colors px-6 py-2 rounded-md text-dark_gray text-center"
             >
             Create New Group
             </Link>
 
             <Link
                 href='/groups/join'
-                className='bg-primary_text hover:bg-blue-600 text-white px-6 py-2 rounded-md text-dark_gray'
+                className='flex w-1/2 bg-primary_text hover:bg-midnight_blue transition-colors px-6 py-2 rounded-md text-dark_gray text-center justify-center items-center'
             >
             Join a group
             </Link>
@@ -103,24 +103,24 @@ export default async function GroupsPage() {
           ))}
         </div>
         {(!adminGroups || adminGroups.length === 0) && (
-          <p className="text-primary_text">You don't manage any groups yet. Create one now!</p>
+          <p className="text-gray-500">You don't manage any groups yet. Create one now!</p>
         )}
       </section>
 
       {/* Groups I'm In */}
       <section className='mx-[100px] font-raleway'>
-        <h2 className="text-xl font-semibold mb-4">Groups I'm In</h2>
+        <h2 className="text-xl font-semibold mb-4 text-primary_text">Groups I'm In</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {memberGroups?.map((memberGroup) => (
-            <div key={memberGroup.group.id} className="border p-4 rounded-lg">
-              <h3 className="font-medium">{memberGroup.group.name}</h3>
-              <p className="text-sm text-gray-600">
+            <div key={memberGroup.group.id} className="bg-midnight_blue p-4 rounded-lg">
+              <h3 className="font-medium text-primary_text">{memberGroup.group.name}</h3>
+              <p className="text-sm text-primary_text">
                 Members: {memberGroup.group.user_groups?.length || 0}
               </p>
-              <div className="mt-4">
+              <div className="mt-4 space-x-2">
                 <Link
                   href={`/groups/${memberGroup.group.id}`}
-                  className="text-sm text-blue-500 hover:underline"
+                  className="text-sm bg-washed_gray text-primary_text hover:underline rounded px-4 py-2"
                 >
                   View Group
                 </Link>
