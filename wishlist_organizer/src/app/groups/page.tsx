@@ -66,14 +66,15 @@ export default async function GroupsPage() {
 
         <div className="space-x-4 flex items-center">
             <Link
-            href="/groups/create"
-            className="bg-primary_text text-white px-6 py-2 rounded-md text-dark_gray"
+                href="/groups/create"
+                className="bg-primary_text text-white px-6 py-2 rounded-md text-dark_gray"
             >
             Create New Group
             </Link>
+
             <Link
-            href='/groups/join'
-            className='bg-primary_text hover:bg-blue-600 text-white px-6 py-2 rounded-md text-dark_gray'
+                href='/groups/join'
+                className='bg-primary_text hover:bg-blue-600 text-white px-6 py-2 rounded-md text-dark_gray'
             >
             Join a group
             </Link>
@@ -81,19 +82,19 @@ export default async function GroupsPage() {
       </div>
 
       {/* Groups I Manage */}
-      <section className="mb-8 mx-[100px]">
+      <section className="mb-8 mx-[100px] font-raleway text-primary_text">
         <h2 className="text-xl font-semibold mb-4">Groups I Manage</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adminGroups?.map((group) => (
-            <div key={group.id} className="border p-4 rounded-lg">
+            <div key={group.id} className="bg-midnight_blue p-4 rounded-lg">
               <h3 className="font-medium">{group.name}</h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-primary_text">
                 Members: {group.user_groups?.length || 0}
               </p>
               <div className="mt-4 space-x-2">
                 <Link
                   href={`/groups/${group.id}/manage`}
-                  className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                  className="text-sm bg-washed_gray text-white px-4 py-2 rounded"
                 >
                   Manage Group
                 </Link>
@@ -102,12 +103,12 @@ export default async function GroupsPage() {
           ))}
         </div>
         {(!adminGroups || adminGroups.length === 0) && (
-          <p className="text-gray-500">You don't manage any groups yet.</p>
+          <p className="text-primary_text">You don't manage any groups yet. Create one now!</p>
         )}
       </section>
 
       {/* Groups I'm In */}
-      <section className='mx-[100px]'>
+      <section className='mx-[100px] font-raleway'>
         <h2 className="text-xl font-semibold mb-4">Groups I'm In</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {memberGroups?.map((memberGroup) => (
