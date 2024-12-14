@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { supabase } from '../../../../../utils/supabase';
 import { revalidatePath } from 'next/cache';
 import DeleteGroupButton from '@/app/components/DeleteGroup';
+import NavBar from '@/app/components/navbar';
 
 interface GroupDetails {
   id: string;
@@ -144,9 +145,12 @@ export default async function ManageGroupPage({
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Manage {group.name}</h1>
-      
+    <div className="font-raleway mb-[25px]">
+      <NavBar/>
+      <div className='pt-[100px]'>
+        <h1 className="text-2xl font-bold text-primary_text">Manage {group.name}</h1>
+      </div>
+    
       {/* Invite Code Section */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Invite Code</h2>
@@ -178,63 +182,72 @@ export default async function ManageGroupPage({
       </section>
 
       {/* Members Section */}
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Members</h2>
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <section className="px-[100px]">
+
+        <h2 className="text-xl font-semibold mb-4 text-primary_text">Members ({memberDetails.length})</h2>
+        <div className="rounded-lg overflow-hidden">
+          <div className="min-w-full">
+            <div className="bg-dark_gray opacity-90 ">
+              <div className='hidden md:flex justify-between text-primary_text'>
+                <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                </h1>
+                <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                </h1>
+                <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Role
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+                </h1>
+              </div>
+              <h1 className='flex px-6 py-3 md:hidden justify-center items-center text-primary_text font-raleway text-xs font-medium'>
+                DETAILS
+              </h1>
+            </div>
+            <div className="bg-washed_gray w-full">
+            <div className="w-full">
+            {/* Desktop view - row layout */}
+            <div className="hidden md:block">
               {memberDetails.map((member) => (
-                <tr key={member.user_id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {member.user.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {member.user.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap capitalize">
-                    {member.role}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    {member.user_id !== group.creator_id && (
-                      <form action={removeMember} className="inline">
-                        <input type="hidden" name="groupId" value={group.id} />
-                        <input type="hidden" name="userId" value={member.user_id} />
-                        <button 
-                          type="submit"
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Remove
-                        </button>
-                      </form>
-                    )}
-                  </td>
-                </tr>
+                <div key={member.user_id} className="border-b border-dark_gray">
+                  <div className="flex flex-row px-6 py-4">
+                    <div className="flex-1 truncate">{member.user.name}</div>
+                    <div className="flex-1 text-center truncate">{member.user.email}</div>
+                    <div className="flex-1 text-right capitalize">{member.role}</div>
+                  </div>
+                </div>
               ))}
+            </div>
+
+            {/* Mobile view - column layout */}
+            <div className="md:hidden font-raleway">
+              {memberDetails.map((member) => (
+                <div key={member.user_id} className="border-b border-dark_gray p-4 space-y-2">
+                  <div className="space-y-1 ">
+                    <div className="text-sm text-primary_text">Name</div>
+                    <div>{member.user.name}</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-sm text-primary_text">Email</div>
+                    <div className="break-all">{member.user.email}</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-sm text-primary_text">Role</div>
+                    <div className="capitalize">{member.role}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
               {memberDetails.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan={3} className="px-6 py-4 text-center text-gray-500">
                     No members found
                   </td>
                 </tr>
               )}
-            </tbody>
-          </table>
+            </div>
+          </div>
         </div>
       </section>
     </div>
