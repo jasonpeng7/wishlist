@@ -147,30 +147,32 @@ export default async function ManageGroupPage({
   return (
     <div className="font-raleway mb-[25px]">
       <NavBar/>
-      <div className='pt-[100px]'>
+      <div className='flex pt-[100px] px-[100px] mb-8 justify-center'>
         <h1 className="text-2xl font-bold text-primary_text">Manage {group.name}</h1>
       </div>
     
       {/* Invite Code Section */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Invite Code</h2>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex items-center gap-4">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Share this code to invite members:</p>
-              <p className="text-2xl font-mono">{group.invite_code || 'No code generated'}</p>
+      <section className="mb-8 px-[100px]">
+        <h2 className="text-xl font-semibold mb-4 text-primary_text">Invite Code</h2>
+
+        <div className="bg-dark_gray p-6 rounded-lg justify-between">
+          <div className="flex flex-col md:flex-row md:justify-between items-center gap-4">
+            <div className='text-center'>
+              <p className="text-sm text-primary_text mb-1">Share this code to invite members:</p>
+              <p className="text-2xl font-mono text-primary_text">{group.invite_code || 'No code generated'}</p>
             </div>
             <form action={generateInviteCode}>
               <input type="hidden" name="groupId" value={group.id} />
               <button 
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-bone hover:bg-blue-600 text-white px-4 py-2 rounded"
               >
                 Generate New Code
               </button>
             </form>
           </div>
         </div>
+
       </section>
       
       {/* Group Settings Section */}
