@@ -165,7 +165,7 @@ export default async function ManageGroupPage({
               <input type="hidden" name="groupId" value={group.id} />
               <button 
                 type="submit"
-                className="bg-bone hover:bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-bone text-dark_gray px-4 py-2 rounded"
               >
                 Generate New Code
               </button>
@@ -174,17 +174,9 @@ export default async function ManageGroupPage({
         </div>
 
       </section>
-      
-      {/* Group Setting Section */}
-      <section className="mb-8 font-raleway">
-        <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
-        <div className="bg-white p-6 rounded-lg shadow">
-            <DeleteGroupButton groupId={group.id} deleteGroup={deleteGroup}/>
-        </div>
-      </section>
 
       {/* Members Section */}
-      <section className="px-[100px]">
+      <section className="px-[100px] mb-8">
 
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Members ({memberDetails.length})</h2>
         <div className="rounded-lg overflow-hidden">
@@ -252,6 +244,15 @@ export default async function ManageGroupPage({
           </div>
         </div>
       </section>
+
+      {/* Group Setting Section */}
+      <section className="mb-8 font-raleway text-primary_text px-[100px]">
+        <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
+        <div className="bg-white p-6 rounded-lg shadow">
+            <DeleteGroupButton groupId={group.id} deleteGroup={deleteGroup}/>
+        </div>
+      </section>
+
     </div>
   );
 }
