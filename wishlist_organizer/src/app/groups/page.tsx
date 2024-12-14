@@ -61,18 +61,18 @@ export default async function GroupsPage() {
   return (
     <div className="">
       <NavBar/>
-      <div className="flex justify-between mb-8 pt-[100px] mx-[100px]">
+      <div className="font-raleway flex justify-between mb-8 pt-[100px] mx-[100px] text-primary_text">
         <h1 className="text-2xl font-bold">My Groups</h1>
         <div className="space-x-4">
           <Link
             href="/groups/create"
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md transition-colors"
+            className="bg-primary_text text-white px-6 py-2 rounded-md  text-dark_gray"
           >
             Create New Group
           </Link>
           <Link
             href='/groups/join'
-            className='bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition-colors'
+            className='bg-primary_text hover:bg-blue-600 text-white px-6 py-2 rounded-md  text-dark_gray'
         >
             Join a group
         </Link>
