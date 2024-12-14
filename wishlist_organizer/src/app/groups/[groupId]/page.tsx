@@ -103,10 +103,10 @@ export default async function ViewGroupPage({
   const creatorResponse = await clerk.users.getUser(group.creator_id);
 
   return (
-    <div className="font-raleway h-screen">
+    <div className="font-raleway">
       <NavBar/>
 
-      <div className='flex flex-col justify-center px-[100px]'>
+      <div className='flex flex-col justify-center px-[50px] md:px-[100px]'>
         <div className='flex justify-start'>
           <h1 className="pt-[100px] text-2xl font-bold mb-6 text-primary_text">You are currently viewing {group.name}</h1>
         </div>
@@ -116,7 +116,7 @@ export default async function ViewGroupPage({
       </div>
 
       {/* Members Section */}
-      <section className="px-[100px]">
+      <section className="px-[50px] md:px-[100px]">
 
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Members ({memberDetails.length})</h2>
         <div className="rounded-lg overflow-hidden">
@@ -157,15 +157,15 @@ export default async function ViewGroupPage({
               {memberDetails.map((member) => (
                 <div key={member.user_id} className="border-b border-dark_gray p-4 space-y-2">
                   <div className="space-y-1 ">
-                    <div className="text-sm text-primary_text">Name</div>
+                    <div className="text-sm text-primary_text">Name:</div>
                     <div>{member.user.name}</div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-sm text-primary_text">Email</div>
+                    <div className="text-sm text-primary_text">Email:</div>
                     <div className="break-all">{member.user.email}</div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-sm text-primary_text">Role</div>
+                    <div className="text-sm text-primary_text">Role:</div>
                     <div className="capitalize">{member.role}</div>
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default async function ViewGroupPage({
         </div>
       </section>
 
-      <div className='my-[20px] flex justify-center items-center'>
+      <div className='mt-[20px] mb-[50px] flex justify-end items-center px-[50px] md:px-[100px]'>
           <Link
               href='/groups'
               className='bg-midnight_blue text-white px-6 py-2 rounded-md transition-colors'
