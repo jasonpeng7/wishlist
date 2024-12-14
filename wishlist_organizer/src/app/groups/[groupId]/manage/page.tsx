@@ -175,7 +175,7 @@ export default async function ManageGroupPage({
 
       </section>
       
-      {/* Group Settings Section */}
+      {/* Group Setting Section */}
       <section className="mb-8 font-raleway">
         <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
         <div className="bg-white p-6 rounded-lg shadow">
