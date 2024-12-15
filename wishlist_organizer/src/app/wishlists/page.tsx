@@ -196,7 +196,7 @@ export default async function WishlistsPage() {
                           </>
                         ) : (
                           <div className="flex items-center justify-center h-1/3">
-                            <p className="text-gray-400 italic">This is your item</p>
+                            <p className="text-dark_gray italic bg-green-400 px-2 rounded-full">This is your item</p>
                           </div>
                         )}
                         
