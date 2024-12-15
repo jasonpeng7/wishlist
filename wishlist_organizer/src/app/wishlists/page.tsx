@@ -202,7 +202,7 @@ export default async function WishlistsPage() {
                         )}
                         
                         {item.link && (
-                            <div className="mb-[10px] flex justify-center items-center">
+                            <div className="my-[10px] flex justify-center items-center">
                               <CopyLinkButton link={item.link} />
                             </div>
                           )}
