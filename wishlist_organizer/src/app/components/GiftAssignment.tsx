@@ -83,7 +83,7 @@ export default function GiftAssignment({
   }
 
   return (
-    <div className="font-raleway flex items-center space-x-2">
+    <div className="font-raleway  flex items-center space-x-2">
       <input
         type="checkbox"
         checked={isChecked}
