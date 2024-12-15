@@ -1,7 +1,7 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
- 
-export default clerkMiddleware();
- 
+import { clerkMiddleware } from '@clerk/nextjs/server'
+
+export default clerkMiddleware()
+
 export const config = {
   matcher: [
     /*
@@ -15,4 +15,4 @@ export const config = {
      */
     "/((?!_next/static|_next/image|favicon.ico|public|sw.js|workbox-|.*\\.(?:jpg|jpeg|gif|png|svg|ico)$).*)",
     "/(api|trpc)(.*)"],
-};
+}
