@@ -3,6 +3,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import MiscCards from './MiscCards';
 import Image from 'next/image';
+import Page from './sign-in/[[...sign-in]]/page';
 
 export default async function LandingPage() {
   const user = await currentUser();
