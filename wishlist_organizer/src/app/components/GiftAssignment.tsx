@@ -76,14 +76,14 @@ export default function GiftAssignment({
   // Show if someone else has marked they will get it
   if (assignedUsername && currentAssignment?.assigned_to !== userId) {
     return (
-      <div className="mt-4 text-sm font-medium text-green-600">
+      <div className="font-raleway text-sm font-medium text-green-600">
         {assignedUsername} will get this!
       </div>
     );
   }
 
   return (
-    <div className="flex items-center mt-4 space-x-2">
+    <div className="font-raleway flex items-center space-x-2">
       <input
         type="checkbox"
         checked={isChecked}
