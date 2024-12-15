@@ -30,7 +30,7 @@ const CopyLinkButton = ({ link }: { link: string }) => {
       </a>
       <button 
         onClick={handleCopy}
-        className="flex items-center gap-1 text-sm bg-bone text-dark_navy px-2 py-1 rounded-md hover:bg-opacity-90 transition-colors ml-2"
+        className="flex items-center gap-1 text-sm bg-bone text-dark_gray px-2 py-1 rounded-md ml-2"
       >
         {copied ? (
           <>
