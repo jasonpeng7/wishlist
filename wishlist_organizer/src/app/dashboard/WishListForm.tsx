@@ -11,7 +11,6 @@ export default function WishlistForm({ userId }: { userId: string }) {
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
     setError(null);
     setSuccess(false);
 
@@ -60,7 +59,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
       )}
       {success && (
         <div className="font-raleway bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          Item added successfully! Refresh to see your updated list!
+          Item added successfully!
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4 ">
