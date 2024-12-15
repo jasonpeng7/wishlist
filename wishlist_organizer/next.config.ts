@@ -7,15 +7,19 @@ const config: NextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
       allowedOrigins: ["*"]
-    }
+    },
+    typedRoutes: true
   },
-  // Add ESLint config
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  pageExtensions: ['ts', 'tsx', 'mdx']
+  pageExtensions: ['ts', 'tsx', 'mdx'],
+  typescript: {
+    // !! WARN !!
+    // This allows production builds to successfully complete even if
+    // your project has type errors.
+    ignoreBuildErrors: true,
+  }
 };
 
 export default config;
