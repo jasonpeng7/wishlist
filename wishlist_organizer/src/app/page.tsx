@@ -34,7 +34,8 @@ export default async function LandingPage() {
       </div>
 
       {/* Rest of your content */}
-      <div className='flex flex-col p-4 w-full md:w-1/3 min-w-[300px] max-w-[500px] mt-[250px]'>
+      <div className='flex flex-col p-4 w-full md:w-1/3 min-w-[300px] max-w-[500px] mt-[260px] relative'>
+        <p className='hidden md:block md:absolute md:bottom-5 md:left-5 text-primary_text font-raleway'>Wishr© by Jason Peng</p>
         <h1 className="font-raleway text-3xl sm:text-4xl lg:text-[50px] text-primary_text font-bold mb-[20px]">
           Welcome to{" "}
           <span className="block">Wishlist Organizer</span>
@@ -43,7 +44,7 @@ export default async function LandingPage() {
           Please sign in to manage your wishlists
         </p>
 
-      <div className='md:hidden items-center justify-center flex flex-col gap-y-[27px] bg-washed_gray p-[20px]'>
+      <div className='md:hidden items-center justify-center flex flex-col gap-y-[27px] bg-washed_gray p-[20px] rounded-md'>
         <div className='flex flex-col w-full'>
           <div className="text-primary_text font-raleway flex flex-col rounded-md bg-dark_gray w-full p-[10px] gap-y-[5px]">
               <h1 className='text-s'>Item Name</h1>
@@ -61,6 +62,8 @@ export default async function LandingPage() {
           </div>
         </div>
       </div>
+
+      <p className='flex md:hidden text-primary_text font-raleway mt-[20px]'>Wishr© by Jason Peng</p>
 
       </div>
 
