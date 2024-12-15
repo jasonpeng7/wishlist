@@ -132,7 +132,20 @@ export default async function WishlistsPage() {
         
         {groupData.map(group => group && (
           <div key={group.groupId} className="my-12">
-            <h2 className="text-2xl font-bold mb-6 text-primary_text font-raleway text-center">
+            <h2
+                className="
+                  text-2xl 
+                  font-bold 
+                  mb-6 
+                  text-primary_text 
+                  font-raleway 
+                  text-center 
+                  mx-[25px] 
+                  md:mx-[50px]
+                  p-4
+                  relative
+                  bg-[radial-gradient(circle,_#ffffff33_2px,_transparent_2px)] 
+                  bg-[size:20px_20px]">
               {group.groupName}
             </h2>
             
@@ -198,8 +211,8 @@ export default async function WishlistsPage() {
   } catch (error) {
     console.error('Error fetching wishlists:', error);
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-8 text-center">Group Wishlists</h1>
+      <div className="max-w-4xl mx-auto p-6 font-raleway">
+        <h1 className="text-3xl font-bold mb-8 text-center text-primary_text">Group Wishlists</h1>
         <p className="text-center text-red-500">Error loading items. Please try again later.</p>
       </div>
     );
