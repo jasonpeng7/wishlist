@@ -188,7 +188,8 @@ export default async function ViewGroupPage({
       <div className='mt-[20px] mb-[50px] flex justify-end items-center px-[50px] md:px-[100px]'>
           <Link
               href='/groups'
-              className='bg-midnight_blue text-white px-6 py-2 rounded-md transition-colors'
+              className='bg-midnight_blue text-white px-6 py-2 rounded-md transition-colors
+              flex transition-transform transform active:scale-90'
           >
               Back
           </Link>
