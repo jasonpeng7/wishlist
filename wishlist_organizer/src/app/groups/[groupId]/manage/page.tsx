@@ -26,20 +26,18 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-type PageParams = {
-  groupId: string;
-};
-
 export default async function Page({
   params,
 }: {
-  params: PageParams;
+  params: { [key: string]: string }
 }) {
   const user = await currentUser();
   
   if (!user) {
     redirect('/sign-in');
   }
+
+  const { groupId } = params;
 
 
   // Fetch group details with invite_code
