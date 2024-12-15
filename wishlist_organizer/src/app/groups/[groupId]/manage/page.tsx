@@ -14,7 +14,7 @@ interface GroupDetails {
   invite_code: string | null;
 }
 
-interface UserGroup {
+interface UserGroup { 
   user_id: string;
   role: string;
 }
@@ -34,7 +34,7 @@ type PageProps = {
 };
 
 
-export default async function ManageGroupPage({ params }: PageProps) {
+export default async function ManageGroupPage({ params, searchParams }: PageProps) {
   const user = await currentUser();
   
   if (!user) {
