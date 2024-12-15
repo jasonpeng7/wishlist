@@ -8,7 +8,7 @@ type WishlistItem = {
     id: string;
     item_name: string;
     description: string;
-    link: string;
+    link: string | null;
     store: string;
     created_at: string;
 };
@@ -84,7 +84,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
         <>
             {items.length === 0 ? (
                 <div className="flex justify-center items-center w-full h-32">
-                    <p className="text-primary_text text-lg">No items yet</p>
+                    <p className="text-primary_text text-lg font-raleway">No items yet</p>
                 </div>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mx-[50px] md:mx-[100px] mb-[100px] font-raleway">

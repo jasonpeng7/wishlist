@@ -59,7 +59,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
         </div>
       )}
       {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div className="font-raleway bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
           Item added successfully! Refresh to see your updated list!
         </div>
       )}
