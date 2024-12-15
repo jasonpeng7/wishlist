@@ -26,19 +26,21 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-interface PageProps {
-  params: {
-    groupId: string;
-  };
-}
+type PageParams = {
+  groupId: string;
+};
 
-export default async function ManageGroupPage(props: PageProps) {
-  const { params } = props;
+export default async function Page({
+  params,
+}: {
+  params: PageParams;
+}) {
   const user = await currentUser();
   
   if (!user) {
     redirect('/sign-in');
   }
+
 
   // Fetch group details with invite_code
   const { data: group } = await supabase
