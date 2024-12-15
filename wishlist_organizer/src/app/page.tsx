@@ -70,7 +70,7 @@ export default async function LandingPage() {
       <MiscCards />
       <div className='fixed top-4 right-4 flex flex-row gap-x-[20px]'>
         <SignInButton >
-            <button className="font-raleway text-dark_gray px-4 bg-bone rounded-md">
+            <button className="font-raleway text-dark_gray px-4 bg-bone rounded-md transition-transform transform active:scale-90">
               Sign In
             </button>
           </SignInButton>
