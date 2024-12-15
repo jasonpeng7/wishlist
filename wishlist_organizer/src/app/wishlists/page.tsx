@@ -172,7 +172,7 @@ export default async function WishlistsPage() {
                     const assignedUsername = assignment ? group.usernames[assignment.assigned_to] : undefined;
 
                     return (
-                      <div key={item.id} className="font-raleway p-4 rounded-md bg-dark_gray h-[360px] text-primary_text">
+                      <div key={item.id} className="font-raleway p-4 rounded-md bg-dark_gray h-[310px] text-primary_text">
                         <h3 className="font-bold text-lg bg-dark_gray break-words line-clamp-1 mb-[10px]">
                           {item.item_name}
                         </h3>
@@ -202,7 +202,7 @@ export default async function WishlistsPage() {
                         )}
                         
                         {item.link && (
-                            <div className="my-[10px] flex justify-center items-center">
+                            <div className="my-[15px] flex justify-center items-center">
                               <CopyLinkButton link={item.link} />
                             </div>
                           )}
