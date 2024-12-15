@@ -17,6 +17,7 @@ export default {
         primary_text: "#D3D9D4", 
         slate_gray: "#2E3944",
         dark_gray: "#212A31",
+        darker_gray: "#192127",
         midnight_blue: "#124E66",
         washed_gray: "#748D92",
         bone: "#D3D9D3",
