@@ -14,7 +14,7 @@ interface GroupDetails {
   invite_code: string | null;
 }
 
-interface UserGroup { 
+interface UserGroup {
   user_id: string;
   role: string;
 }
@@ -26,19 +26,16 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-export default async function Page({
+export default async function ManageGroupPage({
   params,
 }: {
-  params: { [key: string]: string }
+  params: { groupId: string };
 }) {
   const user = await currentUser();
   
   if (!user) {
     redirect('/sign-in');
   }
-
-  const { groupId } = params;
-
 
   // Fetch group details with invite_code
   const { data: group } = await supabase
