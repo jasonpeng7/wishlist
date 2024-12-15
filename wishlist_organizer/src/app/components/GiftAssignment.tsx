@@ -6,23 +6,34 @@ import { supabase } from '../../../utils/supabase';
 type GiftAssignmentProps = {
   itemId: string;
   userId: string;
+  creatorId: string;
   currentAssignment?: {
     assigned_to: string;
     status: 'will_get' | null;
   };
-  assignedUsername?: string;  // Add username of person who will get it
+  assignedUsername?: string;
 }
 
 export default function GiftAssignment({ 
   itemId, 
   userId, 
+  creatorId,
   currentAssignment,
   assignedUsername 
 }: GiftAssignmentProps) {
   const [isChecked, setIsChecked] = useState(currentAssignment?.status === 'will_get');
   const [isUpdating, setIsUpdating] = useState(false);
 
+  // If current user is the creator, don't show the component
+  if (userId === creatorId) {
+    return null;
+  }
+
   const handleToggle = async () => {
+    if (userId === creatorId) {
+      return;
+    }
+
     try {
       setIsUpdating(true);
       
@@ -64,7 +75,6 @@ export default function GiftAssignment({
       }
 
       setIsChecked(!isChecked);
-      // You might want to trigger a page refresh here to update all users' views
       window.location.reload();
     } catch (error) {
       console.error('Error updating gift assignment:', error);
@@ -73,17 +83,26 @@ export default function GiftAssignment({
     }
   };
 
-  // Show if someone else has marked they will get it
-  if (assignedUsername && currentAssignment?.assigned_to !== userId) {
+  // Only show who marked it if the current user marked it themselves
+  if (currentAssignment?.assigned_to === userId && assignedUsername) {
     return (
       <div className="font-raleway text-sm font-medium text-green-600">
-        {assignedUsername} will get this!
+        You will get this!
+      </div>
+    );
+  }
+
+  // If someone else marked it, show who claimed it (but not to the creator)
+  if (currentAssignment?.status === 'will_get' && currentAssignment?.assigned_to !== userId && assignedUsername) {
+    return (
+      <div className="font-raleway text-sm font-medium text-green-600">
+        {assignedUsername} is getting this item!
       </div>
     );
   }
 
   return (
-    <div className="font-raleway  flex items-center space-x-2">
+    <div className="font-raleway flex items-center space-x-2">
       <input
         type="checkbox"
         checked={isChecked}
@@ -92,7 +111,7 @@ export default function GiftAssignment({
         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
       />
       <label className="text-sm font-medium text-primary_text">
-        {isChecked ? "I will get this!" : "Mark as 'will get'"}
+        {isChecked ? "You will get this!" : "Mark as 'will get'"}
       </label>
     </div>
   );
