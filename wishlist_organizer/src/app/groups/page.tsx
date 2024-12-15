@@ -98,7 +98,8 @@ export default async function GroupsPage() {
               <div className="mt-4 space-x-2">
                 <Link
                   href={`/groups/${group.id}/manage`}
-                  className="text-sm bg-washed_gray hover:underline text-white px-4 py-2 rounded"
+                  className="flex w-1/3 text-xs items-center justify-center bg-washed_gray hover:underline text-white px-4 py-2 rounded 
+                  transition-transform transform active:scale-90"
                 >
                   Manage Group
                 </Link>
@@ -124,7 +125,9 @@ export default async function GroupsPage() {
               <div className="mt-4 space-x-2">
                 <Link
                   href={`/groups/${memberGroup.group.id}`}
-                  className="text-sm bg-washed_gray text-primary_text hover:underline rounded px-4 py-2"
+                  className="flex w-1/3 text-xs bg-washed_gray text-primary_text hover:underline rounded px-4 py-2
+                  transition-transform transform active:scale-90
+                  items-center justify-center"
                 >
                   View Group
                 </Link>
