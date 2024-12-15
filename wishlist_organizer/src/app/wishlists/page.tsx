@@ -166,7 +166,7 @@ export default async function WishlistsPage() {
                   {group.usernames[userId]}'s Wishlist
                 </h3>
                 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {userItems.map((item: WishlistItem) => {
                     const assignment = item.gift_assignments?.[0];
                     const assignedUsername = assignment ? group.usernames[assignment.assigned_to] : undefined;
@@ -177,23 +177,22 @@ export default async function WishlistsPage() {
                           {item.item_name}
                         </h3>
                         
-                        {item.store && (
-                          <p className="bg-dark_gray break-words line-clamp-1 mb-[10px]">
-                            {item.store}
-                          </p>
-                        )}
+                        <p className="bg-dark_gray break-words line-clamp-1 mb-[10px]">
+                          {item.store ? item.store : '\u00A0'}
+                        </p>
 
 
                         {user.id !== userId ? (
                           <>
-                            <div className="overflow-y-auto h-1/3">
-                              {item.description && (
-                                <p className="break-words whitespace-normal bg-bone text-dark_gray rounded-md p-[5px]">
-                                  {item.description}
-                                </p>
-                              )}
+                            <div className="h-1/3 overflow-hidden relative bg-darker_gray text-primary_text rounded-md mb-[15px]">
+                              <div className="overflow-y-auto h-full p-[5px]">
+                                {item.description && (
+                                  <p className="break-words whitespace-normal">
+                                    {item.description}
+                                  </p>
+                                )}
+                              </div>
                             </div>
-                            
                           </>
                         ) : (
                           <div className="flex items-center justify-center h-1/3">
@@ -201,16 +200,20 @@ export default async function WishlistsPage() {
                           </div>
                         )}
                         
-                        {item.link && (
-                            <div className="my-[15px] flex justify-center items-center">
+                        {item.link ? (
+                            <div className="mb-[15px] flex justify-center items-center">
                               <CopyLinkButton link={item.link} />
+                            </div>
+                          ) : (
+                            <div className="mb-[15px] flex justify-center items-center">
+                              <p className="italic">No Link</p>
                             </div>
                           )}
                           <div className="flex flex-col justify-start items-left gap-y-[10px]">
                             <GiftAssignment 
                               itemId={item.id}
                               userId={user.id}
-                              creatorId={item.user_id}  // Add this
+                              creatorId={item.user_id} 
                               currentAssignment={assignment}
                               assignedUsername={assignedUsername}
                             />
