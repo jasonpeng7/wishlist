@@ -17,7 +17,7 @@ export default async function DashboardPage() {
   return (
     <main className='flex flex-col'>
      <NavBar/>
-      <div className='flex flex-col mt-[100px] mx-[100px]'>
+      <div className='flex flex-col mt-[100px] mx-[50px] md:mx-[100px]'>
         <h1 className='text-3xl font-raleway text-primary_text'>Start Adding Items To Your Wishlist!</h1>
         <WishlistForm userId={user.id} />
       </div>
