@@ -67,14 +67,14 @@ export default async function GroupsPage() {
         <div className="space-x-4 flex items-stretch">
             <Link
                 href="/groups/create"
-                className="flex w-1/2 bg-primary_text hover:bg-midnight_blue transition-colors px-6 py-2 rounded-md text-dark_gray text-center"
+                className="flex w-1/2 bg-primary_text  transition-colors px-6 py-2 rounded-md text-dark_gray text-center"
             >
             Create New Group
             </Link>
 
             <Link
                 href='/groups/join'
-                className='flex w-1/2 bg-primary_text hover:bg-midnight_blue transition-colors px-6 py-2 rounded-md text-dark_gray text-center justify-center items-center'
+                className='flex w-1/2 bg-primary_text transition-colors px-6 py-2 rounded-md text-dark_gray text-center justify-center items-center'
             >
             Join a group
             </Link>
@@ -94,7 +94,7 @@ export default async function GroupsPage() {
               <div className="mt-4 space-x-2">
                 <Link
                   href={`/groups/${group.id}/manage`}
-                  className="text-sm bg-washed_gray text-white px-4 py-2 rounded"
+                  className="text-sm bg-washed_gray hover:underline text-white px-4 py-2 rounded"
                 >
                   Manage Group
                 </Link>
