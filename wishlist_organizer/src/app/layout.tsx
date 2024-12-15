@@ -1,4 +1,5 @@
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 import './globals.css'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -6,7 +7,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider 
     signInForceRedirectUrl="/dashboard"
     signInFallbackRedirectUrl="/dashboard"
-    signUpFallbackRedirectUrl="/dashboard"
+    signUpFallbackRedirectUrl="/sign-in"
+    
     >
       <html lang="en">
         <head>
