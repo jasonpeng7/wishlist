@@ -7,6 +7,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import NavBar from "../components/navbar";
 import GiftAssignment from "../components/GiftAssignment";
+import CopyLinkButton from "../components/CopyLinkButton";
 
 type WishlistItem = {
   id: string;
@@ -15,6 +16,7 @@ type WishlistItem = {
   description: string | null;
   store: string | null;
   created_at: string;
+  link: string | null
   gift_assignments?: {
     assigned_to: string,
     status: 'will_get' | null;
@@ -64,16 +66,25 @@ export default async function WishlistsPage() {
 
     if (!userGroups || userGroups.length === 0) {
       return (
-        <div className="p-[50px]">
-          <div className="flex justify-end mt-4 mb-6">
-            <Link
-              href='/dashboard'
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md transition-colors"
-            >
-              Dashboard
-            </Link>
+        <div className="">
+          <NavBar/>
+          <div className="flex flex-col justify-center items-center pt-[100px] gap-y-[15px]">
+            <p className="text-center text-primary_text font-raleway">You need to be a member of a group to view wishlists.</p>
+            <div className="flex flex-row gap-x-[30px] font-raleway">
+              <Link
+                href='/groups/create'
+                className="bg-bone text-dark_navy px-4 py-2 rounded-md"
+              >
+                Create a Group
+              </Link>
+              <Link
+                href='/groups/join'
+                className="bg-bone text-dark_gray px-4 py-2 rounded-md"
+              >
+                Join a Group
+              </Link>
+            </div>
           </div>
-          <p className="text-center text-gray-500">You need to be a member of a group to view wishlists.</p>
         </div>
       );
     }
@@ -161,7 +172,7 @@ export default async function WishlistsPage() {
                     const assignedUsername = assignment ? group.usernames[assignment.assigned_to] : undefined;
 
                     return (
-                      <div key={item.id} className="font-raleway p-4 rounded-md bg-dark_gray h-60 text-primary_text">
+                      <div key={item.id} className="font-raleway p-4 rounded-md bg-dark_gray h-[360px] text-primary_text">
                         <h3 className="font-bold text-lg bg-dark_gray break-words line-clamp-1 mb-[10px]">
                           {item.item_name}
                         </h3>
@@ -171,7 +182,8 @@ export default async function WishlistsPage() {
                             {item.store}
                           </p>
                         )}
-                        
+
+
                         {user.id !== userId ? (
                           <>
                             <div className="overflow-y-auto h-1/3">
@@ -182,12 +194,6 @@ export default async function WishlistsPage() {
                               )}
                             </div>
                             
-                            <GiftAssignment 
-                              itemId={item.id}
-                              userId={user.id}
-                              currentAssignment={assignment}
-                              assignedUsername={assignedUsername}
-                            />
                           </>
                         ) : (
                           <div className="flex items-center justify-center h-1/2">
@@ -195,9 +201,23 @@ export default async function WishlistsPage() {
                           </div>
                         )}
                         
-                        <p className="text-sm mt-[10px]">
-                          Added on: {new Date(item.created_at).toLocaleDateString()}
-                        </p>
+                        {item.link && (
+                            <div className="mb-[10px] flex justify-center items-center">
+                              <CopyLinkButton link={item.link} />
+                            </div>
+                          )}
+                          <div className="flex flex-col justify-start items-left gap-y-[10px]">
+                            <GiftAssignment 
+                              itemId={item.id}
+                              userId={user.id}
+                              currentAssignment={assignment}
+                              assignedUsername={assignedUsername}
+                            />
+                            <p className="text-sm mt-0">
+                              Added on: {new Date(item.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+
                       </div>
                     );
                   })}
