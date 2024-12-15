@@ -6,8 +6,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: false, // This prevents session persistence
-    autoRefreshToken: false,
+    persistSession: true, // This prevents session persistence
+    autoRefreshToken: true,
   },
   // Add cache configuration
   db: {
