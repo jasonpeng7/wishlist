@@ -106,7 +106,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
         </div>
         <button
           type="submit"
-          className="font-raleway w-full bg-washed_gray text-white p-2 rounded"
+          className="font-raleway w-full bg-washed_gray text-white p-2 rounded transition-transform transform active:scale-90"
         >
           Add Item
         </button>
