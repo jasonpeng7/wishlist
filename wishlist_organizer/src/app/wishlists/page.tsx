@@ -196,7 +196,7 @@ export default async function WishlistsPage() {
                             
                           </>
                         ) : (
-                          <div className="flex items-center justify-center h-1/2">
+                          <div className="flex items-center justify-center h-1/3">
                             <p className="text-gray-400 italic">This is your item</p>
                           </div>
                         )}
@@ -210,6 +210,7 @@ export default async function WishlistsPage() {
                             <GiftAssignment 
                               itemId={item.id}
                               userId={user.id}
+                              creatorId={item.user_id}  // Add this
                               currentAssignment={assignment}
                               assignedUsername={assignedUsername}
                             />
