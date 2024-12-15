@@ -188,7 +188,7 @@ export default async function WishlistsPage() {
                           <>
                             <div className="overflow-y-auto h-1/3">
                               {item.description && (
-                                <p className="break-words whitespace-normal">
+                                <p className="break-words whitespace-normal bg-bone text-dark_gray rounded-md p-[5px]">
                                   {item.description}
                                 </p>
                               )}
