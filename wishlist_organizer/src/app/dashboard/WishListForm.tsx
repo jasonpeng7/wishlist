@@ -11,6 +11,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(null);
     setSuccess(false);
 
