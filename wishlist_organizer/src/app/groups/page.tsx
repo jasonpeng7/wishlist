@@ -61,7 +61,7 @@ export default async function GroupsPage() {
   return (
     <div className="">
       <NavBar/>
-      <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] mx-[100px] text-primary_text">
+      <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] md: mx-[50px] md:mx-[100px] text-primary_text">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">My Groups</h1>
 
         <div className="space-x-4 flex items-stretch">
@@ -82,7 +82,7 @@ export default async function GroupsPage() {
       </div>
 
       {/* Groups I Manage */}
-      <section className="mb-8 mx-[100px] font-raleway text-primary_text">
+      <section className="mb-8 mx-[50px] md:mx-[100px] font-raleway text-primary_text">
         <h2 className="text-xl font-semibold mb-4">Groups I Manage</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adminGroups?.map((group) => (
@@ -108,7 +108,7 @@ export default async function GroupsPage() {
       </section>
 
       {/* Groups I'm In */}
-      <section className='mx-[100px] font-raleway'>
+      <section className='mx-[50px] md:mx-[100px] font-raleway'>
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Groups I'm In</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {memberGroups?.map((memberGroup) => (
