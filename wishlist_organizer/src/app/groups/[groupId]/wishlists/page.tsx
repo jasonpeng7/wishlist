@@ -57,8 +57,14 @@ export default async function GroupWishlistsPage({ params }: {params: { groupId 
 
     if (!groupMembers || groupMembers.length === 0) {
       return (
-        <div className="flex flex-col justify-center items-center pt-[100px] gap-y-[15px]">
-          <p className="text-primary_text font-raleway text-center">No members found for this group.</p>
+        <div className="">
+          <NavBar/>
+          <div className='flex flex-col justify-center items-center pt-[100px] font-raleway gap-y-[25px]'>
+            <p className="text-primary_text font-raleway text-center">No members found for this group.</p>
+            <Link href="/groups" className='flex rounded-md bg-bone transition-transform transform active:scale-90 text-dark_gray px-6 py-2'>
+                <p>Back to groups</p>
+            </Link>
+          </div>
         </div>
       );
     }
