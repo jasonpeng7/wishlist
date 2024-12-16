@@ -1,38 +1,89 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../../../utils/supabase";
+
+interface Group {
+  id: string;
+  name: string;
+}
+
 export default function WishlistForm({ userId }: { userId: string }) {
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
   const [storeName, setStoreName] = useState('');
+  const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [groups, setGroups] = useState<Group[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Fetch user's groups on component mount
+  useEffect(() => {
+    async function fetchUserGroups() {
+      try {
+        // Fetch admin groups
+        const { data: adminGroups } = await supabase
+          .from('groups')
+          .select('id, name')
+          .eq('creator_id', userId);
+
+        // Fetch member groups
+        const { data: memberGroups } = await supabase
+          .from('user_groups')
+          .select('group:groups(id, name)')
+          .eq('user_id', userId)
+          .eq('role', 'member');
+
+        // Combine and deduplicate groups
+        const combinedGroups = [
+          ...(adminGroups || []),
+          ...(memberGroups?.map(mg => mg.group) || [])
+        ];
+
+        // Remove duplicates
+        const uniqueGroups = Array.from(
+          new Map((combinedGroups as { id: any; name: any; }[]).map(g => [g.id, g])).values()
+        );
+
+        setGroups(uniqueGroups);
+      } catch (err) {
+        console.error('Error fetching groups:', err);
+        setError('Failed to load groups');
+      }
+    }
+
+    fetchUserGroups();
+  }, [userId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
 
-    try {
-      console.log("Submitting with user ID:", userId); // Debug log
+    // Validate group selection
+    if (!selectedGroupId) {
+      setError('Please select a group for this wishlist item');
+      return;
+    }
 
+    try {
       const { data, error } = await supabase
         .from('wishlists')
         .insert([
           {
             user_id: userId,
+            group_id: selectedGroupId,
             item_name: itemName,
             store: storeName || null,
-            description: description || null, // Handle empty description
-            link: link || null, // Handle empty link
+            description: description || null,
+            link: link || null,
           }
         ])
         .select();
 
       if (error) {
-        console.error('Supabase error:', error); // Debug log
+        console.error('Supabase error:', error);
         throw error;
       }
 
@@ -41,9 +92,10 @@ export default function WishlistForm({ userId }: { userId: string }) {
       setDescription('');
       setStoreName('');
       setLink('');
+      setSelectedGroupId('');
       setSuccess(true);
 
-      console.log('Item added successfully:', data); // Debug log
+      console.log('Item added successfully:', data);
 
     } catch (error: any) {
       setError(error.message || 'An error occurred while adding the item');
@@ -63,18 +115,36 @@ export default function WishlistForm({ userId }: { userId: string }) {
           Item added successfully. Please Refresh Your Page!
         </div>
       )}
-      <form onSubmit={handleSubmit} className="space-y-4 ">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="font-raleway">
-          <label className="text-primary_text block mb-2 ">Item Name<span className="text-red-600">*</span></label>
+          <label className="text-primary_text block mb-2">Group<span className="text-red-600">*</span></label>
+          <select
+            value={selectedGroupId}
+            onChange={(e) => setSelectedGroupId(e.target.value)}
+            className="w-full p-2 bg-primary_text rounded text-dark_gray"
+            required
+          >
+            <option value="">Select a Group</option>
+            {groups.map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="font-raleway">
+          <label className="text-primary_text block mb-2">Item Name<span className="text-red-600">*</span></label>
           <input
             placeholder="e.g. Socks"
             type="text"
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded bg text-dark_gray"
+            className="w-full p-2 bg-primary_text rounded text-dark_gray"
             required
           />
         </div>
+        
         <div className="font-raleway">
           <label className="text-primary_text block mb-2">Brand/Store</label>
           <input
@@ -85,6 +155,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             className="w-full p-2 bg-primary_text rounded text-dark_gray"
           />
         </div>
+        
         <div className="font-raleway">
           <label className="text-primary_text block mb-2">Description</label>
           <textarea
@@ -94,6 +165,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             className="w-full p-2 bg-primary_text rounded text-dark_gray"
           />
         </div>
+        
         <div className="font-raleway">
           <label className="text-primary_text block mb-2">Link</label>
           <input
@@ -104,6 +176,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             className="w-full p-2 bg-primary_text rounded text-dark_gray"
           />
         </div>
+        
         <button
           type="submit"
           className="font-raleway w-full bg-washed_gray text-white p-2 rounded transition-transform transform active:scale-90"
