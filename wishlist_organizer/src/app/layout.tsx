@@ -7,8 +7,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider 
     signInForceRedirectUrl="/dashboard"
     signInFallbackRedirectUrl="/dashboard"
-    signUpFallbackRedirectUrl="/sign-in"
-    
+    signUpFallbackRedirectUrl="/dashboard"
+    afterSignOutUrl="/"
     >
       <html lang="en">
         <head>
@@ -22,7 +22,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </SignedOut>
             <div className='user_button'>
               <SignedIn>
-                {/* <UserButton/> */}
               </SignedIn>
             </div>
           </header>
