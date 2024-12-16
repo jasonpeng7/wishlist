@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   if (!user) {
     redirect('/sign-in');
   }
-
+    
   return (
     <main className='flex flex-col'>
      <NavBar/>
