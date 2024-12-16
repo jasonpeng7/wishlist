@@ -1,18 +1,18 @@
 import { SignInButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import MiscCards from './MiscCards';
+import MiscCards from './components/MiscCards';
 import Image from 'next/image';
 
 export default async function LandingPage() {
   const user = await currentUser();
   
   if (user) {
-    redirect('/dashboard');
+    redirect('/groups');
   }
   
   return (
-    <main className="flex flex-row  justify-center bg-slate_gray gap-x-[20px] px-4 sm:px-6 lg:px-8">
+    <main className="flex flex-row justify-center bg-slate_gray gap-x-[20px] px-4 sm:px-6 lg:px-8">
       {/* Gift wrap decoration */}
       <div className="fixed top-0 left-0 w-[300px] h-[300px] pointer-events-none">
         <svg 
@@ -70,7 +70,7 @@ export default async function LandingPage() {
       <MiscCards />
       <div className='fixed top-4 right-4 flex flex-row gap-x-[20px]'>
         <SignInButton >
-            <button className="font-raleway text-dark_gray px-4 bg-bone rounded-md transition-transform transform active:scale-90">
+            <button className="font-raleway text-dark_gray px-4 bg-bone rounded-md transition-transform transform active:scale-90 animate-jump">
               Sign In
             </button>
           </SignInButton>
