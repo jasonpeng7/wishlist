@@ -95,7 +95,8 @@ export default async function GroupsPage() {
               <p className="text-sm text-primary_text">
                 Members: {group.user_groups?.length || 0}
               </p>
-              <div className="mt-4 space-x-2">
+
+              <div className="mt-4 flex flex-row justify-center lg:justify-start space-x-4">
                 <Link
                   href={`/groups/${group.id}/manage`}
                   className="flex w-1/3 text-xs items-center justify-center bg-washed_gray hover:underline text-white px-4 py-2 rounded 
@@ -103,12 +104,20 @@ export default async function GroupsPage() {
                 >
                   Manage Group
                 </Link>
+                <Link
+                  href={`/groups/${group.id}/wishlists`}
+                  className="flex w-1/3 text-xs items-center justify-center bg-bone text-dark_gray px-4 py-2 rounded 
+                  transition-transform transform active:scale-90"
+                >
+                  View Wishlists
+                </Link>
               </div>
+
             </div>
           ))}
         </div>
         {(!adminGroups || adminGroups.length === 0) && (
-          <p className="text-gray-500">You don't manage any groups yet. Create one now!</p>
+          <p className="text-gray-500">You haven't created any groups yet. Create one before you start making a wishlist!</p>
         )}
       </section>
 
@@ -122,7 +131,7 @@ export default async function GroupsPage() {
               <p className="text-sm text-primary_text">
                 Members: {memberGroup.group.user_groups?.length || 0}
               </p>
-              <div className="mt-4 space-x-2">
+              <div className="mt-4 space-x-4 flex justify-center lg:justify-start"> 
                 <Link
                   href={`/groups/${memberGroup.group.id}`}
                   className="flex w-1/3 text-xs bg-washed_gray text-primary_text hover:underline rounded px-4 py-2
@@ -131,12 +140,19 @@ export default async function GroupsPage() {
                 >
                   View Group
                 </Link>
+                <Link
+                  href={`/groups/${memberGroup.group.id}/wishlists`}
+                  className="flex w-1/3 text-xs items-center justify-center bg-bone text-dark_gray px-4 py-2 rounded 
+                  transition-transform transform active:scale-90"
+                >
+                  View Wishlists
+                </Link>
               </div>
             </div>
           ))}
         </div>
         {(!memberGroups || memberGroups.length === 0) && (
-          <p className="text-gray-500">You're not a member of any groups yet.</p>
+          <p className="text-gray-500">You're not a member of any groups yet. Join one before making your wishlist!</p>
         )}
       </section>
     </div>
