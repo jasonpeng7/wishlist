@@ -4,8 +4,8 @@ export default function Page() {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <SignIn 
-        signUpForceRedirectUrl="/dashboard"
-        forceRedirectUrl="/dashboard"
+        signUpForceRedirectUrl="/groups"
+        forceRedirectUrl="/groups"
       />
     </div>
   );
