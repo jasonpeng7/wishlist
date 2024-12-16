@@ -12,6 +12,7 @@ import CopyLinkButton from "../components/CopyLinkButton";
 type WishlistItem = {
   id: string;
   user_id: string;
+  group_id: string;
   item_name: string;
   description: string | null;
   store: string | null;
@@ -112,6 +113,7 @@ export default async function WishlistsPage() {
           )
         `)
         .in('user_id', memberIds)
+        .eq('group_id', userGroup.group_id)
         .order('created_at', { ascending: false });
 
       // Get usernames for group members
