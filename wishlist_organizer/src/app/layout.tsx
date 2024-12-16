@@ -5,9 +5,9 @@ import './globals.css'
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider 
-    signInForceRedirectUrl="/dashboard"
-    signInFallbackRedirectUrl="/dashboard"
-    signUpFallbackRedirectUrl="/dashboard"
+    signInForceRedirectUrl="/groups"
+    signInFallbackRedirectUrl="/groups"
+    signUpFallbackRedirectUrl="/groups"
     afterSignOutUrl="/"
     >
       <html lang="en">
