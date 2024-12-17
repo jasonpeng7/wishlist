@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Loader from "./SpinLoad";
-import { Module } from "module";
 
 export default function NavBar () {
     const pathName = usePathname();
