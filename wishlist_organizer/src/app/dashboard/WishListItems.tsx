@@ -94,8 +94,8 @@ export default function WishlistItems({ userId }: { userId: string}) {
                         <div key={item.id} className="p-4 rounded-md bg-dark_gray h-32 overflow-y-auto relative">
                             <div className="space-y-2">
                                 {editingId === item.id ? (
-                                    <div className="flex flex-col gap-2">
-                                        <h1 className="text-primary_text">Editing Item</h1>
+                                    <div className="flex flex-col gap-2 relative pb-[25px]">
+                                        <h1 className="flex text-primary_text justify-center underline">Editing Item</h1>
                                         
                                         <h1 className="text-primary_text">
                                             Item name: 
@@ -123,19 +123,20 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                             Description:
                                         </h1>
 
-                                        <input
-                                        type="text"
+                                        <textarea
                                         value={editedDescription}
                                         onChange={(e) => setEditedDescription(e.target.value)}
                                         className="w-full p-1 rounded bg-primary_text text-dark_gray"
                                         />
-                                        <div className="flex gap-2">
-                                            <button onClick={handleSave} className="text-green-500">
-                                                <Check size={16} />
-                                            </button>
-                                            <button onClick={() => setEditingId(null)} className="text-red-500">
-                                                <X size={16} />
-                                            </button>
+                                        <div className="absolute top-0 right-2">
+                                            <div className="gap-2">
+                                                <button onClick={handleSave} className="text-green-500">
+                                                    <Check size={16} />
+                                                </button>
+                                                <button onClick={() => setEditingId(null)} className="text-red-500">
+                                                    <X size={16} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
