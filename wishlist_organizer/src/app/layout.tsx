@@ -1,6 +1,7 @@
 import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 import './globals.css'
+import { Analytics } from '@vercel/analytics/next'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </SignedIn>
             </div>
           </header>
-          <main>{children}</main>
+          <main>
+            {children}
+            <Analytics/>
+          </main>
         </body>
       </html>
     </ClerkProvider>
