@@ -88,7 +88,7 @@ export default async function JoinGroupPage() {
                 type="text"
                 id="code"
                 name="code"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                className="mt-1 block w-full rounded-md  px-3 py-2 bg-primary_text"
                 placeholder="Enter code"
                 required
             />
@@ -97,12 +97,14 @@ export default async function JoinGroupPage() {
             <div className='flex justify-end'>
               <Link
                 href='/groups'
-                className='text-primary_text hover:text-washed_gray px-4 py-2'>
+                className='text-primary_text hover:text-washed_gray px-4 py-2
+                transition-transform transform active:scale-90'>
                 Back
               </Link>
               <button 
                 type="submit"
-                className="max-w-fit bg-washed_gray text-white px-4 py-2 rounded"
+                className="max-w-fit bg-washed_gray text-white px-4 py-2 rounded
+                transition-transform transform active:scale-90"
                 >
                 Join Group
               </button>
