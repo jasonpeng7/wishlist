@@ -18,6 +18,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editedName, setEditedName] = useState("");
     const [editedStore, setEditedStore] = useState("");
+    const [editedDescription, setEditedDescription] = useState("");
 
     useEffect(() => {
         fetchItems();
@@ -42,6 +43,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
         setEditingId(item.id);
         setEditedName(item.item_name);
         setEditedStore(item.store);
+        setEditedDescription(item.description);
     };
 
     const handleSave = async () => {
@@ -93,17 +95,39 @@ export default function WishlistItems({ userId }: { userId: string}) {
                             <div className="space-y-2">
                                 {editingId === item.id ? (
                                     <div className="flex flex-col gap-2">
+                                        <h1 className="text-primary_text">Editing Item</h1>
+                                        
+                                        <h1 className="text-primary_text">
+                                            Item name: 
+                                        </h1>
+
                                         <input
                                             type="text"
                                             value={editedName}
                                             onChange={(e) => setEditedName(e.target.value)}
                                             className="w-full p-1 rounded bg-primary_text text-dark_gray"
                                         />
+
+                                        <h1 className="text-primary_text">
+                                            Store:
+                                        </h1>
+
                                         <input
                                             type="text"
                                             value={editedStore}
                                             onChange={(e) => setEditedStore(e.target.value)}
                                             className="w-full p-1 rounded bg-primary_text text-dark_gray"
+                                        />
+
+                                        <h1 className="text-primary_text">
+                                            Description:
+                                        </h1>
+
+                                        <input
+                                        type="text"
+                                        value={editedDescription}
+                                        onChange={(e) => setEditedDescription(e.target.value)}
+                                        className="w-full p-1 rounded bg-primary_text text-dark_gray"
                                         />
                                         <div className="flex gap-2">
                                             <button onClick={handleSave} className="text-green-500">
@@ -120,7 +144,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                         <p className="text-sm text-gray-500">
                                             Added on: {new Date(item.created_at).toLocaleDateString()}
                                         </p>
-                                        <div className="absolute top-2 right-2 flex gap-2">
+                                        <div className="absolute bottom-4 right-2 flex gap-2">
                                             <button 
                                                 onClick={() => handleEdit(item)}
                                                 className="text-blue-500 hover:text-blue-600"
