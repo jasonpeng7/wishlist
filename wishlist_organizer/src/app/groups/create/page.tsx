@@ -63,7 +63,7 @@ const CreateGroupPage: React.FC = () => {
                 type="text"
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded bg-primary_text"
                 required
             />
             </div>
