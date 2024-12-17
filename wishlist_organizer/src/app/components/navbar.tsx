@@ -52,9 +52,9 @@ export default function NavBar () {
             >             
             {pathName === "/groups/create" ? "All Wishlists" : 
             pathName.includes("/groups/join") ? "All Wishlists": 
-            pathName.includes("/wishlists") ? "Dashboard" : 
-            pathName.includes("/groups") && pathName.includes("/manage") ? "Dashboard" :
-            pathName.includes("/groups") ? "Dashboard" : 
+            pathName.includes("/wishlists") ? "My Wishlists" : 
+            pathName.includes("/groups") && pathName.includes("/manage") ? "My Wishlists" :
+            pathName.includes("/groups") ? "My Wishlists" : 
             "All Wishlists"}         
 
         </Link>
@@ -66,10 +66,10 @@ export default function NavBar () {
             text-xs flex items-center h-[32px]'
         >
             {pathName === "/groups" ? "All Wishlists" : 
-            pathName.includes("/groups/create") ? "Your Group" : 
-            pathName.includes("/groups/join") ? "Dashboard":
-            pathName.includes("/groups") ? "Your Group" : 
-            "Your Group"}
+            pathName.includes("/groups/create") ? "My Group" : 
+            pathName.includes("/groups/join") ? "My Wishlists":
+            pathName.includes("/groups") ? "My Group" : 
+            "My Group"}
          </Link>
         {modal && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 flex justify-center items-center">
