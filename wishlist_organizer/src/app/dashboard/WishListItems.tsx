@@ -128,6 +128,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                         onChange={(e) => setEditedDescription(e.target.value)}
                                         className="w-full p-1 rounded bg-primary_text text-dark_gray"
                                         />
+
                                         <div className="absolute top-0 right-2">
                                             <div className="gap-2">
                                                 <button onClick={handleSave} className="text-green-500">
