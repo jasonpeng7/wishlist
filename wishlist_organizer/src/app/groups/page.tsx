@@ -144,14 +144,16 @@ export default async function GroupsPage() {
         {(!memberGroups || memberGroups.length === 0) && (
           <p className="text-gray-500">You're not a member of any groups yet. Join one before making your wishlist!</p>
         )}
-        <Link              
-            href="/groups/join"         
-            className="bg-bone px-4 py-2 rounded-lg w-1/2 
-            transition-transform transform active:scale-90 
-            flex items-center justify-center"         
-            >             
-            <p className='text-dark_gray'>Join a group</p> 
-        </Link>
+        <div className='flex mt-4'>
+          <Link              
+              href="/groups/join"         
+              className="bg-bone px-4 py-2 rounded-lg 
+              transition-transform transform active:scale-90 
+              flex items-center justify-center"         
+              >             
+              <p className='text-dark_gray'>Join a group</p> 
+          </Link>
+        </div>
       </section>
     </div>
   );
