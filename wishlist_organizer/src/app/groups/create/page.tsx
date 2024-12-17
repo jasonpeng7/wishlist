@@ -76,13 +76,15 @@ const CreateGroupPage: React.FC = () => {
             <button
                 type="button"
                 onClick={() => router.back()}
-                className="px-4 py-2 text-primary_text hover:text-washed_gray"
+                className="px-4 py-2 text-primary_text hover:text-washed_gray
+                transition-transform transform active:scale-90"
             >
                 Cancel
             </button>
             <button
                 type="submit"
-                className="bg-washed_gray text-white px-6 py-2 rounded-md transition-colors"
+                className="bg-washed_gray text-white px-6 py-2 rounded-md 
+                transition-transform transform active:scale-90"
             >
                 Create Group
             </button>
