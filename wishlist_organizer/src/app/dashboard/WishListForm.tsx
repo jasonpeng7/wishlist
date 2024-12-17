@@ -121,7 +121,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
           <select
             value={selectedGroupId}
             onChange={(e) => setSelectedGroupId(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded text-dark_gray"
+            className="w-full p-2 bg-primary_text rounded text-gray-400"
             required
           >
             <option value="">
