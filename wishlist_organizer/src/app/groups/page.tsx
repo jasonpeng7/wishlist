@@ -122,7 +122,7 @@ export default async function GroupsPage() {
       </section>
 
       {/* Groups I'm In */}
-      <section className='mx-[50px] md:mx-[100px] font-raleway'>
+      <section className='mx-[50px] md:mx-[100px] font-raleway mb-[50px]'>
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Groups I'm In</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {memberGroups?.map((memberGroup) => (
