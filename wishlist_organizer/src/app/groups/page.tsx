@@ -63,26 +63,6 @@ export default async function GroupsPage() {
       <NavBar/>
       <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] md: mx-[50px] md:mx-[100px] text-primary_text">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">My Groups</h1>
-
-        <div className="space-x-4 flex">
-          <Link              
-              href="/groups/create"         
-              className="bg-bone px-4 py-2 rounded-lg w-1/2 
-              transition-transform transform active:scale-90 
-              flex items-center justify-center text-center"         
-              >             
-              <p className='text-dark_gray'>Create a group</p> 
-          </Link>
-
-          <Link              
-            href="/groups/join"         
-            className="bg-bone px-4 py-2 rounded-lg w-1/2 
-            transition-transform transform active:scale-90 
-            flex items-center justify-center"         
-            >             
-            <p className='text-dark_gray'>Join a group</p> 
-        </Link>
-        </div>
       </div>
 
       {/* Groups I Manage */}
@@ -119,6 +99,16 @@ export default async function GroupsPage() {
         {(!adminGroups || adminGroups.length === 0) && (
           <p className="text-gray-500">You haven't created any groups yet. Create one before you start making a wishlist!</p>
         )}
+        <div className='flex mt-4 '>
+          <Link              
+                href="/groups/create"         
+                className="bg-bone px-4 py-2 rounded-lg 
+                transition-transform transform active:scale-90 
+                flex items-center justify-center text-center"         
+                >             
+                <p className='text-dark_gray'>Create a group</p> 
+            </Link>
+        </div>
       </section>
 
       {/* Groups I'm In */}
@@ -154,6 +144,14 @@ export default async function GroupsPage() {
         {(!memberGroups || memberGroups.length === 0) && (
           <p className="text-gray-500">You're not a member of any groups yet. Join one before making your wishlist!</p>
         )}
+        <Link              
+            href="/groups/join"         
+            className="bg-bone px-4 py-2 rounded-lg w-1/2 
+            transition-transform transform active:scale-90 
+            flex items-center justify-center"         
+            >             
+            <p className='text-dark_gray'>Join a group</p> 
+        </Link>
       </section>
     </div>
   );
