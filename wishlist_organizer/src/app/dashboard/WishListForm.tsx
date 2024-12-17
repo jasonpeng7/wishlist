@@ -124,7 +124,11 @@ export default function WishlistForm({ userId }: { userId: string }) {
             className="w-full p-2 bg-primary_text rounded text-dark_gray"
             required
           >
-            <option value="">Select a Group</option>
+            <option value="">
+              <p className="">
+                Select a Group
+              </p>
+            </option>
             {groups.map((group) => (
               <option key={group.id} value={group.id}>
                 {group.name}
