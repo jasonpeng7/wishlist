@@ -20,12 +20,13 @@ export default function DeleteGroupButton({
   return (
     <div className="">
       <h3 className="text-lg font-medium text-red-600 mb-2">Warning</h3>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-primary_text mb-4">
         Once you delete a group, there is no going back. Please be certain.
       </p>
       <button 
         onClick={handleDelete}
-        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded
+        transition-transform transform active:scale-90"
       >
         Delete Group
       </button>
