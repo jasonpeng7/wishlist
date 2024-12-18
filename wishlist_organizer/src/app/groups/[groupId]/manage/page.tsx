@@ -166,7 +166,8 @@ export default async function ManageGroupPage({
               <input type="hidden" name="groupId" value={group.id} />
               <button 
                 type="submit"
-                className="bg-bone text-dark_gray px-4 py-2 rounded"
+                className="bg-bone text-dark_gray px-4 py-2 rounded
+                transition-transform transform active:scale-90"
               >
                 Generate New Code
               </button>
@@ -207,6 +208,20 @@ export default async function ManageGroupPage({
                     <div className="flex-1 text-center truncate">{member.user.email}</div>
                     <div className="flex-1 text-right capitalize">{member.role}</div>
                   </div>
+                  
+                  {member.role != 'admin' && (
+                  <form action={removeMember} className='px-6'>
+                    <input type="hidden" name="groupId" value={group.id} />
+                    <input type="hidden" name="userId" value={member.user_id} />
+                    <button 
+                      type="submit" 
+                      className="text-primary_text hover:bg-red-700 rounded bg-red-600 px-4 py-2
+                      transition-transform transform active:scale-90 flex items-center justify-center"
+                    >
+                      Remove {member.user.name}
+                    </button>
+                  </form>
+                  )}
                 </div>
               ))}
             </div>
