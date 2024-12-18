@@ -123,72 +123,80 @@ export default async function GroupWishlistsPage({ params }: {params: { groupId 
         </div>
 
         <div className="my-12">
-          {Object.entries(userWishlists || {}).map(([userId, userItems]) => (
-            <div key={userId} className="my-12 mx-8 md:mx-16">
-              <h3 className="text-2xl font-bold mb-4 capitalize text-primary_text font-raleway break-words">
-                {usernames[userId]}'s Wishlist
-              </h3>
+  {Object.keys(userWishlists || {}).length === 0 ? (
+      <div className="my-12 mx-8 md:mx-16">
+        <p className="text-primary_text font-raleway text-center text-lg">
+          No wishlists for this group yet. Be the first to add one!
+        </p>
+      </div>
+      ) : (
+        Object.entries(userWishlists || {}).map(([userId, userItems]) => (
+          <div key={userId} className="my-12 mx-8 md:mx-16">
+            <h3 className="text-2xl font-bold mb-4 capitalize text-primary_text font-raleway break-words">
+              {usernames[userId]}'s Wishlist
+            </h3>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {userItems.map((item: WishlistItem) => {
-                  const assignment = item.gift_assignments?.[0];
-                  const assignedUsername = assignment ? usernames[assignment.assigned_to] : undefined;
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {userItems.map((item: WishlistItem) => {
+                const assignment = item.gift_assignments?.[0];
+                const assignedUsername = assignment ? usernames[assignment.assigned_to] : undefined;
 
-                  return (
-                    <div key={item.id} className="font-raleway p-4 rounded-md bg-dark_gray h-[310px] text-primary_text">
-                      <h3 className="font-bold text-lg bg-dark_gray break-words line-clamp-1 mb-[10px]">
-                        {item.item_name}
-                      </h3>
+                return (
+                  <div key={item.id} className="font-raleway p-4 rounded-md bg-dark_gray h-[310px] text-primary_text">
+                    <h3 className="font-bold text-lg bg-dark_gray break-words line-clamp-1 mb-[10px]">
+                      {item.item_name}
+                    </h3>
 
-                      <p className="bg-dark_gray break-words line-clamp-1 mb-[10px]">
-                        {item.store ? item.store : '\u00A0'}
-                      </p>
+                    <p className="bg-dark_gray break-words line-clamp-1 mb-[10px]">
+                      {item.store ? item.store : '\u00A0'}
+                    </p>
 
-                      {user.id !== userId ? (
-                        <div className="h-1/3 overflow-hidden relative bg-darker_gray text-primary_text rounded-md mb-[15px]">
-                          <div className="overflow-y-auto h-full p-[5px]">
-                            {item.description && (
-                              <p className="break-words whitespace-normal">
-                                {item.description}
-                              </p>
-                            )}
-                          </div>
+                    {user.id !== userId ? (
+                      <div className="h-1/3 overflow-hidden relative bg-darker_gray text-primary_text rounded-md mb-[15px]">
+                        <div className="overflow-y-auto h-full p-[5px]">
+                          {item.description && (
+                            <p className="break-words whitespace-normal">
+                              {item.description}
+                            </p>
+                          )}
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-center h-1/3">
-                          <p className="text-dark_gray italic bg-green-400 px-2 rounded-full">This is your item</p>
-                        </div>
-                      )}
-
-                      {item.link ? (
-                        <div className="mb-[15px] flex justify-center items-center">
-                          <CopyLinkButton link={item.link} />
-                        </div>
-                      ) : (
-                        <div className="mb-[15px] flex justify-center items-center">
-                          <p className="italic">No Link</p>
-                        </div>
-                      )}
-
-                      <div className="flex flex-col justify-start items-left gap-y-[10px]">
-                        <GiftAssignment 
-                          itemId={item.id}
-                          userId={user.id}
-                          creatorId={item.user_id} 
-                          currentAssignment={assignment}
-                          assignedUsername={assignedUsername}
-                        />
-                        <p className="text-sm mt-0">
-                          Added on: {new Date(item.created_at).toLocaleDateString()}
-                        </p>
                       </div>
+                    ) : (
+                      <div className="flex items-center justify-center h-1/3">
+                        <p className="text-dark_gray italic bg-green-400 px-2 rounded-full">This is your item</p>
+                      </div>
+                    )}
+
+                    {item.link ? (
+                      <div className="mb-[15px] flex justify-center items-center">
+                        <CopyLinkButton link={item.link} />
+                      </div>
+                    ) : (
+                      <div className="mb-[15px] flex justify-center items-center">
+                        <p className="italic">No Link</p>
+                      </div>
+                    )}
+
+                    <div className="flex flex-col justify-start items-left gap-y-[10px]">
+                      <GiftAssignment 
+                        itemId={item.id}
+                        userId={user.id}
+                        creatorId={item.user_id} 
+                        currentAssignment={assignment}
+                        assignedUsername={assignedUsername}
+                      />
+                      <p className="text-sm mt-0">
+                        Added on: {new Date(item.created_at).toLocaleDateString()}
+                      </p>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
+          </div>
+        ))
+      )}
+    </div>
       </div>
     );
   } catch (error) {
