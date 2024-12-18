@@ -68,6 +68,16 @@ export default async function GroupsPage() {
       {/* Groups I Manage */}
       <section className="mb-8 mx-[50px] md:mx-[100px] font-raleway text-primary_text">
         <h2 className="text-xl font-semibold mb-4">Groups I Manage</h2>
+        <div className='flex mb-4 '>
+          <Link              
+                href="/groups/create"         
+                className="bg-bone px-4 py-2 rounded-lg 
+                transition-transform transform active:scale-90 
+                flex items-center justify-center text-center"         
+                >             
+                <p className='text-dark_gray'>Create a group</p> 
+            </Link>
+        </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adminGroups?.map((group) => (
             <div key={group.id} className="bg-midnight_blue p-4 rounded-lg">
@@ -99,21 +109,21 @@ export default async function GroupsPage() {
         {(!adminGroups || adminGroups.length === 0) && (
           <p className="text-gray-500">You haven't created any groups yet. Create one before you start making a wishlist!</p>
         )}
-        <div className='flex mt-4 '>
-          <Link              
-                href="/groups/create"         
-                className="bg-bone px-4 py-2 rounded-lg 
-                transition-transform transform active:scale-90 
-                flex items-center justify-center text-center"         
-                >             
-                <p className='text-dark_gray'>Create a group</p> 
-            </Link>
-        </div>
       </section>
 
       {/* Groups I'm In */}
       <section className='mx-[50px] md:mx-[100px] font-raleway mb-[50px]'>
         <h2 className="text-xl font-semibold mb-4 text-primary_text">Groups I'm In</h2>
+        <div className='flex mb-4'>
+          <Link              
+              href="/groups/join"         
+              className="bg-bone px-4 py-2 rounded-lg 
+              transition-transform transform active:scale-90 
+              flex items-center justify-center"         
+              >             
+              <p className='text-dark_gray'>Join a group</p> 
+          </Link>
+        </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {memberGroups?.map((memberGroup) => (
             <div key={memberGroup.group.id} className="bg-midnight_blue p-4 rounded-lg">
@@ -144,16 +154,6 @@ export default async function GroupsPage() {
         {(!memberGroups || memberGroups.length === 0) && (
           <p className="text-gray-500">You're not a member of any groups yet. Join one before making your wishlist!</p>
         )}
-        <div className='flex mt-4'>
-          <Link              
-              href="/groups/join"         
-              className="bg-bone px-4 py-2 rounded-lg 
-              transition-transform transform active:scale-90 
-              flex items-center justify-center"         
-              >             
-              <p className='text-dark_gray'>Join a group</p> 
-          </Link>
-        </div>
       </section>
     </div>
   );
