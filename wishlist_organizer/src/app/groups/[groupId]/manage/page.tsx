@@ -210,7 +210,7 @@ export default async function ManageGroupPage({
                   </div>
                   
                   {member.role != 'admin' && (
-                  <form action={removeMember} className='px-6'>
+                  <form action={removeMember} className='flex px-6 mb-6 justify-end'>
                     <input type="hidden" name="groupId" value={group.id} />
                     <input type="hidden" name="userId" value={member.user_id} />
                     <button 
@@ -218,7 +218,7 @@ export default async function ManageGroupPage({
                       className="text-primary_text hover:bg-red-700 rounded bg-red-600 px-4 py-2
                       transition-transform transform active:scale-90 flex items-center justify-center"
                     >
-                      Remove {member.user.name}
+                      Remove
                     </button>
                   </form>
                   )}
@@ -245,6 +245,20 @@ export default async function ManageGroupPage({
                     <div className="text-sm text-primary_text">Role:</div>
                     <div className="capitalize">{member.role}</div>
                   </div>
+
+                  {member.role != 'admin' && (
+                  <form action={removeMember} className='flex mb-6 justify-center'>
+                    <input type="hidden" name="groupId" value={group.id} />
+                    <input type="hidden" name="userId" value={member.user_id} />
+                    <button 
+                      type="submit" 
+                      className="text-primary_text hover:bg-red-700 rounded bg-red-600 px-4 py-2
+                      transition-transform transform active:scale-90 flex items-center justify-center"
+                    >
+                      Remove
+                    </button>
+                  </form>
+                  )}
                 </div>
               ))}
             </div>
@@ -273,7 +287,8 @@ export default async function ManageGroupPage({
       <div className='flex justify-end px-[50px] md:px-[100px] font-raleway' >
         <Link 
         href="/groups"
-        className='px-4 py-2 text-primary_text bg-midnight_blue rounded-lg'>
+        className='px-4 py-2 text-primary_text bg-midnight_blue rounded-lg
+        transition-transform transform active:scale-90'>
           Back
         </Link>
       </div>
