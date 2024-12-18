@@ -67,10 +67,10 @@ export default function NavBar () {
             text-xs flex items-center h-[32px]'
         >
             {pathName === "/groups" ? "All Wishlists" : 
-            pathName.includes("/groups/create") ? "My Group" : 
+            pathName.includes("/groups/create") ? "My Groups" : 
             pathName.includes("/groups/join") ? "My Wishlists":
-            pathName.includes("/groups") ? "My Group" : 
-            "My Group"}
+            pathName.includes("/groups") ? "My Groups" : 
+            "My Groups"}
          </Link>
         {modal && (
         <div className="fixed top-0 left-0 w-screen h-screen bg-black opacity-50 flex justify-center items-center">
