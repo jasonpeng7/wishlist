@@ -43,6 +43,7 @@ export default function NavBar () {
             pathName === "/groups/join" ? "/wishlists" : 
             pathName === "/wishlists" ? "/dashboard" : 
             pathName.includes("/groups") && pathName.includes("/manage") ? "/dashboard" :
+            pathName.includes("/groups") && pathName.includes("/wishlists") ? "/dashboard" :
             pathName.match(/^\/groups\/[\w-]+$/) ? "/dashboard" :
             pathName === "/groups" ? "/dashboard" : 
             "/wishlists"}             
