@@ -150,7 +150,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                     </div>
                                 ) : (
                                     <>  
-                                        <h1 className="font-extrabold text-primary_text">Group: {item.group.name}</h1>
+                                        <h1 className="font-extrabold text-primary_text">Group: <span className="">{item.group.name}</span></h1>
                                         <h3 className="font-bold text-primary_text min-h-14">{item.item_name} | {item.store}</h3>
                                         <p className="text-sm text-gray-500">
                                             Added on: {new Date(item.created_at).toLocaleDateString()}
