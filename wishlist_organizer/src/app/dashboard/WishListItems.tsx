@@ -3,10 +3,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../utils/supabase";
 import { Pencil, Trash2, X, Check } from "lucide-react"; // Using lucide-react for icons
+import { group } from "console";
 
 type WishlistItem = {
     id: string;
     item_name: string;
+    group: {
+        id: string;
+        name: string;
+    }
     description: string;
     link: string | null;
     store: string;
@@ -27,7 +32,10 @@ export default function WishlistItems({ userId }: { userId: string}) {
     const fetchItems = async() => {
         const {data, error} = await supabase
         .from('wishlists')
-        .select('*')
+        .select(`
+            *,
+            group: groups(id, name)
+        `)
         .eq('user_id', userId)
         .order('created_at', {ascending: false});
 
@@ -141,7 +149,8 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                         </div>
                                     </div>
                                 ) : (
-                                    <>
+                                    <>  
+                                        <h1 className="font-extrabold text-primary_text">{item.group.name}</h1>
                                         <h3 className="font-bold text-primary_text">{item.item_name} | {item.store}</h3>
                                         <p className="text-sm text-gray-500">
                                             Added on: {new Date(item.created_at).toLocaleDateString()}
