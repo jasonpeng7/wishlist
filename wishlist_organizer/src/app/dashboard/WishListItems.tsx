@@ -93,13 +93,13 @@ export default function WishlistItems({ userId }: { userId: string}) {
     return (
         <>
             {items.length === 0 ? (
-                <div className="flex justify-center items-center w-full h-32">
+                <div className="flex justify-center items-center w-full h-36">
                     <p className="text-primary_text text-lg font-raleway">No items yet</p>
                 </div>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mx-[50px] md:mx-[100px] mb-[100px] font-raleway">
                     {items.map((item) => (
-                        <div key={item.id} className="p-4 rounded-md bg-dark_gray h-32 overflow-y-auto relative">
+                        <div key={item.id} className="p-4 rounded-md bg-dark_gray h-36 overflow-y-auto relative">
                             <div className="space-y-2">
                                 {editingId === item.id ? (
                                     <div className="flex flex-col gap-2 relative pb-[25px]">
@@ -138,7 +138,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                         />
 
                                         <div className="absolute top-0 right-2">
-                                            <div className="gap-2">
+                                            <div className="flex gap-2">
                                                 <button onClick={handleSave} className="text-green-500">
                                                     <Check size={16} />
                                                 </button>
@@ -150,8 +150,8 @@ export default function WishlistItems({ userId }: { userId: string}) {
                                     </div>
                                 ) : (
                                     <>  
-                                        <h1 className="font-extrabold text-primary_text">{item.group.name}</h1>
-                                        <h3 className="font-bold text-primary_text">{item.item_name} | {item.store}</h3>
+                                        <h1 className="font-extrabold text-primary_text">Group: {item.group.name}</h1>
+                                        <h3 className="font-bold text-primary_text min-h-14">{item.item_name} | {item.store}</h3>
                                         <p className="text-sm text-gray-500">
                                             Added on: {new Date(item.created_at).toLocaleDateString()}
                                         </p>
