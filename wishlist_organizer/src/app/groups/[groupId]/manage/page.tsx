@@ -35,24 +35,27 @@ export default async function ManageGroupPage({
     redirect("/sign-in");
   }
 
-  // fetch group details with invite_code
-  const { data: group } = (await supabase
+  const groupPromise = supabase
     .from("groups")
     .select("*")
     .eq("id", params.groupId)
-    .single()) as { data: GroupDetails | null };
+    .single();
+
+  const membersPromise = supabase
+    .from("user_groups")
+    .select("user_id, role")
+    .eq("group_id", params.groupId);
+
+  const [{ data: group }, { data: members }] = (await Promise.all([
+    groupPromise,
+    membersPromise,
+  ])) as [{ data: GroupDetails | null }, { data: UserGroup[] | null }];
 
   if (!group || group.creator_id !== user.id) {
     redirect("/groups");
   }
 
-  // fetch group members from user_groups
-  const { data: members } = (await supabase
-    .from("user_groups")
-    .select("user_id, role")
-    .eq("group_id", params.groupId)) as { data: UserGroup[] | null };
-
-  // Fetch user details from Clerk
+  // Fetch user details for members
   let memberDetails: MemberDetail[] = [];
   if (members && members.length > 0) {
     const memberUsers = await Promise.all(
