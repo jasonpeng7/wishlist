@@ -21,7 +21,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 // Function to clear Supabase cache
 export const clearSupabaseCache = () => {
-  // @ts-ignore - accessing internal cache
+  // @ts-expect-error - accessing internal cache
   if (supabase.channel) {
     supabase.removeAllChannels()
   }
