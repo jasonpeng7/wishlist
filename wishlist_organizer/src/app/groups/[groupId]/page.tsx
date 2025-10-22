@@ -67,34 +67,40 @@ export default async function ViewGroupPage({
     redirect("/groups");
   }
 
-  // Fetch user details from Clerk if we have members
-  let memberDetails: MemberDetail[] = [];
-  if (members && members.length > 0) {
-    memberDetails = await Promise.all(
-      members.map(async (member) => {
-        const { data: user } = await supabase
-          .from("users")
-          .select("username")
-          .eq("id", member.user_id)
-          .single();
-        return {
-          ...member,
-          user: {
-            name: user?.username || "Unknown User",
-          },
-        };
-      })
-    );
-  }
+  // --- Fetch member details and creator name in parallel ---
+
+  // Fetch user details for members
+  const memberDetailsPromise =
+    members && members.length > 0
+      ? Promise.all(
+          members.map(async (member) => {
+            const { data: user } = await supabase
+              .from("users")
+              .select("username")
+              .eq("id", member.user_id)
+              .single();
+            return {
+              ...member,
+              user: {
+                name: user?.username || "Unknown User",
+              },
+            };
+          })
+        )
+      : Promise.resolve([]); // Resolve with empty array if no members
 
   // fetch admin details
-  const { data: creator } = await supabase
+  const creatorNamePromise = supabase
     .from("users")
     .select("username")
     .eq("id", group.creator_id)
-    .single();
+    .single()
+    .then(({ data }) => data?.username);
 
-  const creatorName = creator?.username;
+  const [memberDetails, creatorName] = (await Promise.all([
+    memberDetailsPromise,
+    creatorNamePromise,
+  ])) as [MemberDetail[], string];
 
   return (
     <div className="font-raleway">
