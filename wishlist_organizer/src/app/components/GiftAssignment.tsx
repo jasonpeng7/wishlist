@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { supabase } from '../../../utils/supabase';
+import { useState } from "react";
+import { supabase } from "../../../utils/supabase";
 
 type GiftAssignmentProps = {
   itemId: string;
@@ -9,19 +9,24 @@ type GiftAssignmentProps = {
   creatorId: string;
   currentAssignment?: {
     assigned_to: string;
-    status: 'will_get' | null;
+    status: "will_get" | null;
   };
   assignedUsername?: string;
-}
+};
 
-export default function GiftAssignment({ 
-  itemId, 
-  userId, 
+export default function GiftAssignment({
+  itemId,
+  userId,
   creatorId,
   currentAssignment,
-  assignedUsername 
+  assignedUsername,
 }: GiftAssignmentProps) {
-  const [isChecked, setIsChecked] = useState(currentAssignment?.status === 'will_get');
+  console.log(`Rendering GiftAssignment for item ${itemId}:`, {
+    currentAssignment,
+  });
+  const [isChecked, setIsChecked] = useState(
+    currentAssignment?.status === "will_get"
+  );
   const [isUpdating, setIsUpdating] = useState(false);
 
   // If current user is the creator, don't show the component
@@ -36,39 +41,36 @@ export default function GiftAssignment({
 
     try {
       setIsUpdating(true);
-      
+
       if (!isChecked) {
         // Check if anyone has claimed item
-        const {data: existingAssignments} = await supabase
-            .from('gift_assignments')
-            .select('*')
-            .eq('wishlist_item_id', itemId)
-            .eq('status', 'will_get');
-        
-        if(existingAssignments && existingAssignments.length > 0) {
-            alert('Someone else has already claimed this item!');
-            window.location.reload();
-            return;
+        const { data: existingAssignments } = await supabase
+          .from("gift_assignments")
+          .select("*")
+          .eq("wishlist_item_id", itemId)
+          .eq("status", "will_get");
+
+        if (existingAssignments && existingAssignments.length > 0) {
+          alert("Someone else has already claimed this item!");
+          return;
         }
         // Add new assignment
-        const { error } = await supabase
-          .from('gift_assignments')
-          .upsert({
-            wishlist_item_id: itemId,
-            assigned_to: userId,
-            status: 'will_get'
-          });
+        const { error } = await supabase.from("gift_assignments").upsert({
+          wishlist_item_id: itemId,
+          assigned_to: userId,
+          status: "will_get",
+        });
 
         if (error) throw error;
       } else {
         // Remove assignment
         const { error } = await supabase
-          .from('gift_assignments')
+          .from("gift_assignments")
           .delete()
-          .match({ 
+          .match({
             wishlist_item_id: itemId,
-            assigned_to: userId, 
-            status: 'will_get'
+            assigned_to: userId,
+            status: "will_get",
           });
 
         if (error) throw error;
@@ -77,7 +79,7 @@ export default function GiftAssignment({
       setIsChecked(!isChecked);
       window.location.reload();
     } catch (error) {
-      console.error('Error updating gift assignment:', error);
+      console.error("Error updating gift assignment:", error);
     } finally {
       setIsUpdating(false);
     }
@@ -93,7 +95,11 @@ export default function GiftAssignment({
   }
 
   // If someone else marked it, show who claimed it (but not to the creator)
-  if (currentAssignment?.status === 'will_get' && currentAssignment?.assigned_to !== userId && assignedUsername) {
+  if (
+    currentAssignment?.status === "will_get" &&
+    currentAssignment?.assigned_to !== userId &&
+    assignedUsername
+  ) {
     return (
       <div className="font-raleway text-sm font-medium text-green-600">
         {assignedUsername} is getting this item!
