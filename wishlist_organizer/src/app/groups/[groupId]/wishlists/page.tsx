@@ -85,12 +85,33 @@ export default async function GroupWishlistsPage({
     // first fetch all wishlist items for group
     // then in a SEPARATE query, fetch all the gift assignments for the items
     // finally, pass fresh assignment data to GiftComponent param
-    const { data: items, error: itemsError } = await supabase
+    const itemsPromise = supabase
       .from("wishlists")
       .select(`*`)
       .in("user_id", memberIds)
       .eq("group_id", groupId)
       .order("created_at", { ascending: false });
+
+    const usernamesPromise = Promise.all(
+      memberIds.map(async (id) => {
+        const { data: user } = await supabase
+          .from("users")
+          .select("username")
+          .eq("id", id)
+          .single();
+        return { id, username: user?.username || "Unknown User" };
+      })
+    ).then((users) =>
+      users.reduce((acc, user) => {
+        acc[user.id] = user.username;
+        return acc;
+      }, {} as { [key: string]: string })
+    );
+
+    const [{ data: items, error: itemsError }, usernames] = await Promise.all([
+      itemsPromise,
+      usernamesPromise,
+    ]);
 
     if (itemsError) throw itemsError;
     if (!items) {
@@ -110,22 +131,7 @@ export default async function GroupWishlistsPage({
       assignmentsData?.map((a) => [a.wishlist_item_id, a])
     );
 
-    // Get usernames for group members
-    const usernames = await Promise.all(
-      memberIds.map(async (id) => {
-        const { data: user } = await supabase
-          .from("users")
-          .select("username")
-          .eq("id", id)
-          .single();
-        return { id, username: user?.username || "Unknown User" };
-      })
-    ).then((users) =>
-      users.reduce((acc, user) => {
-        acc[user.id] = user.username;
-        return acc;
-      }, {} as { [key: string]: string })
-    );
+    // Get usernames for group members - This is now done in parallel above
 
     // Group items by user_id
     const userWishlists = items.reduce(
