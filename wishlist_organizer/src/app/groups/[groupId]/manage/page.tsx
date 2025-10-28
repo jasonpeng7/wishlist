@@ -25,11 +25,12 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-export default async function ManageGroupPage({
-  params,
-}: {
+interface Props {
   params: { groupId: string };
-}) {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default async function ManageGroupPage({ params }: Props) {
   const user = await getSessionUser();
 
   if (!user) {
