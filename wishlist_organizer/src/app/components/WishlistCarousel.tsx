@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import useEmblaCarousel, { EmblaOptionsType, EmblaCarouselType } from 'embla-carousel-react'
+import useEmblaCarousel from 'embla-carousel-react'
+import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 
