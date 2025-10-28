@@ -8,6 +8,8 @@ import GiftAssignment from "../components/GiftAssignment";
 import CopyLinkButton from "../components/CopyLinkButton";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 
+export const dynamic = "force-dynamic";
+
 type WishlistItem = {
   id: string;
   user_id: string;
@@ -101,15 +103,7 @@ export default async function WishlistsPage() {
         // Get wishlists for group members
         const { data: items } = await supabase
           .from("wishlists")
-          .select(
-            `
-          *,
-          gift_assignments (
-            assigned_to,
-            status
-          )
-        `
-          )
+          .select(`*, gift_assignments(*)`)
           .in("user_id", memberIds)
           .eq("group_id", userGroup.group_id)
           .order("created_at", { ascending: false });

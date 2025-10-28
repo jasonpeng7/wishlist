@@ -1,3 +1,5 @@
+// session handling w/ supabase
+
 import { getSessionUser } from "../../../../../utils/auth";
 import { NextResponse } from "next/server";
 

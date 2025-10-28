@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "../../../utils/supabase";
+import { useRouter } from "next/navigation";
 
 type GiftAssignmentProps = {
   itemId: string;
@@ -21,6 +22,7 @@ export default function GiftAssignment({
   currentAssignment,
   assignedUsername,
 }: GiftAssignmentProps) {
+  const router = useRouter();
   console.log(`Rendering GiftAssignment for item ${itemId}:`, {
     currentAssignment,
   });
@@ -77,7 +79,7 @@ export default function GiftAssignment({
       }
 
       setIsChecked(!isChecked);
-      window.location.reload();
+      router.refresh();
     } catch (error) {
       console.error("Error updating gift assignment:", error);
     } finally {

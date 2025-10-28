@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       .single();
 
     if (findError && findError.code !== "PGRST116") {
-      // PGRST116 means no rows found, if user not found throw err
+      // PGRST116 means no rows found so if user not found throw err
       console.error("Error finding user:", findError);
       return NextResponse.json(
         { error: "Internal server error" },

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function POST() {
+  // clear session token from cookies
   try {
     const response = NextResponse.json({ message: "Signed out successfully" });
     response.cookies.delete("token");

@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Find the user
+    // locate user in db
     const { data: user, error: findError } = await supabase
       .from("users")
       .select("id, username, password_hash")
@@ -38,13 +38,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // create session token 
+    // create session token if user and password are valid
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
 
+    // jwt headers for the response
     const response = NextResponse.json({ message: "Signed in successfully" });
     response.cookies.set("token", token, {
       httpOnly: true,

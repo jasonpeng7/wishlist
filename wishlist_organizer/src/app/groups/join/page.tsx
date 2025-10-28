@@ -29,7 +29,7 @@ export default async function JoinGroupPage() {
       return;
     }
 
-    // Find group with matching invite code
+    // find the group with matching unique invite code
     const { data: group } = await supabase
       .from("groups")
       .select("id")

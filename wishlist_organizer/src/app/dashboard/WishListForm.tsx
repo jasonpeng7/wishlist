@@ -66,7 +66,6 @@ export default function WishlistForm({ userId }: { userId: string }) {
     setError(null);
     setSuccess(false);
 
-    // Validate group selection
     if (!selectedGroupId) {
       setError("Please select a group for this wishlist item");
       return;
