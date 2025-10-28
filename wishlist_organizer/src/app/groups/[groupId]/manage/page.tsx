@@ -26,36 +26,28 @@ interface MemberDetail extends UserGroup {
 }
 
 type Props = {
-  params: { groupId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ groupId: string }>;
 };
 
+
 export default async function ManageGroupPage({ params }: Props) {
+  const { groupId } = await params; // <-- await the promise
   const user = await getSessionUser();
+  if (!user) redirect("/sign-in");
 
-  if (!user) {
-    redirect("/sign-in");
-  }
-
-  const groupPromise = supabase
-    .from("groups")
-    .select("*")
-    .eq("id", params.groupId)
-    .single();
-
+  const groupPromise = supabase.from("groups").select("*").eq("id", groupId).single();
   const membersPromise = supabase
     .from("user_groups")
     .select("user_id, role")
-    .eq("group_id", params.groupId);
+    .eq("group_id", groupId);
 
   const [{ data: group }, { data: members }] = (await Promise.all([
     groupPromise,
     membersPromise,
   ])) as [{ data: GroupDetails | null }, { data: UserGroup[] | null }];
 
-  if (!group || group.creator_id !== user.id) {
-    redirect("/groups");
-  }
+  if (!group || group.creator_id !== user.id) redirect("/groups");
+
 
   // Fetch user details for members
   let memberDetails: MemberDetail[] = [];
