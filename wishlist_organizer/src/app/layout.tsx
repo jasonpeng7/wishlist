@@ -1,5 +1,14 @@
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { Raleway } from "next/font/google";
+import { Metadata } from "next";
+
+const raleway = Raleway({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Wishlist Organizer",
+  description: "Wishlist Organizer by Jason Peng",
+};
 
 export default function RootLayout({
   children,
