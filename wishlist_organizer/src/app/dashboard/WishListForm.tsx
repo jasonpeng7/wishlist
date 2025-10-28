@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "../../../utils/supabase";
+import Image from "next/image";
 
 interface Group {
   id: string;
@@ -17,6 +18,9 @@ export default function WishlistForm({ userId }: { userId: string }) {
   const [groups, setGroups] = useState<Group[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   // fetch all of users groups
   useEffect(() => {
@@ -61,6 +65,17 @@ export default function WishlistForm({ userId }: { userId: string }) {
     }
   }, [userId]);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      setImageFile(null);
+      setImagePreview(null);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -71,8 +86,41 @@ export default function WishlistForm({ userId }: { userId: string }) {
       return;
     }
 
+    let imageUrl: string | null = null;
+    
+    // Step 1: Upload image if one is selected
+    if (imageFile) {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append('file', imageFile);
+
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to upload image.');
+        }
+        
+        imageUrl = data.url;
+
+      } catch (uploadError) {
+        const message = uploadError instanceof Error ? uploadError.message : "An error occurred during upload.";
+        setError(message);
+        setUploading(false);
+        return;
+      } finally {
+        setUploading(false);
+      }
+    }
+
+    // Step 2: Insert item into the wishlists table
     try {
-      const { data, error } = await supabase
+      const { data, error: insertError } = await supabase
         .from("wishlists")
         .insert([
           {
@@ -82,13 +130,14 @@ export default function WishlistForm({ userId }: { userId: string }) {
             store: storeName || null,
             description: description || null,
             link: link || null,
+            image_url: imageUrl,
           },
         ])
         .select();
 
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
+      if (insertError) {
+        console.error("Supabase error:", insertError);
+        throw insertError;
       }
 
       // Clear form
@@ -97,6 +146,8 @@ export default function WishlistForm({ userId }: { userId: string }) {
       setStoreName("");
       setLink("");
       setSelectedGroupId("");
+      setImageFile(null);
+      setImagePreview(null);
       setSuccess(true);
 
       console.log("Item added successfully:", data);
@@ -190,11 +241,35 @@ export default function WishlistForm({ userId }: { userId: string }) {
           />
         </div>
 
+        <div className="font-raleway">
+          <label className="text-primary_text block mb-2">Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full text-sm text-primary_text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-bone file:text-dark_gray hover:file:bg-opacity-80"
+          />
+        </div>
+        
+        {imagePreview && (
+          <div className="mt-4">
+            <p className="text-sm text-primary_text mb-2">Image Preview:</p>
+            <Image
+              src={imagePreview}
+              alt="Image preview"
+              width={100}
+              height={100}
+              className="rounded-lg object-cover"
+            />
+          </div>
+        )}
+
         <button
           type="submit"
-          className="font-raleway w-full bg-washed_gray text-white p-2 rounded transition-transform transform active:scale-90"
+          className="font-raleway w-full bg-washed_gray text-white p-2 rounded transition-transform transform active:scale-90 disabled:opacity-50"
+          disabled={uploading}
         >
-          Add Item
+          {uploading ? 'Uploading...' : 'Add Item'}
         </button>
       </form>
     </div>

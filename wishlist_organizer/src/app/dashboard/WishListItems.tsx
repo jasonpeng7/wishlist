@@ -97,7 +97,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
                     <p className="text-primary_text text-lg font-raleway">No items yet</p>
                 </div>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mx-[50px] md:mx-[100px] mb-[100px] font-raleway">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mx-[25px] sm:mx-0 mb-[100px] font-raleway">
                     {items.map((item) => (
                         <div key={item.id} className="p-4 rounded-md bg-dark_gray h-36 overflow-y-auto relative">
                             <div className="space-y-2">
