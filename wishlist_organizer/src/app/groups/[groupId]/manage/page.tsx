@@ -5,6 +5,7 @@ import DeleteGroupButton from "@/app/components/DeleteGroup";
 import Link from "next/link";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
 import NavBar from "@/app/components/navbar";
+import { JSX } from "react";
 
 interface GroupDetails {
   id: string;
@@ -25,11 +26,11 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-export default async function ManageGroupPage({
-  params,
-}: {
-  params: { [key: string]: string };
-}) {
+interface PageProps {
+  params: { groupId: string };
+}
+
+export default async function ManageGroupPage({ params }: PageProps): Promise<JSX.Element> {
   const user = await getSessionUser();
 
   if (!user) {
