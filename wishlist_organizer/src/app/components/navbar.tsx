@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Home, Users, Gift, LogOut } from "lucide-react";
 
 export default function NavBar() {
   const pathName = usePathname();
@@ -17,8 +18,15 @@ export default function NavBar() {
     }
   };
 
+  const isDashboard = pathName === "/dashboard";
+  const isGroups = pathName.startsWith("/groups");
+  const isWishlists = pathName.startsWith("/wishlists");
+
   return (
-    <nav className="fixed w-full flex rounded-full z-50">
+    <>
+        <nav className="fixed
+     w-full max-w-[1000px] flex z-50 bg-white/40 items-center h-16 glass
+     justify-center justify-between p-6">
       <div className="flex-shrink-0">
         <Link
           href="/dashboard"
@@ -33,7 +41,7 @@ export default function NavBar() {
           ></Image>
         </Link>
       </div>
-      <div className="flex gap-x-[25px] items-center font-raleway font-medium">
+      <div className="hidden sm:flex gap-x-[25px] items-center font-raleway font-medium">
         <Link
           href={pathName === "/dashboard" ? "/groups" : "/dashboard"}
           className="bg-bone px-4 py-2 rounded-full 
@@ -43,14 +51,44 @@ export default function NavBar() {
           {pathName === "/dashboard" ? "My Groups & Wishlists" : "My Dashboard"}
         </Link>
       </div>
-      <button
-        onClick={handleSignOut}
-        className="bg-red-500 text-white px-4 py-2 rounded-full 
-                   transition-transform transform active:scale-90 
-                   text-xs flex items-center h-[32px]"
-      >
-        Sign Out
-      </button>
+
     </nav>
+
+
+      {/* Bottom Navbar for Mobile */}
+      <nav className="fixed bottom-0 left-0 right-0 h-16 glass sm:hidden z-50">
+        <div className="flex justify-around items-center h-full">
+          <Link href="/dashboard" className="flex flex-col items-center">
+            <Home
+              className={isDashboard ? "text-blue-500" : "text-white/70"}
+            />
+            <span
+              className={`text-xs ${
+                isDashboard ? "text-blue-500" : "text-white/70"
+              }`}
+            >
+              Home
+            </span>
+          </Link>
+          <Link href="/groups" className="flex flex-col items-center">
+            <Users className={isGroups ? "text-blue-500" : "text-white/70"} />
+            <span
+              className={`text-xs ${
+                isGroups ? "text-blue-500" : "text-white/70"
+              }`}
+            >
+              Groups
+            </span>
+          </Link>
+          <button
+            onClick={handleSignOut}
+            className="flex flex-col items-center transition-transform transform active:scale-90"
+          >
+            <LogOut className="text-red-500" />
+            <span className="text-xs text-red-500">Sign Out</span>
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }
