@@ -26,11 +26,12 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-interface PageProps {
+type Props = {
   params: { groupId: string };
-}
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export default async function ManageGroupPage({ params }: PageProps): Promise<JSX.Element> {
+export default async function ManageGroupPage({ params }: Props) {
   const user = await getSessionUser();
 
   if (!user) {
