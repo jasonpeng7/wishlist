@@ -1,30 +1,11 @@
 import { supabase } from "../../../../../utils/supabase";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import GiftAssignment from "../../../components/GiftAssignment";
-import CopyLinkButton from "../../../components/CopyLinkButton";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
 import WishlistCarousel from "../../../components/WishlistCarousel";
 import NavBar from "@/app/components/navbar";
 
 export const dynamic = "force-dynamic";
-
-type WishlistItem = {
-  id: string;
-  user_id: string;
-  group_id: string;
-  item_name: string;
-  description: string | null;
-  store: string | null;
-  created_at: string;
-  link: string | null;
-  image_url?: string | null;
-  price?: number | null;
-  gift_assignments?: {
-    assigned_to: string;
-    status: "will_get" | null;
-  }[];
-};
 
 export default async function GroupWishlistsPage({
   params,

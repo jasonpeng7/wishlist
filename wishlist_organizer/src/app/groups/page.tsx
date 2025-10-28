@@ -8,24 +8,6 @@ interface UserGroup {
   user_id: string;
 }
 
-interface GroupDetails {
-  id: string;
-  name: string;
-  creator_id: string;
-  created_at: string;
-  user_groups: UserGroup[];
-}
-
-interface MemberGroupResponse {
-  group: {
-    id: string;
-    name: string;
-    creator_id: string;
-    created_at: string;
-    user_groups: UserGroup[];
-  };
-}
-
 export default async function GroupsPage() {
   const user = await getSessionUser();
 

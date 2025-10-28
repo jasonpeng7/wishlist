@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import useEmblaCarousel, { EmblaOptionsType, EmblaCarouselType } from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import Link from 'next/link'
 import Image from 'next/image'
 
 type WishlistItem = {
@@ -102,7 +101,6 @@ const WishlistCarousel: React.FC<PropType> = ({ items, shelfTitle, options }) =>
   }
 
   const startItem = selectedIndex + 1;
-  const endItem = Math.min(selectedIndex + visibleSlides, items.length);
 
   return (
     <div

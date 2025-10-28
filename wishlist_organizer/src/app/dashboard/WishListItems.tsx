@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../../../utils/supabase";
 import { Pencil, Trash2, X, Check } from "lucide-react"; // Using lucide-react for icons
-import { group } from "console";
 
 type WishlistItem = {
     id: string;
@@ -25,11 +24,7 @@ export default function WishlistItems({ userId }: { userId: string}) {
     const [editedStore, setEditedStore] = useState("");
     const [editedDescription, setEditedDescription] = useState("");
 
-    useEffect(() => {
-        fetchItems();
-    }, [userId]);
-
-    const fetchItems = async() => {
+    const fetchItems = useCallback(async() => {
         const {data, error} = await supabase
         .from('wishlists')
         .select(`
@@ -45,7 +40,11 @@ export default function WishlistItems({ userId }: { userId: string}) {
         }
 
         setItems(data || []);
-    };
+    }, [userId]);
+
+    useEffect(() => {
+        fetchItems();
+    }, [userId, fetchItems]);
 
     const handleEdit = (item: WishlistItem) => {
         setEditingId(item.id);

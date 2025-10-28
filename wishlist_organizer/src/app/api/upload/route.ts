@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
       const { payload } = await jose.jwtVerify<UserPayload>(token, secret);
       userId = payload.userId;
-    } catch (err) {
+    } catch {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
 

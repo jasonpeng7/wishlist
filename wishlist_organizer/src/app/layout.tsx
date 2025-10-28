@@ -1,7 +1,7 @@
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 import { Raleway } from "next/font/google";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 const raleway = Raleway({ subsets: ["latin"] });
 
@@ -29,7 +29,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-slate_gray">
+      <body className={`${raleway.className} bg-slate_gray`}>
         <main>
           {children}
           <Analytics />

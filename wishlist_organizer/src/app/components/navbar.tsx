@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Users, Gift, LogOut } from "lucide-react";
+import { Home, Users, LogOut } from "lucide-react";
 
 export default function NavBar() {
   const pathName = usePathname();
@@ -20,7 +20,6 @@ export default function NavBar() {
 
   const isDashboard = pathName === "/dashboard";
   const isGroups = pathName.startsWith("/groups");
-  const isWishlists = pathName.startsWith("/wishlists");
 
   return (
     <>
@@ -78,6 +77,16 @@ export default function NavBar() {
               }`}
             >
               Groups
+            </span>
+          </Link>
+          <Link href="/wishlists" className="flex flex-col items-center">
+            <Users className={isGroups ? "text-blue-500" : "text-gray-500"} />
+            <span
+              className={`text-xs ${
+                isGroups ? "text-blue-500" : "text-gray-500"
+              }`}
+            >
+              Wishlists
             </span>
           </Link>
           <button
