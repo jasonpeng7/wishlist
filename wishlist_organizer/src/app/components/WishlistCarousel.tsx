@@ -31,28 +31,14 @@ const WishlistCarousel: React.FC<PropType> = ({ items, shelfTitle, options }) =>
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-  const [visibleSlides, setVisibleSlides] = useState(1);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
   
-  const updateVisibleSlides = (api: EmblaCarouselType) => {
-    if (!api) return;
-    const engine = api.internalEngine();
-    const slideCount = api.slideNodes().length;
-    if (engine.scrollBody.size === 0 || slideCount === 0) {
-      setVisibleSlides(1);
-      return;
-    }
-    const slidesInView = api.slidesInView(true);
-    setVisibleSlides(slidesInView.length);
-  };
-
   const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
     setSelectedIndex(emblaApi.selectedScrollSnap());
     setPrevBtnDisabled(!emblaApi.canScrollPrev());
     setNextBtnDisabled(!emblaApi.canScrollNext());
-    updateVisibleSlides(emblaApi);
   }, []);
 
   useEffect(() => {
@@ -64,7 +50,6 @@ const WishlistCarousel: React.FC<PropType> = ({ items, shelfTitle, options }) =>
     
     const handleResize = () => {
       emblaApi.reInit();
-      updateVisibleSlides(emblaApi);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);

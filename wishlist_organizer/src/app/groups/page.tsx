@@ -4,10 +4,6 @@ import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 import { redirect } from "next/navigation";
 
-interface UserGroup {
-  user_id: string;
-}
-
 export default async function GroupsPage() {
   const user = await getSessionUser();
 

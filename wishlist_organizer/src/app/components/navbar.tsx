@@ -79,16 +79,6 @@ export default function NavBar() {
               Groups
             </span>
           </Link>
-          <Link href="/wishlists" className="flex flex-col items-center">
-            <Users className={isGroups ? "text-blue-500" : "text-gray-500"} />
-            <span
-              className={`text-xs ${
-                isGroups ? "text-blue-500" : "text-gray-500"
-              }`}
-            >
-              Wishlists
-            </span>
-          </Link>
           <button
             onClick={handleSignOut}
             className="flex flex-col items-center transition-transform transform active:scale-90"

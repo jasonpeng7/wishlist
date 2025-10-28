@@ -3,7 +3,10 @@ import { Analytics } from "@vercel/analytics/react";
 import { Raleway } from "next/font/google";
 import type { Metadata } from "next";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const raleway = Raleway({ 
+  subsets: ["latin"],
+  variable: '--font-raleway',
+});
 
 export const metadata: Metadata = {
   title: "Wishlist Organizer",
@@ -29,7 +32,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`${raleway.className} bg-slate_gray`}>
+      <body className={`${raleway.variable} font-sans bg-slate_gray`}>
         <main>
           {children}
           <Analytics />

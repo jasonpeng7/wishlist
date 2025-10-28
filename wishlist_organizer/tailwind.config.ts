@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        raleway: ['Raleway', 'sans-serif'],
+        sans: ['var(--font-raleway)', 'sans-serif'],
       },
       colors: {
         background: "var(--background)",
