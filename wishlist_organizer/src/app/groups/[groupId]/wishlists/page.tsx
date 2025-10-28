@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import GiftAssignment from "../../../components/GiftAssignment";
 import CopyLinkButton from "../../../components/CopyLinkButton";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
+import WishlistCarousel from "../../../components/WishlistCarousel";
+import NavBar from "@/app/components/navbar";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,8 @@ type WishlistItem = {
   store: string | null;
   created_at: string;
   link: string | null;
+  image_url?: string | null;
+  price?: number | null;
   gift_assignments?: {
     assigned_to: string;
     status: "will_get" | null;
@@ -119,34 +123,32 @@ export default async function GroupWishlistsPage({
       return <p>No wishlist items found for this group.</p>;
     }
 
-    // Get all assignments for the fetched items in a separate query
-    const itemIds = items.map((item) => item.id);
-    const { data: assignmentsData } = await supabase
-      .from("gift_assignments")
-      .select("wishlist_item_id, assigned_to, status")
-      .in("wishlist_item_id", itemIds);
+    // A fresh approach to preparing data for the carousel
+    const usersWithWishlists = memberIds
+      .map(id => {
+        const userItems = items.filter(item => item.user_id === id);
+        // Map to the structure expected by WishlistCarousel
+        const carouselItems = userItems.map(item => ({
+          id: item.id,
+          name: item.item_name,
+          description: item.description,
+          link: item.link,
+          image_url: item.image_url, // Pass the image_url to the component
+          price: item.price,
+        }));
 
-    // Create a Map for quick lookup of assignments by item ID
-    const assignmentsMap = new Map(
-      assignmentsData?.map((a) => [a.wishlist_item_id, a])
-    );
+        return {
+          id,
+          username: usernames[id],
+          items: carouselItems,
+        };
+      })
+      .filter(user => user.items.length > 0);
 
-    // Get usernames for group members - This is now done in parallel above
-
-    // Group items by user_id
-    const userWishlists = items.reduce(
-      (acc: { [key: string]: WishlistItem[] }, item) => {
-        if (!acc[item.user_id]) {
-          acc[item.user_id] = [];
-        }
-        acc[item.user_id].push(item);
-        return acc;
-      },
-      {}
-    );
 
     return (
-      <div className="font-raleway">
+      <div className="font-raleway pb-[100px]">
+        <NavBar />
         <div className="pt-[100px] flex flex-col">
           <div
             className="flex flex-row justify-center items-center
@@ -170,84 +172,22 @@ export default async function GroupWishlistsPage({
         </div>
 
         <div className="my-12">
-          {Object.keys(userWishlists || {}).length === 0 ? (
+          {usersWithWishlists.length === 0 ? (
             <div className="my-12 mx-8 md:mx-16">
               <p className="text-primary_text font-raleway text-center text-lg">
                 No wishlists for this group yet. Be the first to add one!
               </p>
             </div>
           ) : (
-            Object.entries(userWishlists || {}).map(([userId, userItems]) => (
-              <div key={userId} className="my-12 mx-8 md:mx-16">
-                <h3 className="text-2xl font-bold mb-4 capitalize text-primary_text font-raleway break-words">
-                  {usernames[userId]}&apos;s Wishlist
-                </h3>
+            usersWithWishlists.map(user => (
+              <div key={user.id} className="my-12 mx-8 md:mx-16">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-2xl font-bold capitalize text-primary_text font-raleway break-words">
+                    {user.username}&apos;s Wishlist
+                  </h3>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {userItems.map((item: WishlistItem) => {
-                    const assignment = assignmentsMap.get(item.id);
-                    const assignedUsername = assignment
-                      ? usernames[assignment.assigned_to]
-                      : undefined;
-
-                    return (
-                      <div
-                        key={item.id}
-                        className="font-raleway p-4 rounded-md bg-dark_gray h-[310px] text-primary_text"
-                      >
-                        <h3 className="font-bold text-lg bg-dark_gray break-words line-clamp-1 mb-[10px]">
-                          {item.item_name}
-                        </h3>
-
-                        <p className="bg-dark_gray break-words line-clamp-1 mb-[10px]">
-                          {item.store ? item.store : "\u00A0"}
-                        </p>
-
-                        {user.id !== userId ? (
-                          <div className="h-1/3 overflow-hidden relative bg-darker_gray text-primary_text rounded-md mb-[15px]">
-                            <div className="overflow-y-auto h-full p-[5px]">
-                              {item.description && (
-                                <p className="break-words whitespace-normal">
-                                  {item.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex items-center justify-center h-1/3">
-                            <p className="text-dark_gray italic bg-green-400 px-2 rounded-full">
-                              This is your item
-                            </p>
-                          </div>
-                        )}
-
-                        {item.link ? (
-                          <div className="mb-[15px] flex justify-center items-center">
-                            <CopyLinkButton link={item.link} />
-                          </div>
-                        ) : (
-                          <div className="mb-[15px] flex justify-center items-center">
-                            <p className="italic">No Link</p>
-                          </div>
-                        )}
-
-                        <div className="flex flex-col justify-start items-left gap-y-[10px]">
-                          <GiftAssignment
-                            itemId={item.id}
-                            userId={user.id}
-                            creatorId={item.user_id}
-                            currentAssignment={assignment}
-                            assignedUsername={assignedUsername}
-                          />
-                          <p className="text-sm mt-0">
-                            Added on:{" "}
-                            {new Date(item.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
+                <WishlistCarousel items={user.items} shelfTitle={`${user.username}'s Wishlist`} />
               </div>
             ))
           )}

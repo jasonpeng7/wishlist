@@ -51,14 +51,14 @@ export default async function GroupsPage() {
   ]);
 
   return (
-    <div className="">
+    <div className="max-w-[1000px] mx-auto bg-[#2E3944]]">
       <NavBar />
-      <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] md: mx-[50px] md:mx-[100px] text-primary_text">
+      <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] text-primary_text mx-[25px] sm:mx-0">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">My Groups</h1>
       </div>
 
       {/* Groups I Manage */}
-      <section className="mb-8 mx-[50px] md:mx-[100px] font-raleway text-primary_text">
+      <section className="mb-8 font-raleway text-primary_text mx-[25px] sm:mx-0">
         <h2 className="text-xl font-semibold mb-4">Groups I Manage</h2>
         <div className="flex mb-4 ">
           <Link
@@ -106,7 +106,7 @@ export default async function GroupsPage() {
       </section>
 
       {/* Groups I'm In */}
-      <section className="mx-[50px] md:mx-[100px] font-raleway mb-[50px]">
+      <section className="font-raleway mb-[50px] mx-[25px] sm:mx-0">
         <h2 className="text-xl font-semibold mb-4 text-primary_text">
           Groups I&apos;m In
         </h2>

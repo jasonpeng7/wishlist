@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { supabase } from "../../../../utils/supabase";
 import Link from "next/link";
 import { getSessionUser } from "../../../../../wishlist_organizer/utils/auth";
+import NavBar from "@/app/components/navbar";
 
 interface GroupDetails {
   id: string;
@@ -104,6 +105,7 @@ export default async function ViewGroupPage({
 
   return (
     <div className="font-raleway">
+      <NavBar />
       <div className="flex flex-col justify-center px-[50px] md:px-[100px]">
         <div className="flex justify-start">
           <h1 className="pt-[100px] text-2xl font-bold mb-6 text-primary_text">

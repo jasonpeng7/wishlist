@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import DeleteGroupButton from "@/app/components/DeleteGroup";
 import Link from "next/link";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
+import NavBar from "@/app/components/navbar";
 
 interface GroupDetails {
   id: string;
@@ -148,6 +149,7 @@ export default async function ManageGroupPage({
 
   return (
     <div className="font-raleway mb-[50px] relative z-10">
+      <NavBar />
       <div className="flex pt-[100px] px-[50px] md:px-[100px] mb-8 justify-center">
         <h1 className="text-2xl font-bold text-primary_text">
           Manage {group.name}
