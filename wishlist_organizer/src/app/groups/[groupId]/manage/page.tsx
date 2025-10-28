@@ -25,29 +25,36 @@ interface MemberDetail extends UserGroup {
   };
 }
 
-type Props = {
-  params: Promise<{ groupId: string }>;
-};
-
-
-export default async function ManageGroupPage({ params }: Props) {
-  const { groupId } = await params; // <-- await the promise
+export default async function ManageGroupPage({
+  params,
+}: {
+  params: { groupId: string };
+}) {
   const user = await getSessionUser();
-  if (!user) redirect("/sign-in");
 
-  const groupPromise = supabase.from("groups").select("*").eq("id", groupId).single();
+  if (!user) {
+    redirect("/sign-in");
+  }
+
+  const groupPromise = supabase
+    .from("groups")
+    .select("*")
+    .eq("id", params.groupId)
+    .single();
+
   const membersPromise = supabase
     .from("user_groups")
     .select("user_id, role")
-    .eq("group_id", groupId);
+    .eq("group_id", params.groupId);
 
   const [{ data: group }, { data: members }] = (await Promise.all([
     groupPromise,
     membersPromise,
   ])) as [{ data: GroupDetails | null }, { data: UserGroup[] | null }];
 
-  if (!group || group.creator_id !== user.id) redirect("/groups");
-
+  if (!group || group.creator_id !== user.id) {
+    redirect("/groups");
+  }
 
   // Fetch user details for members
   let memberDetails: MemberDetail[] = [];
@@ -141,8 +148,9 @@ export default async function ManageGroupPage({ params }: Props) {
   }
 
   return (
-    <div className="font-raleway mb-[50px] relative z-10">
+    <>
       <NavBar />
+    <div className="font-raleway mb-[50px] relative z-10">
       <div className="flex pt-[100px] px-[50px] md:px-[100px] mb-8 justify-center">
         <h1 className="text-2xl font-bold text-primary_text">
           Manage {group.name}
@@ -326,5 +334,6 @@ export default async function ManageGroupPage({ params }: Props) {
         </Link>
       </div>
     </div>
+    </>
   );
 }
