@@ -64,20 +64,20 @@ export default function NavBar() {
       <nav className="fixed bottom-0 left-0 right-0 h-16 glass sm:hidden z-50">
         <div className="flex justify-around items-center h-full">
           <Link href="/dashboard" className="flex flex-col items-center">
-            <Home className={isDashboard ? "text-blue-500" : "text-white/70"} />
+            <Home className={isDashboard ? "text-blue-500" : "text-black/70"} />
             <span
               className={`text-xs ${
-                isDashboard ? "text-blue-500" : "text-white/70"
+                isDashboard ? "text-blue-500" : "text-black/70"
               }`}
             >
               Home
             </span>
           </Link>
           <Link href="/groups" className="flex flex-col items-center">
-            <Users className={isGroups ? "text-blue-500" : "text-white/70"} />
+            <Users className={isGroups ? "text-blue-500" : "text-black/70"} />
             <span
               className={`text-xs ${
-                isGroups ? "text-blue-500" : "text-white/70"
+                isGroups ? "text-blue-500" : "text-black/70"
               }`}
             >
               Groups
