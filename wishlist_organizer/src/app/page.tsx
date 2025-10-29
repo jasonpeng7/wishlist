@@ -7,7 +7,7 @@ export default async function LandingPage() {
       {/* Background image */}
       <div className="absolute inset-0">
         <Image
-          src="/placeholder.webp"
+          src="/landing.webp"
           alt="Wishr background"
           fill
           className="object-cover"
