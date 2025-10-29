@@ -40,27 +40,77 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // 3. Upload the file to Supabase Storage
-    // Normalize filename: derive extension from content type; avoid relying on user filename
-    const mime = file.type || 'application/octet-stream';
-    const extFromMime = (() => {
-      const parts = mime.split('/');
-      const sub = parts[1] || '';
+    // 3. Prepare file for upload to Supabase Storage
+    // Infer mime from provided type or filename extension
+    const originalMime = file.type || '';
+    const nameExt = (() => {
+      const name = (file as File).name || '';
+      const idx = name.lastIndexOf('.');
+      return idx !== -1 ? name.slice(idx + 1).toLowerCase() : '';
+    })();
+    const inferMimeFromExt = (ext: string) => {
+      switch (ext) {
+        case 'jpg':
+        case 'jpeg':
+          return 'image/jpeg';
+        case 'png':
+          return 'image/png';
+        case 'webp':
+          return 'image/webp';
+        case 'gif':
+          return 'image/gif';
+        case 'heic':
+          return 'image/heic';
+        case 'heif':
+          return 'image/heif';
+        case 'avif':
+          return 'image/avif';
+        case 'tif':
+        case 'tiff':
+          return 'image/tiff';
+        case 'bmp':
+          return 'image/bmp';
+        default:
+          return '';
+      }
+    };
+    let mime = originalMime || inferMimeFromExt(nameExt) || 'application/octet-stream';
+
+    const extFromMime = (type: string) => {
+      const parts = type.split('/');
+      const sub = (parts[1] || '').toLowerCase();
       if (sub.startsWith('jpeg')) return 'jpeg';
       if (sub.startsWith('jpg')) return 'jpg';
       if (sub.startsWith('png')) return 'png';
       if (sub.startsWith('webp')) return 'webp';
       if (sub.startsWith('gif')) return 'gif';
+      if (sub.startsWith('heic')) return 'heic';
+      if (sub.startsWith('heif')) return 'heif';
+      if (sub.startsWith('avif')) return 'avif';
+      if (sub.startsWith('tiff')) return 'tiff';
+      if (sub.startsWith('bmp')) return 'bmp';
       return 'bin';
-    })();
-    const fileName = `${userId}/${uuidv4()}.${extFromMime}`;
+    };
+
+    let finalExt = extFromMime(mime);
+    // If extension is unknown but it's an image, try from filename, else default to jpg
+    if (finalExt === 'bin' && mime.startsWith('image/')) {
+      const fallbackExtMap = new Set(['jpeg','jpg','png','webp','gif','heic','heif','avif','tiff','bmp']);
+      finalExt = fallbackExtMap.has(nameExt) ? nameExt : 'jpg';
+      // align mime with chosen extension when possible
+      const mapped = inferMimeFromExt(finalExt);
+      if (mapped) mime = mapped;
+      else if (!mime || mime === 'application/octet-stream') mime = 'image/jpeg';
+    }
+
+    const fileName = `${userId}/${uuidv4()}.${finalExt}`;
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('wishlist-images')
       .upload(fileName, file, { contentType: mime });
 
     if (uploadError) {
       console.error('Supabase Storage Error:', uploadError);
-      return NextResponse.json({ error: 'Failed to upload to storage' }, { status: 500 });
+      return NextResponse.json({ error: uploadError.message || 'Failed to upload to storage' }, { status: 500 });
     }
 
     // 4. Get the public URL of the uploaded file
