@@ -58,7 +58,8 @@ const CreateGroupPage: React.FC = () => {
 
       if (memberError) throw memberError;
 
-      router.push("/groups");
+      // redirect to manage page for the created group
+      router.push(`/groups/${group.id}/manage`);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -73,11 +74,11 @@ const CreateGroupPage: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="christmas-stripes">
       <NavBar />
-      <div className="max-w-lg font-raleway bg-midnight_blue h-screen items-center justify-center mx-auto px-[20px]">
-        <div className="mx-auto items-center justify-center">
-          <h1 className="pt-[100px] text-2xl font-bold mb-8 text-primary_text">
+      <div className="font-raleway bg-[#f7f9fb] h-screen items-center justify-center mx-auto px-[20px] mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10">
+        <div className="mx-auto items-center justify-center max-w-lg">
+          <h1 className="text-3xl font-bold mb-4 text-primary_text">
             Create New Group
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,7 +108,7 @@ const CreateGroupPage: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="bg-washed_gray text-white px-6 py-2 rounded-md 
+                className="bg-green-600 text-white px-6 py-2 rounded-md 
                 transition-transform transform active:scale-90"
               >
                 Create Group

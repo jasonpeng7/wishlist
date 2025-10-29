@@ -1,11 +1,14 @@
 import { redirect } from "next/navigation";
 import { supabase } from "../../../../utils/supabase";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../../wishlist_organizer/utils/auth";
 
-export default async function JoinGroupPage() {
+export default async function JoinGroupPage({
+  searchParams,
+}: {
+  searchParams?: { error?: string };
+}) {
   const user = await getSessionUser();
 
   if (!user) {
@@ -24,8 +27,10 @@ export default async function JoinGroupPage() {
     const code = formData.get("code")?.toString().toUpperCase();
 
     if (!code) {
-      console.error("Please enter an invite code");
-      revalidatePath("/groups/join");
+      redirect(
+        "/groups/join?error=" +
+          encodeURIComponent("Please enter an invite code")
+      );
       return;
     }
 
@@ -37,8 +42,9 @@ export default async function JoinGroupPage() {
       .single();
 
     if (!group) {
-      console.error("Invalid invite code");
-      revalidatePath("/groups/join");
+      redirect(
+        "/groups/join?error=" + encodeURIComponent("Invalid invite code")
+      );
       return;
     }
 
@@ -51,8 +57,10 @@ export default async function JoinGroupPage() {
       .single();
 
     if (existingMember) {
-      console.error("You are already a member of this group");
-      revalidatePath("/groups/join");
+      redirect(
+        "/groups/join?error=" +
+          encodeURIComponent("You are already a member of this group")
+      );
       return;
     }
 
@@ -64,8 +72,9 @@ export default async function JoinGroupPage() {
     });
 
     if (error) {
-      console.error("Failed to join group");
-      revalidatePath("/groups/join");
+      redirect(
+        "/groups/join?error=" + encodeURIComponent("Failed to join group")
+      );
       return;
     }
 
@@ -73,12 +82,18 @@ export default async function JoinGroupPage() {
   }
 
   return (
-    <div>
+    <div className="christmas-stripes">
       <NavBar />
-      <div className="max-w-lg mx-auto px-[20px] pt-[100px] bg-midnight_blue h-screen font-raleway">
+      <div className="font-raleway bg-[#f7f9fb] h-screen items-center justify-center mx-auto px-[20px] mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10">
         <h1 className="text-2xl font-bold mb-6 text-primary_text">
           Join a Group
         </h1>
+
+        {searchParams?.error && (
+          <div className="mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+            {searchParams.error}
+          </div>
+        )}
 
         <form action={joinGroup} className="space-y-4">
           <div>
@@ -108,7 +123,7 @@ export default async function JoinGroupPage() {
             </Link>
             <button
               type="submit"
-              className="max-w-fit bg-washed_gray text-white px-4 py-2 rounded
+              className="max-w-fit bg-green-600 text-white px-4 py-2 rounded
                 transition-transform transform active:scale-90"
             >
               Join Group

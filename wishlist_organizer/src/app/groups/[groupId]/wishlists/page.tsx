@@ -106,10 +106,10 @@ export default async function GroupWishlistsPage({
 
     // A fresh approach to preparing data for the carousel
     const usersWithWishlists = memberIds
-      .map(id => {
-        const userItems = items.filter(item => item.user_id === id);
+      .map((id) => {
+        const userItems = items.filter((item) => item.user_id === id);
         // Map to the structure expected by WishlistCarousel
-        const carouselItems = userItems.map(item => ({
+        const carouselItems = userItems.map((item) => ({
           id: item.id,
           name: item.item_name,
           description: item.description,
@@ -124,24 +124,27 @@ export default async function GroupWishlistsPage({
           items: carouselItems,
         };
       })
-      .filter(user => user.items.length > 0);
-
+      .filter((user) => user.items.length > 0);
 
     return (
-      <div className="font-raleway pb-[100px]">
+      <div className="font-raleway bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-10">
         <NavBar />
-        <div className="pt-[100px] flex flex-col">
+        <div className="mb-4">
+          <Link href="/groups" className="text-primary_text font-raleway">
+            {"< "}Back
+          </Link>
+        </div>
+        <div className="flex flex-col">
           <div
-            className="flex flex-row justify-center items-center
-                font-bold mb-6 text-primary_text font-raleway text-center 
-                mx-[25px] md:mx-[50px] p-4 relative bg-[radial-gradient(circle,_#ffffff33_2px,_transparent_2px)] 
-                bg-[size:20px_20px]"
+            className="flex flex-row 
+                font-bold mb-4 text-primary_text font-raleway text-left 
+                relative"
           >
-            <h1 className="text-2xl">Wishlists for {groupDetails?.name}</h1>
+            <h1 className="text-3xl ">Wishlists for {groupDetails?.name}</h1>
           </div>
 
-          <div className="flex justify-center sm:justify-end">
-            <div className="w-fit mx-[25px] md:mx-[50px] bg-bone rounded-md">
+          <div className="flex ">
+            <div className=" bg-bone rounded-md">
               <Link
                 href="/dashboard"
                 className="flex transition-transform transform active:scale-90 text-dark_gray px-6 py-2"
@@ -154,21 +157,23 @@ export default async function GroupWishlistsPage({
 
         <div className="my-12">
           {usersWithWishlists.length === 0 ? (
-            <div className="my-12 mx-8 md:mx-16">
+            <div className="my-12">
               <p className="text-primary_text font-raleway text-center text-lg">
                 No wishlists for this group yet. Be the first to add one!
               </p>
             </div>
           ) : (
-            usersWithWishlists.map(user => (
-              <div key={user.id} className="my-12 mx-8 md:mx-16">
-                <div className="flex justify-between items-center mb-4">
+            usersWithWishlists.map((user) => (
+              <div key={user.id} className="">
+                <div className="mb-4">
                   <h3 className="text-2xl font-bold capitalize text-primary_text font-raleway break-words">
                     {user.username}&apos;s Wishlist
                   </h3>
-
                 </div>
-                <WishlistCarousel items={user.items} shelfTitle={`${user.username}'s Wishlist`} />
+                <WishlistCarousel
+                  items={user.items}
+                  shelfTitle={`${user.username}'s Wishlist`}
+                />
               </div>
             ))
           )}

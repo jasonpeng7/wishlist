@@ -29,14 +29,14 @@ export default async function GroupsPage() {
   ]);
 
   return (
-    <div className="max-w-[1000px] mx-auto bg-[#2E3944]]">
+    <div className="max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl">
       <NavBar />
-      <div className="font-raleway flex flex-col md:flex-row justify-between items-center mb-8 pt-[100px] text-primary_text mx-[25px] sm:mx-0">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">My Groups</h1>
+      <div className="font-raleway text-primary_text p-6 md:p-8 lg:p-10">
+        <h1 className="text-3xl font-bold mb-4 md:mb-0">My Groups</h1>
       </div>
 
       {/* Groups I Manage */}
-      <section className="mb-8 font-raleway text-primary_text mx-[25px] sm:mx-0">
+      <section className="font-raleway text-primary_text mx-[25px] sm:mx-0">
         <h2 className="text-xl font-semibold mb-4">Groups I Manage</h2>
         <div className="flex mb-4 ">
           <Link
@@ -45,14 +45,14 @@ export default async function GroupsPage() {
                 transition-transform transform active:scale-90 
                 flex items-center justify-center text-center"
           >
-            <p className="text-dark_gray">Create a group</p>
+            <p className="text-dark_gray font-medium">Create a group</p>
           </Link>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adminGroups?.map((group) => (
-            <div key={group.id} className="bg-midnight_blue p-4 rounded-lg">
-              <h3 className="font-medium">{group.name}</h3>
-              <p className="text-sm text-primary_text">
+            <div key={group.id} className="bg-primary_text p-4 rounded-lg">
+              <h3 className="font-medium text-white">{group.name}</h3>
+              <p className="text-sm text-white">
                 Members: {group.user_groups?.length || 0}
               </p>
 
@@ -62,11 +62,11 @@ export default async function GroupsPage() {
                   className="flex w-1/3 text-xs items-center justify-center bg-washed_gray hover:underline text-white px-4 py-2 rounded 
                   transition-transform transform active:scale-90"
                 >
-                  Manage Group
+                  Invite Friends
                 </Link>
                 <Link
                   href={`/groups/${group.id}/wishlists`}
-                  className="flex w-1/3 text-xs items-center justify-center bg-bone text-dark_gray px-4 py-2 rounded 
+                  className="flex w-1/3 text-xs items-center justify-center bg-washed_gray text-white px-4 py-2 rounded 
                   transition-transform transform active:scale-90"
                 >
                   View Wishlists
@@ -84,7 +84,7 @@ export default async function GroupsPage() {
       </section>
 
       {/* Groups I'm In */}
-      <section className="font-raleway mb-[50px] mx-[25px] sm:mx-0">
+      <section className="font-raleway mt-[20px] mb-[50px] mx-[25px] sm:mx-0">
         <h2 className="text-xl font-semibold mb-4 text-primary_text">
           Groups I&apos;m In
         </h2>
@@ -95,7 +95,7 @@ export default async function GroupsPage() {
               transition-transform transform active:scale-90 
               flex items-center justify-center"
           >
-            <p className="text-dark_gray">Join a group</p>
+            <p className="text-dark_gray font-medium">Join a group</p>
           </Link>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -107,15 +107,15 @@ export default async function GroupsPage() {
             if (!group) return null;
 
             return (
-              <div key={group.id} className="bg-midnight_blue p-4 rounded-lg">
-                <h3 className="font-medium text-primary_text">{group.name}</h3>
-                <p className="text-sm text-primary_text">
+              <div key={group.id} className="bg-primary_text p-4 rounded-lg">
+                <h3 className="font-medium text-white">{group.name}</h3>
+                <p className="text-sm text-white">
                   Members: {group.user_groups?.length || 0}
                 </p>
                 <div className="mt-4 space-x-4 flex justify-center lg:justify-start">
                   <Link
                     href={`/groups/${group.id}`}
-                    className="flex w-1/3 text-xs bg-washed_gray text-primary_text hover:underline rounded px-4 py-2
+                    className="flex w-1/3 text-xs bg-washed_gray text-white hover:underline rounded px-4 py-2
                   transition-transform transform active:scale-90
                   items-center justify-center"
                   >
@@ -123,7 +123,7 @@ export default async function GroupsPage() {
                   </Link>
                   <Link
                     href={`/groups/${group.id}/wishlists`}
-                    className="flex w-1/3 text-xs items-center justify-center bg-bone text-dark_gray px-4 py-2 rounded 
+                    className="flex w-1/3 text-xs items-center justify-center bg-washed_gray text-white px-4 py-2 rounded 
                   transition-transform transform active:scale-90"
                   >
                     View Wishlists
