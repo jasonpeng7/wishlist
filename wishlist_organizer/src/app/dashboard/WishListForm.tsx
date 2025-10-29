@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../../utils/supabase";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Group {
   id: string;
@@ -87,29 +88,31 @@ export default function WishlistForm({ userId }: { userId: string }) {
     }
 
     let imageUrl: string | null = null;
-    
+
     // Step 1: Upload image if one is selected
     if (imageFile) {
       setUploading(true);
       const formData = new FormData();
-      formData.append('file', imageFile);
+      formData.append("file", imageFile);
 
       try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
+        const response = await fetch("/api/upload", {
+          method: "POST",
           body: formData,
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to upload image.');
+          throw new Error(data.error || "Failed to upload image.");
         }
-        
-        imageUrl = data.url;
 
+        imageUrl = data.url;
       } catch (uploadError) {
-        const message = uploadError instanceof Error ? uploadError.message : "An error occurred during upload.";
+        const message =
+          uploadError instanceof Error
+            ? uploadError.message
+            : "An error occurred during upload.";
         setError(message);
         setUploading(false);
         return;
@@ -178,21 +181,28 @@ export default function WishlistForm({ userId }: { userId: string }) {
           <label className="text-primary_text block mb-2">
             Group<span className="text-red-600">*</span>
           </label>
-          <select
-            value={selectedGroupId}
-            onChange={(e) => setSelectedGroupId(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded text-dark_gray"
-            required
-          >
-            <option value="">
-              <p className="">Select a Group</p>
-            </option>
-            {groups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
+          {groups.length === 0 ? (
+            <Link
+              href="/groups"
+              className="inline-block bg-green-600 text-white px-4 py-2 rounded-full transition-transform transform active:scale-90"
+            >
+              Join or Create a Group
+            </Link>
+          ) : (
+            <select
+              value={selectedGroupId}
+              onChange={(e) => setSelectedGroupId(e.target.value)}
+              className="w-full p-2 bg-primary_text rounded text-white"
+              required
+            >
+              <option value="">Select a Group</option>
+              {groups.map((group) => (
+                <option key={group.id} value={group.id}>
+                  {group.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         <div className="font-raleway">
@@ -204,7 +214,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             type="text"
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded text-dark_gray"
+            className="w-full p-2 bg-primary_text rounded text-white"
             required
           />
         </div>
@@ -216,7 +226,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             type="text"
             value={storeName}
             onChange={(e) => setStoreName(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded text-dark_gray"
+            className="w-full p-2 bg-primary_text rounded text-white"
           />
         </div>
 
@@ -226,7 +236,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             placeholder="e.g. size, color, etc."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded text-dark_gray"
+            className="w-full p-2 bg-primary_text rounded text-white"
           />
         </div>
 
@@ -237,7 +247,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             type="text"
             value={link}
             onChange={(e) => setLink(e.target.value)}
-            className="w-full p-2 bg-primary_text rounded text-dark_gray"
+            className="w-full p-2 bg-primary_text rounded text-white"
           />
         </div>
 
@@ -250,7 +260,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
             className="w-full text-sm text-primary_text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-bone file:text-dark_gray hover:file:bg-opacity-80"
           />
         </div>
-        
+
         {imagePreview && (
           <div className="mt-4">
             <p className="text-sm text-primary_text mb-2">Image Preview:</p>
@@ -266,10 +276,10 @@ export default function WishlistForm({ userId }: { userId: string }) {
 
         <button
           type="submit"
-          className="font-raleway w-full bg-washed_gray text-white p-2 rounded transition-transform transform active:scale-90 disabled:opacity-50"
+          className="font-raleway w-full bg-green-600 text-white p-2 rounded-full transition-transform transform active:scale-90 disabled:opacity-50"
           disabled={uploading}
         >
-          {uploading ? 'Uploading...' : 'Add Item'}
+          {uploading ? "Uploading..." : "Add Item"}
         </button>
       </form>
     </div>
