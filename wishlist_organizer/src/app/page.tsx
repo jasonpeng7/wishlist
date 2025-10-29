@@ -1,76 +1,58 @@
-import MiscCards from "./components/MiscCards";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function LandingPage() {
   return (
-    <main className="flex flex-row justify-center bg-slate_gray gap-x-[20px] px-4 sm:px-6 lg:px-8">
-      {/* Gift wrap decoration */}
-      <div className="fixed top-0 left-0 w-[300px] h-[300px] pointer-events-none">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 100 100"
-          className="w-full h-full"
-        >
-          {/* Main triangle with stripes */}
-          <path d="M0 0 L100 0 L0 100 Z" fill="#124E66" />
-          <path
-            d="M20 0 L0 20 M40 0 L0 40 M60 0 L0 60 M80 0 L0 80"
-            stroke="#124E66"
-            strokeWidth="2"
-          />
-        </svg>
+    <main className="relative h-screen w-full overflow-hidden bg-slate_gray">
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/placeholder.webp"
+          alt="Wishr background"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
-      {/* Rest of your content */}
-      <div className="flex flex-col p-4 w-full md:w-1/3 min-w-[300px] max-w-[500px] mt-[260px] relative">
-        <p className="hidden md:block md:absolute md:bottom-5 md:left-5 text-primary_text font-raleway">
-          Wishr© by Jason Peng
-        </p>
-        <h1 className="font-raleway text-3xl sm:text-4xl lg:text-[50px] text-primary_text font-bold mb-[20px]">
-          Welcome to <span className="block">Wishlist Organizer</span>
-        </h1>
-        <p className="text-primary_text font-raleway font-medium text-sm sm:text-[15px] mb-6 py-[10px]">
-          Please sign in to manage your wishlists
-        </p>
+      {/* Centered logo and title near top */}
+      <div className="relative z-10 flex flex-col items-center pt-10 sm:pt-14">
+        <Image src="/logo.svg" alt="Wishr logo" width={56} height={56} />
+        <h1 className="mt-3 font-raleway text-white text-3xl">Wishr</h1>
+      </div>
 
-        <div className="md:hidden items-center justify-center flex flex-col gap-y-[27px] bg-washed_gray p-[20px] rounded-md">
-          <div className="flex flex-col w-full">
-            <div className="text-primary_text font-raleway flex flex-col rounded-md bg-dark_gray w-full p-[10px] gap-y-[5px]">
-              <h1 className="text-s">Item Name</h1>
-              <p className="text-[10px]">Brand/Store</p>
-              <p className="text-[10px]">Describe it!</p>
-            </div>
+      {/* Two lines of text just above the popup */}
+      <div className="z-10 absolute left-0 right-0 bottom-[32vh] sm:bottom-[34vh] flex flex-col items-center px-6 mb-4">
+        <p className="text-center font-raleway text-white text-base sm:text-base">
+          Organize wishlists for yourself and groups.
+        </p>
+        <p className="text-center font-raleway text-white sm:text-base">
+          Track and share effortlessly.
+        </p>
+      </div>
+
+      {/* Bottom sheet popup (~30% height) */}
+      <div className="absolute z-20 left-0 right-0 bottom-0 h-[32vh] sm:h-[30vh] bg-[#f7f9fb] rounded-t-2xl ring-1 ring-white/10">
+        <div className="mx-auto h-full max-w-md px-5 py-6 flex flex-col justify-between">
+          <div className="text-center">
+            <p className="font-raleway text-dark_gray/80 text-sm">
+              Sign in or create an account to continue
+            </p>
           </div>
-
-          <div className="flex flex-col w-full">
-            <div className="text-primary_text font-raleway flex flex-col rounded-md bg-dark_gray w-full p-[10px] gap-y-[5px]">
-              <h1 className="text-s">Item Name</h1>
-              <p className="text-[10px]">Brand/Store</p>
-              <p className="text-[10px]">Describe it!</p>
-            </div>
+          <div className="flex flex-col gap-3">
+            <Link href="/signin">
+              <button className="w-full font-raleway bg-primary_text text-white py-2.5 rounded-md active:scale-95 transition-transform">
+                Sign in
+              </button>
+            </Link>
+            <Link href="/signup">
+              <button className="w-full font-raleway border border-primary_text text-primary_text py-2.5 rounded-md active:scale-95 transition-transform">
+                Sign up
+              </button>
+            </Link>
           </div>
         </div>
-
-        <p className="flex md:hidden text-primary_text font-raleway mt-[20px]">
-          Wishr© by Jason Peng
-        </p>
-      </div>
-
-      <MiscCards />
-      <div className="fixed top-4 right-4 flex flex-row gap-x-[20px]">
-        <Link href="/signin">
-          <button className="font-raleway text-dark_gray px-4 bg-bone rounded-md transition-transform transform active:scale-90 animate-jump">
-            Sign In
-          </button>
-        </Link>
-        <Image
-          src="/logo.svg"
-          alt="Logo"
-          width={40}
-          height={40}
-          priority
-        ></Image>
       </div>
     </main>
   );
