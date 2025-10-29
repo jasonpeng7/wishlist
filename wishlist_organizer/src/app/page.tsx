@@ -34,8 +34,8 @@ export default async function LandingPage() {
 
       {/* Bottom sheet popup (~30% height) */}
       <div className="absolute z-20 left-0 right-0 bottom-0 h-[32vh] sm:h-[30vh] bg-[#f7f9fb] rounded-t-2xl ring-1 ring-white/10">
-        <div className="mx-auto h-full max-w-md px-5 py-6 flex flex-col justify-between">
-          <div className="text-center">
+        <div className="mx-auto max-w-md px-5 py-6 flex flex-col justify-between">
+          <div className="text-center mb-2">
             <p className="font-raleway text-dark_gray/80 text-sm">
               Sign in or create an account to continue
             </p>
