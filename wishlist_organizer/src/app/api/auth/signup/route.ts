@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json();
+    const { username, password, email } = await request.json();
 
     if (!username || !password) {
       return NextResponse.json(
@@ -13,12 +13,36 @@ export async function POST(request: Request) {
       );
     }
 
-    // does user exist
+    // does email exist
+    const { data: existingEmail, error: findErrorEmail} = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", email)
+      .single();
+
+    // does username exist
     const { data: existingUser, error: findError } = await supabase
       .from("users")
       .select("username")
       .eq("username", username)
       .single();
+
+    if (findErrorEmail && findErrorEmail.code !== "PGRST116") {
+        // PGRST116 means no rows found so if user not found throw err
+        console.error("Error finding email:", findErrorEmail);
+        return NextResponse.json(
+          { error: "Internal server error" },
+          { status: 500 }
+        );
+    }
+  
+  
+    if (existingEmail) {
+      return NextResponse.json(
+        { error: "Email already exists" },
+        { status: 409 }
+      );
+    }
 
     if (findError && findError.code !== "PGRST116") {
       // PGRST116 means no rows found so if user not found throw err
@@ -43,7 +67,7 @@ export async function POST(request: Request) {
     // create new user
     const { error: insertError } = await supabase
       .from("users")
-      .insert([{ username, password_hash: passwordHash }]);
+      .insert([{ username, password_hash: passwordHash, email }]);
 
     if (insertError) {
       console.error("Error inserting user:", insertError);
