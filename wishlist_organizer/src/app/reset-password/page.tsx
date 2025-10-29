@@ -25,8 +25,8 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    if (password.length < 1) {
+      setError("Password must be at least 1 character long");
       setLoading(false);
       return;
     }
@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
         const data = await response.json();
         setError(data.error || "Something went wrong");
       }
-    } catch (error) {
+    } catch {
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -62,10 +62,10 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate_gray">
-        <div className="w-full max-w-md p-8 space-y-6 bg-washed_gray rounded-lg shadow-md text-center">
-          <h1 className="text-2xl font-bold text-green-600">Success!</h1>
-          <p className="text-primary_text">
+      <div className="flex items-center justify-center min-h-screen bg-primary_text">
+        <div className="w-full max-w-md p-6 min-h-screen space-y-6 bg-[#f7f9fb] mt-20 glass-element rounded-t-3xl text-center">
+          <h1 className="text-3xl font-bold text-green-600">Success!</h1>
+          <p className="text-white">
             Your password has been reset successfully. You will be redirected to
             the sign-in page.
           </p>
@@ -75,36 +75,36 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate_gray">
-      <div className="w-full max-w-md p-8 space-y-6 bg-washed_gray rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center text-primary_text">
+    <div className="flex items-center justify-center min-h-screen bg-primary_text">
+      <div className="w-full max-w-md p-6 min-h-screen space-y-6 bg-[#f7f9fb] mt-20 glass-element rounded-t-3xl">
+        <h1 className="text-3xl font-bold text-center text-white">
           Reset Your Password
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-primary_text">
+            <label className="block text-sm font-medium text-white">
               New Password
             </label>
             <input
-              type="password"
+              type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 mt-1 border rounded bg-primary_text text-dark_gray"
               required
-              minLength={6}
+              minLength={1}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-primary_text">
+            <label className="block text-sm font-medium text-white">
               Confirm New Password
             </label>
             <input
-              type="password"
+              type="text"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full p-2 mt-1 border rounded bg-primary_text text-dark_gray"
               required
-              minLength={6}
+              minLength={1}
             />
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
