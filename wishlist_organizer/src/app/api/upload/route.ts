@@ -41,16 +41,22 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Upload the file to Supabase Storage
-    // Sanitize filename to remove special characters and spaces
-    const sanitizedFileName = file.name
-      .replace(/[^a-zA-Z0-9.-]/g, '_') // Replace special chars with underscores
-      .replace(/_+/g, '_') // Replace multiple underscores with single
-      .replace(/^_|_$/g, ''); // Remove leading/trailing underscores
-    
-    const fileName = `${userId}/${uuidv4()}-${sanitizedFileName}`;
+    // Normalize filename: derive extension from content type; avoid relying on user filename
+    const mime = file.type || 'application/octet-stream';
+    const extFromMime = (() => {
+      const parts = mime.split('/');
+      const sub = parts[1] || '';
+      if (sub.startsWith('jpeg')) return 'jpeg';
+      if (sub.startsWith('jpg')) return 'jpg';
+      if (sub.startsWith('png')) return 'png';
+      if (sub.startsWith('webp')) return 'webp';
+      if (sub.startsWith('gif')) return 'gif';
+      return 'bin';
+    })();
+    const fileName = `${userId}/${uuidv4()}.${extFromMime}`;
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('wishlist-images')
-      .upload(fileName, file);
+      .upload(fileName, file, { contentType: mime });
 
     if (uploadError) {
       console.error('Supabase Storage Error:', uploadError);
