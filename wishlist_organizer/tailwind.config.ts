@@ -14,7 +14,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary_text: "#D3D9D4", 
+        primary_text: "#474853", 
         slate_gray: "#2E3944",
         dark_gray: "#212A31",
         darker_gray: "#192127",
