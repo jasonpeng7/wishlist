@@ -3,9 +3,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { Raleway } from "next/font/google";
 import type { Metadata } from "next";
 
-const raleway = Raleway({ 
+const raleway = Raleway({
   subsets: ["latin"],
-  variable: '--font-raleway',
+  variable: "--font-raleway",
 });
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`${raleway.variable} font-sans bg-slate_gray`}>
+      <body className={`${raleway.variable} font-sans christmas-stripes`}>
         <main>
           {children}
           <Analytics />
