@@ -174,13 +174,13 @@ export default function WishlistItems({ userId }: { userId: string }) {
                     <div className="absolute top-0 right-2">
                       <div className="flex gap-2">
                         <button onClick={handleSave} className="text-green-500">
-                          <Check size={16} />
+                          <Check size={24} />
                         </button>
                         <button
                           onClick={() => setEditingId(null)}
                           className="text-red-500"
                         >
-                          <X size={16} />
+                          <X size={24} />
                         </button>
                       </div>
                     </div>

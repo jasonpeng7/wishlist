@@ -29,7 +29,7 @@ export default async function GroupsPage() {
   ]);
 
   return (
-    <div className="max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl">
+    <div className="max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl pb-20">
       <NavBar />
       <div className="font-raleway text-primary_text p-6 md:p-8 lg:p-10">
         <h1 className="text-3xl font-bold mb-4 md:mb-0">My Groups</h1>
@@ -84,7 +84,7 @@ export default async function GroupsPage() {
       </section>
 
       {/* Groups I'm In */}
-      <section className="font-raleway mt-[20px] mb-[50px] mx-[25px] sm:mx-0">
+      <section className="font-raleway mt-[20px] mx-[25px] sm:mx-0">
         <h2 className="text-xl font-semibold mb-4 text-primary_text">
           Groups I&apos;m In
         </h2>
