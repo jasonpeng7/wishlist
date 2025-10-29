@@ -11,12 +11,33 @@
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.glass-element {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(2px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.493);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2),
+    inset 0 4px 20px rgba(255, 255, 255, 0.3);
+}
+
+.glass-element::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(1px);
+  box-shadow: inset -10px -8px 0px -11px rgba(255, 255, 255, 1),
+    inset 0px -9px 0px -8px rgba(255, 255, 255, 1);
+  opacity: 0.6;
+  z-index: -1;
+  filter: blur(1px) drop-shadow(10px 4px 6px black) brightness(115%);
 }
 
 .glass {
@@ -25,12 +46,12 @@
   backdrop-filter: blur(2px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.493);
   border-radius: 2rem;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2), 
-              inset 0 4px 20px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2),
+    inset 0 4px 20px rgba(255, 255, 255, 0.3);
 }
 
 .glass::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -40,8 +61,25 @@
   border-radius: 2rem;
   backdrop-filter: blur(1px);
   box-shadow: inset -10px -8px 0px -11px rgba(255, 255, 255, 1),
-              inset 0px -9px 0px -8px rgba(255, 255, 255, 1);
+    inset 0px -9px 0px -8px rgba(255, 255, 255, 1);
   opacity: 0.6;
   z-index: -1;
   filter: blur(1px) drop-shadow(10px 4px 6px black) brightness(115%);
+}
+
+/* Christmas Stripes Background (red/green with white separators) */
+.christmas-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #0b6b3a 0px,
+    #0b6b3a 24px,
+    #ffffff 24px,
+    #ffffff 28px,
+    #c1121f 28px,
+    #c1121f 52px,
+    #ffffff 52px,
+    #ffffff 56px
+  );
+  background-attachment: fixed;
+  background-size: auto;
 }
