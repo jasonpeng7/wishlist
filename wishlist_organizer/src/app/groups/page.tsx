@@ -3,6 +3,7 @@ import Link from "next/link";
 import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 import { redirect } from "next/navigation";
+import { Settings } from 'lucide-react';
 
 export default async function GroupsPage() {
   const user = await getSessionUser();
@@ -51,7 +52,12 @@ export default async function GroupsPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adminGroups?.map((group) => (
             <div key={group.id} className="bg-primary_text p-4 rounded-lg">
+              <div className="flex justify-between items-center">
               <h3 className="font-medium text-white">{group.name}</h3>
+              <Link href={`/groups/${group.id}/manage`} className="text-white hover:text-gray-300 transition">
+                <Settings size={20} />
+              </Link>
+              </div>
               <p className="text-sm text-white">
                 Members: {group.user_groups?.length || 0}
               </p>

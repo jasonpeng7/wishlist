@@ -20,7 +20,6 @@ export default async function GroupWishlistsPage({
       redirect("/sign-in");
     }
 
-    // check if groupId is valid
     if (!groupId) {
       return (
         <div className="flex flex-col justify-center items-center pt-[100px]">
@@ -33,7 +32,7 @@ export default async function GroupWishlistsPage({
 
     const groupDetailsPromise = supabase
       .from("groups")
-      .select("name")
+      .select("name, hide_gift_getters")
       .eq("id", groupId)
       .single();
 
@@ -67,56 +66,58 @@ export default async function GroupWishlistsPage({
 
     const memberIds = groupMembers.map((member) => member.user_id);
 
-    // first fetch all wishlist items for group
-    // then in a SEPARATE query, fetch all the gift assignments for the items
-    // finally, pass fresh assignment data to GiftComponent param
-    const itemsPromise = supabase
+    const { data: items, error: itemsError } = await supabase
       .from("wishlists")
       .select(`*`)
       .in("user_id", memberIds)
       .eq("group_id", groupId)
       .order("created_at", { ascending: false });
 
-    const usernamesPromise = Promise.all(
-      memberIds.map(async (id) => {
-        const { data: user } = await supabase
-          .from("users")
-          .select("username")
-          .eq("id", id)
-          .single();
-        return { id, username: user?.username || "Unknown User" };
-      })
-    ).then((users) =>
-      users.reduce((acc, user) => {
-        acc[user.id] = user.username;
-        return acc;
-      }, {} as { [key: string]: string })
-    );
-
-    const [{ data: items, error: itemsError }, usernames] = await Promise.all([
-      itemsPromise,
-      usernamesPromise,
-    ]);
-
     if (itemsError) throw itemsError;
     if (!items) {
-      // Handle case where there are no items
       return <p>No wishlist items found for this group.</p>;
     }
 
-    // A fresh approach to preparing data for the carousel
+    const itemIds = items.map((item) => item.id);
+    const { data: assignmentsData } = await supabase
+      .from("gift_assignments")
+      .select("wishlist_item_id, assigned_to, status")
+      .in("wishlist_item_id", itemIds);
+
+    const assignmentsMap = new Map(
+      assignmentsData?.map((a) => [a.wishlist_item_id, a])
+    );
+
+    const allUserIds = [...new Set([...memberIds, ...(assignmentsData?.map(a => a.assigned_to) || [])])];
+
+    const { data: allUsers } = await supabase
+      .from("users")
+      .select("id, username")
+      .in("id", allUserIds);
+
+    const usernames = allUsers?.reduce((acc, u) => {
+      acc[u.id] = u.username;
+      return acc;
+    }, {} as Record<string, string>) || {};
+
     const usersWithWishlists = memberIds
       .map((id) => {
         const userItems = items.filter((item) => item.user_id === id);
-        // Map to the structure expected by WishlistCarousel
-        const carouselItems = userItems.map((item) => ({
-          id: item.id,
-          name: item.item_name,
-          description: item.description,
-          link: item.link,
-          image_url: item.image_url, // Pass the image_url to the component
-          price: item.price,
-        }));
+        const carouselItems = userItems.map((item) => {
+          const assignment = assignmentsMap.get(item.id);
+          const assignedUsername = assignment ? usernames[assignment.assigned_to] : undefined;
+          return {
+            id: item.id,
+            name: item.item_name,
+            description: item.description,
+            link: item.link,
+            image_url: item.image_url,
+            price: item.price,
+            user_id: item.user_id,
+            assignment,
+            assignedUsername,
+          };
+        });
 
         return {
           id,
@@ -142,12 +143,11 @@ export default async function GroupWishlistsPage({
           >
             <h1 className="text-3xl ">Wishlists for {groupDetails?.name}</h1>
           </div>
-
           <div className="flex ">
-            <div className=" bg-bone rounded-md">
+            <div className=" bg-green-600 rounded-md">
               <Link
                 href="/dashboard"
-                className="flex transition-transform transform active:scale-90 text-dark_gray px-6 py-2"
+                className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
               >
                 <p>Add to my wishlist for {groupDetails?.name}</p>
               </Link>
@@ -163,16 +163,18 @@ export default async function GroupWishlistsPage({
               </p>
             </div>
           ) : (
-            usersWithWishlists.map((user) => (
-              <div key={user.id} className="">
+            usersWithWishlists.map((userData) => (
+              <div key={userData.id} className="">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold capitalize text-primary_text font-raleway break-words">
-                    {user.username}&apos;s Wishlist
+                    {userData.username}&apos;s Wishlist
                   </h3>
                 </div>
                 <WishlistCarousel
-                  items={user.items}
-                  shelfTitle={`${user.username}'s Wishlist`}
+                  items={userData.items}
+                  shelfTitle={`${userData.username}'s Wishlist`}
+                  currentUserId={user.id}
+                  showGiftAssignments={!groupDetails?.hide_gift_getters}
                 />
               </div>
             ))

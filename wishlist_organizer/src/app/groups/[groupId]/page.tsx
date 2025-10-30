@@ -104,27 +104,37 @@ export default async function ViewGroupPage({
   ])) as [MemberDetail[], string];
 
   return (
-    <div className="font-raleway">
+    <div className="font-raleway bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-10">
       <NavBar />
-      <div className="flex flex-col justify-center px-[50px] md:px-[100px]  ">
-        <div className="flex justify-start">
-          <h1 className="pt-[100px] text-2xl font-bold mb-6 text-primary_text">
-            You are currently viewing {group.name}
-          </h1>
+      <div className="flex font-raleway mb-4">
+          <Link
+            href="/groups"
+            className=" text-primary_text font-medium rounded transition-transform transform active:scale-90"
+          >
+            {"< "}Back
+          </Link>
         </div>
-        <p className="text-sm text-primary_text mb-6">
-          Created by: {creatorName}
-        </p>
-      </div>
+
+        <div className="flex mb-8">
+            <div className=" bg-green-600 rounded-md">
+              <Link
+                href="/dashboard"
+                className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
+              >
+                <p>Add to my wishlist for {group.name}</p>
+              </Link>
+            </div>
+          </div>
+
 
       {/* Members Section */}
-      <section className="px-[50px] md:px-[100px]">
+      <section className="">
         <h2 className="text-xl font-semibold mb-4 text-primary_text">
           Members ({memberDetails.length})
         </h2>
         <div className="rounded-lg overflow-hidden">
           <div className="min-w-full">
-            <div className="bg-dark_gray opacity-90 ">
+            <div className="bg-primary_text opacity-90 ">
               <div className="hidden md:flex justify-between text-primary_text">
                 <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Name
@@ -136,11 +146,11 @@ export default async function ViewGroupPage({
                   Role
                 </h1>
               </div>
-              <h1 className="flex px-6 py-3 md:hidden justify-center items-center text-primary_text font-raleway text-xs font-medium">
+              <h1 className="flex px-6 py-3 md:hidden justify-center items-center text-white font-raleway text-xs font-medium">
                 DETAILS
               </h1>
             </div>
-            <div className="bg-washed_gray w-full">
+            <div className="bg-bone w-full">
               <div className="w-full">
                 {/* Desktop view - row layout */}
                 <div className="hidden md:block">
@@ -166,7 +176,7 @@ export default async function ViewGroupPage({
                   {memberDetails.map((member) => (
                     <div
                       key={member.user_id}
-                      className="border-b border-dark_gray p-4 space-y-2"
+                      className="border-b border-[#f7f9fb] p-4 space-y-2 flex flex-row justify-between"
                     >
                       <div className="space-y-1 ">
                         <div className="text-sm text-primary_text">Name:</div>
@@ -196,15 +206,7 @@ export default async function ViewGroupPage({
         </div>
       </section>
 
-      <div className="mt-[20px] mb-[50px] flex justify-end items-center px-[50px] md:px-[100px]">
-        <Link
-          href="/groups"
-          className="bg-midnight_blue text-white px-6 py-2 rounded-md
-              flex transition-transform transform active:scale-90"
-        >
-          Back
-        </Link>
-      </div>
+
     </div>
   );
 }

@@ -78,7 +78,7 @@ export default async function JoinGroupPage({
       return;
     }
 
-    redirect("/groups");
+    redirect(`/groups/${group.id}/wishlists`);
   }
 
   return (

@@ -5,6 +5,7 @@ import DeleteGroupButton from "@/app/components/DeleteGroup";
 import Link from "next/link";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
 import NavBar from "@/app/components/navbar";
+import GroupSettings from "./GroupSettings";
 
 interface GroupDetails {
   id: string;
@@ -12,6 +13,7 @@ interface GroupDetails {
   creator_id: string;
   created_at: string;
   invite_code: string | null;
+  hide_gift_getters: boolean;
 }
 
 interface UserGroup {
@@ -76,6 +78,22 @@ export default async function ManageGroupPage({ params }: Props) {
       })
     );
     memberDetails = memberUsers;
+  }
+
+  async function updateHideGiftGetters(groupId: string, hide: boolean) {
+    "use server";
+    const { error } = await supabase
+      .from('groups')
+      .update({ hide_gift_getters: hide })
+      .eq('id', groupId);
+
+    if (error) {
+      console.error('Error updating group settings:', error);
+      throw new Error('Failed to update group settings in database.');
+    } else {
+      revalidatePath(`/groups/${groupId}/manage`);
+      revalidatePath(`/groups/${groupId}/wishlists`);
+    }
   }
 
   async function generateInviteCode(formData: FormData) {
@@ -270,8 +288,9 @@ export default async function ManageGroupPage({ params }: Props) {
                     {memberDetails.map((member) => (
                       <div
                         key={member.user_id}
-                        className="border-b border-[#f7f9fb] p-4 space-y-2 bg-bone"
+                        className="border-b border-[#f7f9fb] p-4 space-y-2 bg-bone items-center"
                       >
+                        <div className="flex flex-row justify-between">
                         <div className="space-y-1 ">
                           <div className="text-sm text-primary_text">Name:</div>
                           <div>{member.user.name}</div>
@@ -280,6 +299,8 @@ export default async function ManageGroupPage({ params }: Props) {
                           <div className="text-sm text-primary_text">Role:</div>
                           <div className="capitalize">{member.role}</div>
                         </div>
+                          </div>
+
 
                         {member.role != "admin" && (
                           <form action={removeMember} className="flex mb-6">
@@ -319,12 +340,7 @@ export default async function ManageGroupPage({ params }: Props) {
         </section>
 
         {/* Group Setting Section */}
-        <section className="mb-8 font-raleway text-primary_text">
-          <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
-          <div className="bg-dark_gray p-6 rounded-lg">
-            <DeleteGroupButton groupId={group.id} deleteGroup={deleteGroup} />
-          </div>
-        </section>
+        <GroupSettings group={group} deleteGroup={deleteGroup} updateHideGiftGetters={updateHideGiftGetters} />
       </div>
     </>
   );
