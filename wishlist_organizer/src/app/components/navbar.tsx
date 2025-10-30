@@ -13,6 +13,7 @@ export default function NavBar() {
     const response = await fetch("/api/auth/signout", { method: "POST" });
     if (response.ok) {
       router.push("/signin");
+      router.refresh();
     } else {
       alert("Sign out failed");
     }
