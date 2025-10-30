@@ -56,39 +56,34 @@ export default function NavBar() {
         </div>
       </nav>
 
-      <nav className="fixed top-4 left-4 flex flex-row gap-x-[20px] md:hidden">
-        <Image src="/logo.svg" alt="Logo" width={40} height={40} />
-      </nav>
 
       {/* Bottom Navbar for Mobile */}
       <nav className="fixed bottom-0 left-0 right-0 h-16 glass sm:hidden z-50">
         <div className="flex justify-around items-center h-full">
-          <Link href="/dashboard" className="flex flex-col items-center">
-            <Home className={isDashboard ? "text-blue-500" : "text-black/70"} />
-            <span
-              className={`text-xs ${
-                isDashboard ? "text-blue-500" : "text-black/70"
-              }`}
-            >
-              Home
-            </span>
+          <Link href="/dashboard" className="flex flex-col items-center p-2">
+            <div className={`relative flex flex-col items-center justify-center h-full w-20 ${isDashboard ? 'glass-nav' : ''}`}>
+              <Home className={isDashboard ? "text-black/70" : "text-black/70"} />
+              <span className={`text-sm font-medium ${isDashboard ? "text-black/70" : "text-black/70"}`}>
+                Home
+              </span>
+            </div>
           </Link>
-          <Link href="/groups" className="flex flex-col items-center">
-            <Users className={isGroups ? "text-blue-500" : "text-black/70"} />
-            <span
-              className={`text-xs ${
-                isGroups ? "text-blue-500" : "text-black/70"
-              }`}
-            >
-              Groups
-            </span>
+          <Link href="/groups" className="flex flex-col items-center p-2">
+            <div className={`relative flex flex-col items-center justify-center h-full w-20 ${isGroups ? 'glass-nav' : ''}`}>
+              <Users className={isGroups ? "text-black/70" : "text-black/70"} />
+              <span className={`text-sm font-medium ${isGroups ? "text-black/70" : "text-black/70"}`}>
+                Groups
+              </span>
+            </div>
           </Link>
           <button
             onClick={handleSignOut}
-            className="flex flex-col items-center transition-transform transform active:scale-90"
+            className="flex flex-col items-center transition-transform transform active:scale-90 p-2"
           >
-            <LogOut className="text-red-500" />
-            <span className="text-xs text-red-500">Sign Out</span>
+            <div className="relative flex flex-col items-center justify-center h-full w-20">
+              <LogOut className="text-red-500" />
+              <span className="text-sm font-medium text-red-500">Sign Out</span>
+            </div>
           </button>
         </div>
       </nav>

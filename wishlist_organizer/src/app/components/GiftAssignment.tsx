@@ -23,15 +23,11 @@ export default function GiftAssignment({
   assignedUsername,
 }: GiftAssignmentProps) {
   const router = useRouter();
-  console.log(`Rendering GiftAssignment for item ${itemId}:`, {
-    currentAssignment,
-  });
   const [isChecked, setIsChecked] = useState(
     currentAssignment?.status === "will_get"
   );
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // If current user is the creator, don't show the component
   if (userId === creatorId) {
     return null;
   }
@@ -45,7 +41,6 @@ export default function GiftAssignment({
       setIsUpdating(true);
 
       if (!isChecked) {
-        // Check if anyone has claimed item
         const { data: existingAssignments } = await supabase
           .from("gift_assignments")
           .select("*")
@@ -56,7 +51,6 @@ export default function GiftAssignment({
           alert("Someone else has already claimed this item!");
           return;
         }
-        // Add new assignment
         const { error } = await supabase.from("gift_assignments").upsert({
           wishlist_item_id: itemId,
           assigned_to: userId,
@@ -65,7 +59,6 @@ export default function GiftAssignment({
 
         if (error) throw error;
       } else {
-        // Remove assignment
         const { error } = await supabase
           .from("gift_assignments")
           .delete()
@@ -87,7 +80,6 @@ export default function GiftAssignment({
     }
   };
 
-  // Only show who marked it if the current user marked it themselves
   if (currentAssignment?.assigned_to === userId && assignedUsername) {
     return (
       <div className="font-raleway text-sm font-medium text-green-600">
@@ -96,7 +88,6 @@ export default function GiftAssignment({
     );
   }
 
-  // If someone else marked it, show who claimed it (but not to the creator)
   if (
     currentAssignment?.status === "will_get" &&
     currentAssignment?.assigned_to !== userId &&
@@ -118,8 +109,8 @@ export default function GiftAssignment({
         disabled={isUpdating}
         className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
       />
-      <label className="text-sm font-medium text-primary_text">
-        {isChecked ? "You will get this!" : "Mark as 'will get'"}
+      <label className="text-sm font-medium text-white">
+        {isChecked ? "You're getting this!" : "I want to get this item!"}
       </label>
     </div>
   );

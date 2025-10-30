@@ -5,6 +5,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import GiftAssignment from "./GiftAssignment";
 
 type WishlistItem = {
   id: string;
@@ -13,18 +14,28 @@ type WishlistItem = {
   link?: string | null;
   image_url?: string | null;
   price?: number | null;
+  user_id: string;
+  assignment?: {
+    assigned_to: string;
+    status: "will_get" | null;
+  };
+  assignedUsername?: string;
 };
 
 type PropType = {
   items: WishlistItem[];
   shelfTitle: string;
   options?: EmblaOptionsType;
+  currentUserId: string;
+  showGiftAssignments: boolean;
 };
 
 const WishlistCarousel: React.FC<PropType> = ({
   items,
   shelfTitle,
   options,
+  currentUserId,
+  showGiftAssignments,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     ...options,
@@ -144,6 +155,17 @@ const WishlistCarousel: React.FC<PropType> = ({
                   >
                     View Item
                   </a>
+                )}
+                {showGiftAssignments && (
+                  <div className="mt-4">
+                    <GiftAssignment
+                      itemId={item.id}
+                      userId={currentUserId}
+                      creatorId={item.user_id}
+                      currentAssignment={item.assignment}
+                      assignedUsername={item.assignedUsername}
+                    />
+                  </div>
                 )}
               </div>
             </div>
