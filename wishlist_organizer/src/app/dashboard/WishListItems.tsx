@@ -128,7 +128,7 @@ export default function WishlistItems({ userId }: { userId: string }) {
         </p>
       </Modal>
       {items.length === 0 ? (
-        <div className="flex justify-center items-center w-full h-36">
+        <div className="flex justify-center items-center w-full mb-20">
           <p className="text-primary_text text-lg font-raleway">No items yet</p>
         </div>
       ) : (

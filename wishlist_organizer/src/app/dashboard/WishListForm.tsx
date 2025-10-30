@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import { supabase } from "../../../utils/supabase";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,7 @@ interface Group {
 }
 
 export default function WishlistForm({ userId }: { userId: string }) {
+  const router = useRouter();
   const [itemName, setItemName] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
@@ -80,7 +82,6 @@ export default function WishlistForm({ userId }: { userId: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
 
     if (!selectedGroupId) {
       setError("Please select a group for this wishlist item");
@@ -143,17 +144,8 @@ export default function WishlistForm({ userId }: { userId: string }) {
         throw insertError;
       }
 
-      // Clear form
-      setItemName("");
-      setDescription("");
-      setStoreName("");
-      setLink("");
-      setSelectedGroupId("");
-      setImageFile(null);
-      setImagePreview(null);
-      setSuccess(true);
-
-      console.log("Item added successfully:", data);
+      // Redirect to the group's wishlist page
+      router.push(`/groups/${selectedGroupId}/wishlists`);
     } catch (error) {
       const message =
         error instanceof Error
@@ -169,11 +161,6 @@ export default function WishlistForm({ userId }: { userId: string }) {
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
-        </div>
-      )}
-      {success && (
-        <div className="font-raleway bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          Item added successfully. Please Refresh Your Page!
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
