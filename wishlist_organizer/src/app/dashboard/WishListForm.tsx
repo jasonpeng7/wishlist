@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { supabase } from "../../../utils/supabase";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,13 +18,14 @@ export default function WishlistForm({ userId }: { userId: string }) {
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [storeName, setStoreName] = useState("");
-  const [selectedGroupId, setSelectedGroupId] = useState("");
   const [groups, setGroups] = useState<Group[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const searchParams = useSearchParams();
+  const defaultGroup = searchParams.get("groupId") || "";
+  const [selectedGroupId, setSelectedGroupId] = useState(defaultGroup);
 
   // fetch all of users groups
   useEffect(() => {
