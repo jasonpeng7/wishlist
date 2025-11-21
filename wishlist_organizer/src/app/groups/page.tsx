@@ -3,7 +3,7 @@ import Link from "next/link";
 import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 import { redirect } from "next/navigation";
-import { Settings } from 'lucide-react';
+import { Settings } from "lucide-react";
 
 export default async function GroupsPage() {
   const user = await getSessionUser();
@@ -53,26 +53,29 @@ export default async function GroupsPage() {
           {adminGroups?.map((group) => (
             <div key={group.id} className="bg-primary_text p-4 rounded-lg">
               <div className="flex justify-between items-center">
-              <h3 className="font-medium text-white">{group.name}</h3>
-              <Link href={`/groups/${group.id}/manage`} className="text-white hover:text-gray-300 transition">
-                <Settings size={20} />
-              </Link>
+                <h3 className="font-medium text-white">{group.name}</h3>
+                <Link
+                  href={`/groups/${group.id}/manage`}
+                  className="text-white hover:text-gray-300 transition"
+                >
+                  <Settings size={20} />
+                </Link>
               </div>
               <p className="text-sm text-white">
                 Members: {group.user_groups?.length || 0}
               </p>
 
-              <div className="mt-4 flex flex-row justify-center lg:justify-start space-x-4">
+              <div className="mt-4 flex flex-col space-y-4 ">
                 <Link
                   href={`/groups/${group.id}/manage`}
-                  className="flex w-1/3 text-xs items-center justify-center bg-washed_gray hover:underline text-white px-4 py-2 rounded 
+                  className="flex text-xs items-center justify-center bg-white hover:underline text-black px-4 py-4 rounded 
                   transition-transform transform active:scale-90"
                 >
                   Invite Friends
                 </Link>
                 <Link
                   href={`/groups/${group.id}/wishlists`}
-                  className="flex w-1/3 text-xs items-center justify-center bg-washed_gray text-white px-4 py-2 rounded 
+                  className="flex  text-xs items-center justify-center bg-washed_gray text-white px-4 py-4 rounded 
                   transition-transform transform active:scale-90"
                 >
                   View Wishlists
@@ -118,10 +121,10 @@ export default async function GroupsPage() {
                 <p className="text-sm text-white">
                   Members: {group.user_groups?.length || 0}
                 </p>
-                <div className="mt-4 space-x-4 flex justify-center lg:justify-start">
+                <div className="mt-4 space-y-4 flex flex-col">
                   <Link
                     href={`/groups/${group.id}`}
-                    className="flex w-1/3 text-xs bg-washed_gray text-white hover:underline rounded px-4 py-2
+                    className="flex text-xs bg-white text-black hover:underline rounded px-4 py-4
                   transition-transform transform active:scale-90
                   items-center justify-center"
                   >
@@ -129,7 +132,7 @@ export default async function GroupsPage() {
                   </Link>
                   <Link
                     href={`/groups/${group.id}/wishlists`}
-                    className="flex w-1/3 text-xs items-center justify-center bg-washed_gray text-white px-4 py-2 rounded 
+                    className="flex text-xs items-center justify-center bg-washed_gray text-white px-4 py-4 rounded 
                   transition-transform transform active:scale-90"
                   >
                     View Wishlists

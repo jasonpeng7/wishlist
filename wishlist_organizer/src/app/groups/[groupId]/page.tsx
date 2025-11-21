@@ -104,28 +104,27 @@ export default async function ViewGroupPage({
   ])) as [MemberDetail[], string];
 
   return (
-    <div className="font-raleway bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-10">
+    <div className="font-raleway bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-[100px]">
       <NavBar />
       <div className="flex font-raleway mb-4">
+        <Link
+          href="/groups"
+          className=" text-primary_text font-medium rounded transition-transform transform active:scale-90"
+        >
+          {"< "}Back
+        </Link>
+      </div>
+
+      <div className="flex mb-8">
+        <div className=" bg-green-600 rounded-md">
           <Link
-            href="/groups"
-            className=" text-primary_text font-medium rounded transition-transform transform active:scale-90"
+            href="/dashboard"
+            className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
           >
-            {"< "}Back
+            <p>Add to my wishlist for {group.name}</p>
           </Link>
         </div>
-
-        <div className="flex mb-8">
-            <div className=" bg-green-600 rounded-md">
-              <Link
-                href="/dashboard"
-                className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
-              >
-                <p>Add to my wishlist for {group.name}</p>
-              </Link>
-            </div>
-          </div>
-
+      </div>
 
       {/* Members Section */}
       <section className="">
@@ -205,8 +204,6 @@ export default async function ViewGroupPage({
           </div>
         </div>
       </section>
-
-
     </div>
   );
 }

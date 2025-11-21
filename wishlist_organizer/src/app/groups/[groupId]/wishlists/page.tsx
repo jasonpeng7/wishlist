@@ -88,24 +88,32 @@ export default async function GroupWishlistsPage({
       assignmentsData?.map((a) => [a.wishlist_item_id, a])
     );
 
-    const allUserIds = [...new Set([...memberIds, ...(assignmentsData?.map(a => a.assigned_to) || [])])];
+    const allUserIds = [
+      ...new Set([
+        ...memberIds,
+        ...(assignmentsData?.map((a) => a.assigned_to) || []),
+      ]),
+    ];
 
     const { data: allUsers } = await supabase
       .from("users")
       .select("id, username")
       .in("id", allUserIds);
 
-    const usernames = allUsers?.reduce((acc, u) => {
-      acc[u.id] = u.username;
-      return acc;
-    }, {} as Record<string, string>) || {};
+    const usernames =
+      allUsers?.reduce((acc, u) => {
+        acc[u.id] = u.username;
+        return acc;
+      }, {} as Record<string, string>) || {};
 
     const usersWithWishlists = memberIds
       .map((id) => {
         const userItems = items.filter((item) => item.user_id === id);
         const carouselItems = userItems.map((item) => {
           const assignment = assignmentsMap.get(item.id);
-          const assignedUsername = assignment ? usernames[assignment.assigned_to] : undefined;
+          const assignedUsername = assignment
+            ? usernames[assignment.assigned_to]
+            : undefined;
           return {
             id: item.id,
             name: item.item_name,
@@ -146,7 +154,7 @@ export default async function GroupWishlistsPage({
           <div className="flex ">
             <div className=" bg-green-600 rounded-md">
               <Link
-                href="/dashboard"
+                href={`/dashboard/?groupId=${groupId}`}
                 className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
               >
                 <p>Add to my wishlist for {groupDetails?.name}</p>
