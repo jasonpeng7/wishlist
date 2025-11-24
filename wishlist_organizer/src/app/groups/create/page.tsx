@@ -75,8 +75,7 @@ const CreateGroupPage: React.FC = () => {
 
   return (
     <div className="christmas-stripes">
-      <NavBar />
-      <div className="font-raleway bg-[#f7f9fb] h-screen items-center justify-center mx-auto px-[20px] mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10">
+      <div className="font-raleway max-w-[1000px] bg-[#f7f9fb] h-screen items-center justify-center mx-auto px-[20px] mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10">
         <div className="mx-auto items-center justify-center max-w-lg">
           <h1 className="text-3xl font-bold mb-4 text-primary_text">
             Create New Group
