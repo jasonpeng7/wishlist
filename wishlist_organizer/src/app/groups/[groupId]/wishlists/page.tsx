@@ -136,14 +136,14 @@ export default async function GroupWishlistsPage({
       .filter((user) => user.items.length > 0);
 
     return (
-      <div className="font-raleway bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-10">
+      <div className="font-raleway mx-auto max-w-[1000px] bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-0 pb-10">
         <NavBar />
-        <div className="mb-4">
+        <div className="mb-4 md:p-6 md:pt-20">
           <Link href="/groups" className="text-primary_text font-raleway">
             {"< "}Back
           </Link>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col md:p-6">
           <div
             className="flex flex-row 
                 font-bold mb-4 text-primary_text font-raleway text-left 
@@ -151,7 +151,7 @@ export default async function GroupWishlistsPage({
           >
             <h1 className="text-3xl ">Wishlists for {groupDetails?.name}</h1>
           </div>
-          <div className="flex ">
+          <div className="flex">
             <div className=" bg-green-600 rounded-md">
               <Link
                 href={`/dashboard/?groupId=${groupId}`}
@@ -163,7 +163,7 @@ export default async function GroupWishlistsPage({
           </div>
         </div>
 
-        <div className="my-12">
+        <div className="py-12 md:px-6">
           {usersWithWishlists.length === 0 ? (
             <div className="my-12">
               <p className="text-primary_text font-raleway text-center text-lg">
