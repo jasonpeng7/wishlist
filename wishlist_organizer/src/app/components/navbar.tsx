@@ -25,7 +25,7 @@ export default function NavBar() {
   return (
     <>
       <nav
-        className="fixed
+        className="
           w-full max-w-[1000px] z-50 bg-white/40 items-center h-16 glass
           justify-between p-6 hidden md:flex"
       >
@@ -54,25 +54,50 @@ export default function NavBar() {
               ? "My Groups & Wishlists"
               : "My Dashboard"}
           </Link>
+          <button
+            onClick={handleSignOut}
+            className="flex flex-col items-center transition-transform transform active:scale-90 p-2"
+          >
+            <div className="bg-red-600 relative flex flex-col items-center justify-center h-full w-20 rounded-full p-1">
+              <span className="text-sm font-medium text-white">Sign Out</span>
+            </div>
+          </button>
         </div>
       </nav>
-
 
       {/* Bottom Navbar for Mobile */}
       <nav className="fixed bottom-0 left-0 right-0 h-16 glass sm:hidden z-50">
         <div className="flex justify-around items-center h-full">
           <Link href="/dashboard" className="flex flex-col items-center p-2">
-            <div className={`relative flex flex-col items-center justify-center h-full w-20 ${isDashboard ? 'glass-nav' : ''}`}>
-              <Home className={isDashboard ? "text-black/70" : "text-black/70"} />
-              <span className={`text-sm font-medium ${isDashboard ? "text-black/70" : "text-black/70"}`}>
+            <div
+              className={`relative flex flex-col items-center justify-center h-full w-20 ${
+                isDashboard ? "glass-nav" : ""
+              }`}
+            >
+              <Home
+                className={isDashboard ? "text-black/70" : "text-black/70"}
+              />
+              <span
+                className={`text-sm font-medium ${
+                  isDashboard ? "text-black/70" : "text-black/70"
+                }`}
+              >
                 Home
               </span>
             </div>
           </Link>
           <Link href="/groups" className="flex flex-col items-center p-2">
-            <div className={`relative flex flex-col items-center justify-center h-full w-20 ${isGroups ? 'glass-nav' : ''}`}>
+            <div
+              className={`relative flex flex-col items-center justify-center h-full w-20 ${
+                isGroups ? "glass-nav" : ""
+              }`}
+            >
               <Users className={isGroups ? "text-black/70" : "text-black/70"} />
-              <span className={`text-sm font-medium ${isGroups ? "text-black/70" : "text-black/70"}`}>
+              <span
+                className={`text-sm font-medium ${
+                  isGroups ? "text-black/70" : "text-black/70"
+                }`}
+              >
                 Groups
               </span>
             </div>
