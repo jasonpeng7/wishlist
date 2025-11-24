@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import OnboardingModal from '../components/OnboardingModal';
-import { supabase } from '../../../utils/supabase';
+import { useState, useEffect } from "react";
+import OnboardingModal from "../components/OnboardingModal";
+import { supabase } from "../../../utils/supabase";
 import WishlistItems from "./WishListItems";
 import WishlistForm from "./WishListForm";
 import NavBar from "../components/navbar";
-import RibbonDivider from '../components/RibbonDivider';
+import RibbonDivider from "../components/RibbonDivider";
 
 interface User {
   id: string;
@@ -21,21 +21,21 @@ export default function DashboardView({ user }: DashboardViewProps) {
 
   useEffect(() => {
     const checkGroupsAndOnboarding = async () => {
-      const hasBeenOnboarded = localStorage.getItem('onboarded');
-      if (hasBeenOnboarded === 'true') {
+      const hasBeenOnboarded = localStorage.getItem("onboarded");
+      if (hasBeenOnboarded === "true") {
         return;
       }
 
       const { data: groups, error } = await supabase
-        .from('user_groups')
-        .select('group_id', { count: 'exact', head: true })
-        .eq('user_id', user.id);
-      
+        .from("user_groups")
+        .select("group_id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
       if (error) {
-        console.error('Error fetching user groups:', error);
+        console.error("Error fetching user groups:", error);
         return;
       }
-      
+
       const groupCount = groups ? groups.length : 0;
       if (groupCount === 0) {
         setShowOnboarding(true);
@@ -48,7 +48,7 @@ export default function DashboardView({ user }: DashboardViewProps) {
   return (
     <>
       {showOnboarding && <OnboardingModal userId={user.id} />}
-      <main className="min-h-screen bg-[#474853] pt-20 christmas-stripes">
+      <main className="min-h-screen max-w-[1000px] mx-auto bg-[#474853] pt-20 christmas-stripes">
         <NavBar />
         <div className="bg-[#f7f9fb] rounded-t-3xl md:mt-[100px] md:mx-8 lg:mx-auto lg:max-w-[1000px]">
           <div className="p-6 md:p-8 lg:p-10">
