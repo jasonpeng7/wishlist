@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from 'react';
-import ConfirmationModal from '../../../components/ConfirmationModal';
-import DeleteGroupButton from '@/app/components/DeleteGroup';
+import { useState } from "react";
+import ConfirmationModal from "../../../components/ConfirmationModal";
+import DeleteGroupButton from "@/app/components/DeleteGroup";
 
 interface GroupSettingsProps {
   group: {
@@ -13,7 +13,11 @@ interface GroupSettingsProps {
   deleteGroup: (formData: FormData) => Promise<void>;
 }
 
-export default function GroupSettings({ group, updateHideGiftGetters, deleteGroup }: GroupSettingsProps) {
+export default function GroupSettings({
+  group,
+  updateHideGiftGetters,
+  deleteGroup,
+}: GroupSettingsProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentSetting, setCurrentSetting] = useState(group.hide_gift_getters);
 
@@ -28,14 +32,16 @@ export default function GroupSettings({ group, updateHideGiftGetters, deleteGrou
       setCurrentSetting(newValue);
     } catch (error) {
       console.error("Failed to update setting:", error);
-      alert("There was an error updating the setting. Please check the server logs and your database permissions (RLS).");
+      alert(
+        "There was an error updating the setting. Please check the server logs and your database permissions (RLS)."
+      );
     }
     setIsModalOpen(false);
   };
 
   return (
     <>
-      <section className="mt-8 mb-24 font-raleway text-primary_text">
+      <section className="mt-8 pb-24 font-raleway text-primary_text md:px-6">
         <h2 className="text-xl font-semibold mb-4">Group Settings</h2>
         <div className="bg-primary_text p-6 rounded-lg">
           <div className="flex items-center justify-between mb-4">
@@ -43,12 +49,12 @@ export default function GroupSettings({ group, updateHideGiftGetters, deleteGrou
             <button
               onClick={handleToggle}
               className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
-                currentSetting ? 'bg-green-500' : 'bg-red-600'
+                currentSetting ? "bg-green-500" : "bg-red-600"
               }`}
             >
               <span
                 className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
-                  currentSetting ? 'translate-x-6' : 'translate-x-1'
+                  currentSetting ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </button>

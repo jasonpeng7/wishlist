@@ -83,13 +83,13 @@ export default async function ManageGroupPage({ params }: Props) {
   async function updateHideGiftGetters(groupId: string, hide: boolean) {
     "use server";
     const { error } = await supabase
-      .from('groups')
+      .from("groups")
       .update({ hide_gift_getters: hide })
-      .eq('id', groupId);
+      .eq("id", groupId);
 
     if (error) {
-      console.error('Error updating group settings:', error);
-      throw new Error('Failed to update group settings in database.');
+      console.error("Error updating group settings:", error);
+      throw new Error("Failed to update group settings in database.");
     } else {
       revalidatePath(`/groups/${groupId}/manage`);
       revalidatePath(`/groups/${groupId}/wishlists`);
@@ -168,9 +168,9 @@ export default async function ManageGroupPage({ params }: Props) {
 
   return (
     <>
-      <NavBar />
-      <div className="font-raleway relative bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10">
-        <div className="flex font-raleway mb-4">
+      <div className="font-raleway max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-0">
+        <NavBar />
+        <div className="flex font-raleway mb-4 md:pt-20 md:p-6">
           <Link
             href="/groups"
             className=" text-primary_text font-medium rounded transition-transform transform active:scale-90"
@@ -178,14 +178,14 @@ export default async function ManageGroupPage({ params }: Props) {
             {"< "}Back
           </Link>
         </div>
-        <div className="flex mb-4">
+        <div className="flex mb-4 md:px-6">
           <h1 className="text-3xl font-bold text-primary_text">
             Manage {group.name}
           </h1>
         </div>
 
         {/* invite code */}
-        <section className="mb-8">
+        <section className="mb-8 md:px-6">
           <h2 className="text-xl font-semibold mb-4 text-primary_text">
             Invite Code
           </h2>
@@ -215,7 +215,7 @@ export default async function ManageGroupPage({ params }: Props) {
         </section>
 
         {/* members */}
-        <section className="pmb-8">
+        <section className="mb-8 md:px-6">
           <h2 className="text-xl font-semibold mb-4 text-primary_text">
             Members ({memberDetails.length})
           </h2>
@@ -291,16 +291,19 @@ export default async function ManageGroupPage({ params }: Props) {
                         className="border-b border-[#f7f9fb] p-4 space-y-2 bg-bone items-center"
                       >
                         <div className="flex flex-row justify-between">
-                        <div className="space-y-1 ">
-                          <div className="text-sm text-primary_text">Name:</div>
-                          <div>{member.user.name}</div>
-                        </div>
-                        <div className="space-y-1">
-                          <div className="text-sm text-primary_text">Role:</div>
-                          <div className="capitalize">{member.role}</div>
-                        </div>
+                          <div className="space-y-1 ">
+                            <div className="text-sm text-primary_text">
+                              Name:
+                            </div>
+                            <div>{member.user.name}</div>
                           </div>
-
+                          <div className="space-y-1">
+                            <div className="text-sm text-primary_text">
+                              Role:
+                            </div>
+                            <div className="capitalize">{member.role}</div>
+                          </div>
+                        </div>
 
                         {member.role != "admin" && (
                           <form action={removeMember} className="flex mb-6">
@@ -340,7 +343,11 @@ export default async function ManageGroupPage({ params }: Props) {
         </section>
 
         {/* Group Setting Section */}
-        <GroupSettings group={group} deleteGroup={deleteGroup} updateHideGiftGetters={updateHideGiftGetters} />
+        <GroupSettings
+          group={group}
+          deleteGroup={deleteGroup}
+          updateHideGiftGetters={updateHideGiftGetters}
+        />
       </div>
     </>
   );
