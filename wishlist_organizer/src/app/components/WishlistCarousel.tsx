@@ -177,7 +177,7 @@ const WishlistCarousel: React.FC<PropType> = ({
         <button
           onClick={scrollPrev}
           disabled={prevBtnDisabled}
-          className="w-10 h-10 rounded-full bg-primary_text hover:bg-washed_gray/80 disabled:opacity-0 transition flex items-center justify-center text-white"
+          className="w-10 h-10 rounded-full bg-green-600 disabled:opacity-0 transition flex items-center justify-center text-white"
           aria-label={`Previous items in ${shelfTitle}`}
         >
           <ChevronLeft size={24} />
@@ -190,7 +190,7 @@ const WishlistCarousel: React.FC<PropType> = ({
         <button
           onClick={scrollNext}
           disabled={nextBtnDisabled}
-          className="w-10 h-10 rounded-full bg-primary_text hover:bg-washed_gray/80 disabled:opacity-0 transition flex items-center justify-center text-white"
+          className="w-10 h-10 rounded-full bg-green-600 disabled:opacity-0 transition flex items-center justify-center text-white"
           aria-label={`Next items in ${shelfTitle}`}
         >
           <ChevronRight size={24} />
