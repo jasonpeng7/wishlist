@@ -6,6 +6,8 @@ type ModalProps = {
   onClose: () => void;
   children: React.ReactNode;
   actions?: React.ReactNode;
+  className?: string;
+  titleClassName?: string;
 };
 
 export default function Modal({
@@ -14,16 +16,22 @@ export default function Modal({
   onClose,
   children,
   actions,
+  className = "bg-dark_gray",
+  titleClassName = "text-white",
 }: ModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-lg bg-dark_gray shadow-xl">
+      <div
+        className={`relative z-10 w-full max-w-md mx-4 rounded-lg shadow-xl ${className} overflow-y-auto max-h-[90vh]`}
+      >
         {title && (
           <div className="px-5 pt-4">
-            <h3 className="text-lg font-semibold text-white">{title}</h3>
+            <h3 className={`text-lg font-semibold ${titleClassName}`}>
+              {title}
+            </h3>
           </div>
         )}
         <div className="px-5 py-4 ">{children}</div>
