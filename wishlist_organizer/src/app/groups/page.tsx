@@ -3,7 +3,7 @@ import Link from "next/link";
 import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 import { redirect } from "next/navigation";
-import { Settings } from "lucide-react";
+import { Settings, Gift, User } from "lucide-react";
 
 export default async function GroupsPage() {
   const user = await getSessionUser();
@@ -51,35 +51,55 @@ export default async function GroupsPage() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {adminGroups?.map((group) => (
-            <div key={group.id} className="bg-primary_text p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <h3 className="font-medium text-white">{group.name}</h3>
-                <Link
-                  href={`/groups/${group.id}/manage`}
-                  className="text-white hover:text-gray-300 transition"
-                >
-                  <Settings size={20} />
-                </Link>
+            <div
+              key={group.id}
+              className="relative bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group"
+            >
+              {/* Christmas Ribbon Decoration (Red for Admin) */}
+              <div className="absolute top-0 left-6 w-8 h-full bg-red-600/90 shadow-sm z-0">
+                <div className="absolute top-0 inset-x-0 h-full border-l border-r border-white/20"></div>
               </div>
-              <p className="text-sm text-white">
-                Members: {group.user_groups?.length || 0}
-              </p>
 
-              <div className="mt-4 flex flex-col space-y-4 ">
-                <Link
-                  href={`/groups/${group.id}/manage`}
-                  className="flex text-xs items-center justify-center bg-white hover:underline text-black px-4 py-4 rounded 
-                  transition-transform transform active:scale-90"
-                >
-                  Invite Friends
-                </Link>
-                <Link
-                  href={`/groups/${group.id}/wishlists`}
-                  className="flex  text-xs items-center justify-center bg-washed_gray text-white px-4 py-4 rounded 
-                  transition-transform transform active:scale-90"
-                >
-                  View Wishlists
-                </Link>
+              {/* Gift Bow/Icon */}
+              <div className="absolute top-6 left-6 w-8 flex justify-center z-10">
+                <div className="bg-white rounded-full p-1 shadow-sm border border-red-100">
+                  <Gift size={16} className="text-red-600" />
+                </div>
+              </div>
+
+              <div className="pl-20 pr-5 py-5 relative z-0">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="font-bold text-lg text-slate-800 font-raleway leading-tight truncate">
+                    {group.name}
+                  </h3>
+                  <Link
+                    href={`/groups/${group.id}/manage`}
+                    className="text-slate-400 hover:text-slate-600 transition-colors"
+                    title="Group Settings"
+                  >
+                    <Settings size={18} />
+                  </Link>
+                </div>
+
+                <div className="flex items-center gap-2 text-slate-500 text-xs font-medium mb-6 bg-slate-50 w-fit px-2 py-1 rounded-full">
+                  <User size={12} />
+                  <span>{group.user_groups?.length || 0} members</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Link
+                    href={`/groups/${group.id}/manage`}
+                    className="flex items-center justify-center text-center text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 py-2.5 rounded-lg transition-colors"
+                  >
+                    Invite
+                  </Link>
+                  <Link
+                    href={`/groups/${group.id}/wishlists`}
+                    className="flex items-center justify-center text-center text-xs font-bold text-white bg-red-600 hover:bg-red-700 py-2.5 rounded-lg transition-colors shadow-sm"
+                  >
+                    Wishlists
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
@@ -116,27 +136,47 @@ export default async function GroupsPage() {
             if (!group) return null;
 
             return (
-              <div key={group.id} className="bg-primary_text p-4 rounded-lg">
-                <h3 className="font-medium text-white">{group.name}</h3>
-                <p className="text-sm text-white">
-                  Members: {group.user_groups?.length || 0}
-                </p>
-                <div className="mt-4 space-y-4 flex flex-col">
-                  <Link
-                    href={`/groups/${group.id}`}
-                    className="flex text-xs bg-white text-black hover:underline rounded px-4 py-4
-                  transition-transform transform active:scale-90
-                  items-center justify-center"
-                  >
-                    View Group
-                  </Link>
-                  <Link
-                    href={`/groups/${group.id}/wishlists`}
-                    className="flex text-xs items-center justify-center bg-washed_gray text-white px-4 py-4 rounded 
-                  transition-transform transform active:scale-90"
-                  >
-                    View Wishlists
-                  </Link>
+              <div
+                key={group.id}
+                className="relative bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group"
+              >
+                {/* Green Ribbon for Member Groups */}
+                <div className="absolute top-0 left-6 w-8 h-full bg-green-700/90 shadow-sm z-0">
+                  <div className="absolute top-0 inset-x-0 h-full border-l border-r border-white/20"></div>
+                </div>
+
+                <div className="absolute top-6 left-6 w-8 flex justify-center z-10">
+                  <div className="bg-white rounded-full p-1 shadow-sm border border-green-100">
+                    <Gift size={16} className="text-green-700" />
+                  </div>
+                </div>
+
+                <div className="pl-20 pr-5 py-5 relative z-0">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-bold text-lg text-slate-800 font-raleway leading-tight truncate">
+                      {group.name}
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-slate-500 text-xs font-medium mb-6 bg-slate-50 w-fit px-2 py-1 rounded-full">
+                    <User size={12} />
+                    <span>{group.user_groups?.length || 0} members</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link
+                      href={`/groups/${group.id}`}
+                      className="flex items-center justify-center text-center text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 py-2.5 rounded-lg transition-colors"
+                    >
+                      Details
+                    </Link>
+                    <Link
+                      href={`/groups/${group.id}/wishlists`}
+                      className="flex items-center justify-center text-center text-xs font-bold text-white bg-green-700 hover:bg-green-800 py-2.5 rounded-lg transition-colors shadow-sm"
+                    >
+                      Wishlists
+                    </Link>
+                  </div>
                 </div>
               </div>
             );
