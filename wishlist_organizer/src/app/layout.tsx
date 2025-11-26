@@ -2,6 +2,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Raleway } from "next/font/google";
 import type { Metadata } from "next";
+import Providers from "./providers";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -33,10 +34,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${raleway.variable} font-sans christmas-stripes`}>
-        <main>
-          {children}
-          <Analytics />
-        </main>
+        <Providers>
+          <main>
+            {children}
+            <Analytics />
+          </main>
+        </Providers>
       </body>
     </html>
   );
