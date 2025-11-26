@@ -138,7 +138,12 @@ export const useGroupWishlist = (groupId: string, currentUserId: string) => {
             items: mappedItems,
           };
         })
-        .filter((user) => user.items.length > 0);
+        .filter((user) => user.items.length > 0)
+        .sort((a, b) => {
+          if (a.id === currentUserId) return -1;
+          if (b.id === currentUserId) return 1;
+          return 0;
+        });
 
       return {
         usersWithWishlists,
