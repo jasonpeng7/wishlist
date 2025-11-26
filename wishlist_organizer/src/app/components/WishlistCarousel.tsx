@@ -128,8 +128,8 @@ const WishlistCarousel: React.FC<PropType> = ({
               className="flex-grow-0 flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 pl-4"
               key={item.id}
             >
-              <div className="bg-primary_text p-4 rounded-lg h-full flex flex-col">
-                <div className="relative w-full h-48 mb-4">
+              <div className="lined-paper torn-paper p-6 rounded-t-sm h-full flex flex-col filter drop-shadow-sm">
+                <div className="relative w-full h-48 mb-4 border border-slate-100 rounded overflow-hidden bg-white">
                   <Image
                     src={item.image_url || "/placeholder.webp"}
                     alt={item.name}
@@ -139,10 +139,10 @@ const WishlistCarousel: React.FC<PropType> = ({
                     loading="lazy"
                   />
                 </div>
-                <h3 className="font-medium text-white flex-grow">
+                <h3 className="font-bold text-slate_gray flex-grow font-raleway text-lg">
                   {item.name}
                 </h3>
-                <h2 className="text-white/70 flex-grow">
+                <h2 className="text-slate_gray/70 flex-grow text-sm mt-1 mb-3 font-raleway">
                   {item.description || "No description"}
                 </h2>
                 {item.link && (
@@ -150,14 +150,14 @@ const WishlistCarousel: React.FC<PropType> = ({
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-bone hover:underline mt-2 text-sm rounded-md bg-slate_gray/50 p-2 w-fit"
+                    className="text-white bg-slate_gray hover:bg-slate_gray/90 text-sm rounded-md p-2 w-fit mb-3 font-raleway transition-colors"
                     tabIndex={-1} // Items inside are not tabbable individually
                   >
                     View Item
                   </a>
                 )}
                 {showGiftAssignments && (
-                  <div className="mt-4">
+                  <div className="mt-auto pt-2 border-t border-slate-200/50">
                     <GiftAssignment
                       itemId={item.id}
                       userId={currentUserId}
