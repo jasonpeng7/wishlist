@@ -133,7 +133,12 @@ export default async function GroupWishlistsPage({
           items: carouselItems,
         };
       })
-      .filter((user) => user.items.length > 0);
+      .filter((user) => user.items.length > 0)
+      .sort((a, b) => {
+        if (a.id === user.id) return -1;
+        if (b.id === user.id) return 1;
+        return 0;
+      });
 
     return (
       <div className="font-raleway mx-auto max-w-[1000px] bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-0 pb-10">
