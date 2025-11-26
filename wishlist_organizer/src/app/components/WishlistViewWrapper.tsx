@@ -1,9 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../../../wishlist_organizer/utils/supabase";
+import { useState } from "react";
 import WishlistCarousel from "./WishlistCarousel";
 import WishlistBulletPoints from "./WIshlistBulletPoints";
 import { LayoutGrid, List } from "lucide-react";
@@ -44,34 +41,6 @@ export default function WishlistViewWrapper({
   showGiftAssignments,
 }: Props) {
   const [viewMode, setViewMode] = useState<"carousel" | "list">("list");
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const channel = supabase
-      .channel(`gift-assignments-${groupId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "gift_assignments",
-        },
-        () => {
-          // Invalidate React Query cache for the group (updates client-side list)
-          queryClient.invalidateQueries({
-            queryKey: ["groupWishlist", groupId],
-          });
-          // Refresh Server Component data (updates server-side carousel props)
-          router.refresh();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [groupId, queryClient, router]);
 
   return (
     <div className="flex flex-col w-full">
