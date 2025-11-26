@@ -6,6 +6,7 @@ import { supabase } from "../../../utils/supabase";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Group {
   id: string;
@@ -13,6 +14,7 @@ interface Group {
 }
 
 export default function WishlistForm({ userId }: { userId: string }) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [itemName, setItemName] = useState("");
   const [description, setDescription] = useState("");
@@ -126,7 +128,7 @@ export default function WishlistForm({ userId }: { userId: string }) {
 
     // Step 2: Insert item into the wishlists table
     try {
-      const { data, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from("wishlists")
         .insert([
           {
@@ -145,6 +147,11 @@ export default function WishlistForm({ userId }: { userId: string }) {
         console.error("Supabase error:", insertError);
         throw insertError;
       }
+
+      // Invalidate React Query cache for the group so the new item appears immediately
+      await queryClient.invalidateQueries({
+        queryKey: ["groupWishlist", selectedGroupId],
+      });
 
       // Redirect to the group's wishlist page
       router.push(`/groups/${selectedGroupId}/wishlists`);
