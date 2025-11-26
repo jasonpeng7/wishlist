@@ -2,8 +2,8 @@ import { supabase } from "../../../../../utils/supabase";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
-import WishlistCarousel from "../../../components/WishlistCarousel";
 import NavBar from "@/app/components/navbar";
+import WishlistViewWrapper from "@/app/components/WishlistViewWrapper";
 
 export const dynamic = "force-dynamic";
 
@@ -164,29 +164,13 @@ export default async function GroupWishlistsPage({
         </div>
 
         <div className="py-12 md:px-6">
-          {usersWithWishlists.length === 0 ? (
-            <div className="my-12">
-              <p className="text-primary_text font-raleway text-center text-lg">
-                No wishlists for this group yet. Be the first to add one!
-              </p>
-            </div>
-          ) : (
-            usersWithWishlists.map((userData) => (
-              <div key={userData.id} className="">
-                <div className="mb-4">
-                  <h3 className="text-2xl font-bold capitalize text-primary_text font-raleway break-words">
-                    {userData.username}&apos;s Wishlist
-                  </h3>
-                </div>
-                <WishlistCarousel
-                  items={userData.items}
-                  shelfTitle={`${userData.username}'s Wishlist`}
-                  currentUserId={user.id}
-                  showGiftAssignments={!groupDetails?.hide_gift_getters}
-                />
-              </div>
-            ))
-          )}
+          <WishlistViewWrapper
+            usersWithWishlists={usersWithWishlists}
+            groupId={groupId}
+            groupName={groupDetails?.name}
+            currentUserId={user.id}
+            showGiftAssignments={!groupDetails?.hide_gift_getters}
+          />
         </div>
       </div>
     );
