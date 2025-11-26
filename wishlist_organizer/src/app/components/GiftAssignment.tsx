@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../../../utils/supabase";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,7 @@ type GiftAssignmentProps = {
     status: "will_get" | null;
   };
   assignedUsername?: string;
+  onUpdate?: () => void;
 };
 
 export default function GiftAssignment({
@@ -21,12 +22,21 @@ export default function GiftAssignment({
   creatorId,
   currentAssignment,
   assignedUsername,
+  onUpdate,
 }: GiftAssignmentProps) {
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(
-    currentAssignment?.status === "will_get"
+    currentAssignment?.status === "will_get" &&
+      currentAssignment?.assigned_to === userId
   );
   const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    setIsChecked(
+      currentAssignment?.status === "will_get" &&
+        currentAssignment?.assigned_to === userId
+    );
+  }, [currentAssignment, userId]);
 
   if (userId === creatorId) {
     return null;
@@ -73,20 +83,15 @@ export default function GiftAssignment({
 
       setIsChecked(!isChecked);
       router.refresh();
+      if (onUpdate) {
+        onUpdate();
+      }
     } catch (error) {
       console.error("Error updating gift assignment:", error);
     } finally {
       setIsUpdating(false);
     }
   };
-
-  if (currentAssignment?.assigned_to === userId && assignedUsername) {
-    return (
-      <div className="font-raleway text-sm font-medium text-green-600">
-        You will get this!
-      </div>
-    );
-  }
 
   if (
     currentAssignment?.status === "will_get" &&
@@ -101,15 +106,22 @@ export default function GiftAssignment({
   }
 
   return (
-    <div className="font-raleway flex items-center space-x-2">
+    <div
+      className={`font-raleway flex items-center space-x-2 px-3 py-1.5 rounded-md transition-colors w-fit ${
+        isChecked ? "bg-green-600 text-white" : "bg-transparent"
+      }`}
+    >
       <input
         type="checkbox"
         checked={isChecked}
         onChange={handleToggle}
         disabled={isUpdating}
-        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer accent-green-600"
       />
-      <label className="text-sm font-medium text-white">
+      <label
+        className="text-sm font-medium cursor-pointer select-none"
+        onClick={() => !isUpdating && handleToggle()}
+      >
         {isChecked ? "You're getting this!" : "I want to get this item!"}
       </label>
     </div>
