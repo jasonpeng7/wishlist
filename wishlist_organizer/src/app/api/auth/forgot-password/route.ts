@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       }
 
       // Send password reset email via Mailgun
-      const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
+      const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
       
       try {
         const formData = new URLSearchParams();
