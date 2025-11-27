@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       
       try {
         const formData = new URLSearchParams();
-        formData.append('from', `Wishlist App <noreply@${process.env.MAILGUN_SANDBOX_DOMAIN}>`);
+        formData.append('from', `Wishlist App <noreply@${process.env.MAILGUN_DOMAIN}>`);
         formData.append('to', user.email);
         formData.append('subject', 'Reset Your Password - Wishlist App');
         formData.append('text', `
@@ -112,7 +112,7 @@ Wishlist App Team
 </html>
         `);
 
-        const emailResponse = await fetch(`https://api.mailgun.net/v3/${process.env.MAILGUN_SANDBOX_DOMAIN}/messages`, {
+        const emailResponse = await fetch(`https://api.mailgun.net/v3/${process.env.MAILGUN_DOMAIN}/messages`, {
           method: 'POST',
           headers: {
             'Authorization': `Basic ${Buffer.from(`api:${process.env.MAILGUN_API_KEY}`).toString('base64')}`,
