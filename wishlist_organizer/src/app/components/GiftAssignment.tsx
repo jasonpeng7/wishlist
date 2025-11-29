@@ -100,7 +100,8 @@ export default function GiftAssignment({
   ) {
     return (
       <div className="font-raleway text-sm font-medium text-green-600">
-        {assignedUsername} is getting this item!
+        {/* {assignedUsername} is getting this item! */}
+        This item has been claimed!
       </div>
     );
   }
