@@ -1,12 +1,23 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import { useGroupWishlist, WishlistItem } from "../../hooks/useGroupWishlist";
+import { supabase } from "../../../utils/supabase";
 import GiftAssignment from "./GiftAssignment";
 import Loader from "./Loader";
 import Modal from "./Modal";
+import ConfirmationModal from "./ConfirmationModal";
+import "react-swipeable-list/dist/styles.css";
+import {
+  SwipeableList,
+  SwipeableListItem,
+  TrailingActions,
+  SwipeAction,
+  Type,
+} from "react-swipeable-list";
+import { Trash2 } from "lucide-react";
 
 type Props = {
   groupId: string;
@@ -17,11 +28,13 @@ const WishlistItemRow = React.memo(
   ({
     item,
     onViewItem,
+    onRemoveItem,
     currentUserId,
     isMyList,
   }: {
     item: WishlistItem;
     onViewItem: (item: WishlistItem) => void;
+    onRemoveItem: (itemId: string) => void;
     currentUserId: string;
     isMyList: boolean;
   }) => {
@@ -33,34 +46,54 @@ const WishlistItemRow = React.memo(
       item.assignment?.status === "will_get" &&
       item.assignment?.assigned_to !== currentUserId;
 
-    return (
-      <li className="group flex items-center justify-between py-3 border-b border-slate-400/20 last:border-0 hover:bg-black/5 transition-colors px-2 rounded-sm">
-        <div className="flex flex-col truncate pr-4">
-          <h4
-            className={`font-bold text-sm truncate font-raleway ${
-              isSelfAssigned
-                ? "text-green-700"
-                : isOtherAssigned
-                ? "line-through text-slate-400 decoration-slate-400"
-                : "text-slate_gray"
-            }`}
-            title={item.name}
-          >
-            {item.name}
-          </h4>
-          {isOtherAssigned && item.assignedUsername && (
-            <span className="text-xs text-slate-400 italic font-raleway">
-              claimed by {item.assignedUsername}
-            </span>
-          )}
-        </div>
-        <button
-          onClick={() => onViewItem(item)}
-          className="flex-shrink-0 text-xs font-bold bg-transparent text-slate_gray border border-slate_gray px-3 py-1 rounded hover:bg-slate_gray hover:text-white transition-colors font-raleway"
+    const trailingActions = () => (
+      <TrailingActions>
+        <SwipeAction
+          onClick={() => {
+            onRemoveItem(item.id);
+          }}
         >
-          View Item
-        </button>
-      </li>
+          <div className="flex items-center justify-center h-full bg-red-600 max-auto px-6">
+            <Trash2 size={16} className="text-white" />
+          </div>
+        </SwipeAction>
+      </TrailingActions>
+    );
+
+    return (
+      <SwipeableList threshold={0.25} fullSwipe={false} type={Type.IOS}>
+        <SwipeableListItem
+          trailingActions={isMyList ? trailingActions() : undefined}
+        >
+          <div className="group flex items-center justify-between py-3 border-b border-slate-400/20 last:border-0 hover:bg-black/5 transition-colors px-2 rounded-sm w-full">
+            <div className="flex flex-col truncate pr-4">
+              <h4
+                className={`font-bold text-sm truncate font-raleway ${
+                  isSelfAssigned
+                    ? "text-green-700"
+                    : isOtherAssigned
+                    ? "line-through text-slate-400 decoration-slate-400"
+                    : "text-slate_gray"
+                }`}
+                title={item.name}
+              >
+                {item.name}
+              </h4>
+              {isOtherAssigned && item.assignedUsername && (
+                <span className="text-xs text-slate-400 italic font-raleway">
+                  claimed by {item.assignedUsername}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => onViewItem(item)}
+              className="flex-shrink-0 text-xs font-bold bg-transparent text-slate_gray border border-slate_gray px-3 py-1 rounded hover:bg-slate_gray hover:text-white transition-colors font-raleway"
+            >
+              View Item
+            </button>
+          </div>
+        </SwipeableListItem>
+      </SwipeableList>
     );
   }
 );
@@ -72,12 +105,14 @@ const UserWishlistSection = React.memo(
     username,
     items,
     onViewItem,
+    onRemoveItem,
     currentUserId,
     listOwnerId,
   }: {
     username: string;
     items: WishlistItem[];
     onViewItem: (item: WishlistItem) => void;
+    onRemoveItem: (itemId: string) => void;
     currentUserId: string;
     listOwnerId: string;
   }) => {
@@ -101,17 +136,18 @@ const UserWishlistSection = React.memo(
             </div>
           </div>
 
-          <ul className="pl-2">
+          <div className="pl-2 flex flex-col gap-1">
             {items.map((item) => (
               <WishlistItemRow
                 key={item.id}
                 item={item}
                 onViewItem={onViewItem}
+                onRemoveItem={onRemoveItem}
                 currentUserId={currentUserId}
                 isMyList={isMyList}
               />
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     );
@@ -127,14 +163,41 @@ export default function WishlistBulletPoints({
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useGroupWishlist(groupId, currentUserId);
   const [selectedItem, setSelectedItem] = useState<WishlistItem | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleAssignmentUpdate = () => {
     queryClient.invalidateQueries({ queryKey: ["groupWishlist", groupId] });
   };
 
-  const handleViewItem = (item: WishlistItem) => {
-    setSelectedItem(item);
+  const handleRemoveItem = useCallback((itemId: string) => {
+    setItemToDelete(itemId);
+  }, []);
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+
+    setIsDeleting(true);
+    const { error } = await supabase
+      .from("wishlists")
+      .delete()
+      .eq("id", itemToDelete);
+
+    if (error) {
+      console.error("Error deleting item:", error);
+      alert("Failed to delete item");
+    } else {
+      queryClient.invalidateQueries({
+        queryKey: ["groupWishlist", groupId],
+      });
+    }
+    setIsDeleting(false);
+    setItemToDelete(null);
   };
+
+  const handleViewItem = useCallback((item: WishlistItem) => {
+    setSelectedItem(item);
+  }, []);
 
   const handleCloseModal = () => {
     setSelectedItem(null);
@@ -175,13 +238,14 @@ export default function WishlistBulletPoints({
             username={user.username}
             items={user.items}
             onViewItem={handleViewItem}
+            onRemoveItem={handleRemoveItem}
             currentUserId={currentUserId}
             listOwnerId={user.id}
           />
         ))}
       </div>
     );
-  }, [data, isLoading, error, currentUserId]);
+  }, [data, isLoading, error, currentUserId, handleViewItem, handleRemoveItem]);
 
   return (
     <div className="w-full max-w-6xl mx-auto pb-12">
@@ -277,6 +341,16 @@ export default function WishlistBulletPoints({
           </div>
         )}
       </Modal>
+
+      <ConfirmationModal
+        isOpen={!!itemToDelete}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Item"
+        message="Are you sure you want to delete this item? This action cannot be undone."
+        confirmText="Delete"
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }
