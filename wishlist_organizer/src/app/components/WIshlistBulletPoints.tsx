@@ -81,7 +81,7 @@ const WishlistItemRow = React.memo(
               </h4>
               {isOtherAssigned && item.assignedUsername && (
                 <span className="text-xs text-slate-400 italic font-raleway">
-                  claimed by {item.assignedUsername}
+                  item has been claimed!
                 </span>
               )}
             </div>
