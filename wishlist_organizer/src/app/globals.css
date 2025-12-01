@@ -105,14 +105,14 @@
     rgba(0, 0, 0, 0.05) 32px
   );
   position: relative;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 /* Torn Bottom Edge */
 .torn-paper {
   position: relative;
   /* Ensure content doesn't overlap the torn part excessively */
-  padding-bottom: 20px; 
+  padding-bottom: 20px;
 }
 
 .torn-paper::after {
@@ -123,8 +123,10 @@
   width: 100%;
   height: 20px;
   background-color: #fdfbf7;
-  -webkit-mask-image: linear-gradient(45deg, transparent 50%, black 50%), linear-gradient(-45deg, transparent 50%, black 50%);
-  mask-image: linear-gradient(45deg, transparent 50%, black 50%), linear-gradient(-45deg, transparent 50%, black 50%);
+  -webkit-mask-image: linear-gradient(45deg, transparent 50%, black 50%),
+    linear-gradient(-45deg, transparent 50%, black 50%);
+  mask-image: linear-gradient(45deg, transparent 50%, black 50%),
+    linear-gradient(-45deg, transparent 50%, black 50%);
   -webkit-mask-size: 20px 20px;
   mask-size: 20px 20px;
   -webkit-mask-repeat: repeat-x;
@@ -132,4 +134,184 @@
   -webkit-mask-position: left bottom;
   mask-position: left bottom;
   z-index: 10;
+}
+
+/* Snow Effect */
+.snow-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) translateX(20px);
+    opacity: 0.3;
+  }
+}
+
+/* House Shape */
+.house-container {
+  position: relative;
+  z-index: 10;
+}
+
+.house-roof {
+  width: 0;
+  height: 0;
+  border-left: 175px solid transparent;
+  border-right: 175px solid transparent;
+  border-bottom: 140px solid #8b4513; /* Solid brown color */
+  position: relative;
+  margin: 0 auto;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  z-index: 20;
+}
+
+/* Chimney */
+.chimney {
+  position: absolute;
+  top: 20px;
+  left: 57%;
+  margin-left: 40px; /* Offset from center */
+  width: 40px;
+  height: 120px;
+  background: #8b4513;
+  border: 2px solid #5e2f0d;
+  z-index: 5;
+}
+
+.smoke {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: smoke 3s infinite;
+}
+
+@keyframes smoke {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-40px) scale(3);
+    opacity: 0;
+  }
+}
+
+/* Christmas Lights */
+.lights-strand {
+  position: absolute;
+  top: 140px; /* Hang from bottom edge of roof (border-bottom height) */
+  left: -160px; /* Align with roof left edge (border-left width) */
+  width: 340px; /* Total width of roof base (160px + 180px) */
+  height: 10px;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+}
+
+.light {
+  width: 10px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ccc;
+  animation: flash 1s infinite alternate;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.light:nth-child(odd) {
+  animation-duration: 1.2s;
+  background: #ff0000;
+  box-shadow: 0 0 15px #ff0000;
+}
+.light:nth-child(even) {
+  animation-duration: 0.8s;
+  background: #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+}
+.light:nth-child(3n) {
+  animation-duration: 1.5s;
+  background: #ffff00;
+  box-shadow: 0 0 15px #ffff00;
+}
+.light:nth-child(4n) {
+  animation-duration: 1.1s;
+  background: #0000ff;
+  box-shadow: 0 0 15px #0000ff;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.house-body {
+  width: 100%;
+  max-width: 350px; /* Match roof base width approx */
+  margin: 0 auto;
+  background: #f7f1e3; /* Creamy wall color */
+  border: 4px solid #4a3b2a;
+  border-top: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Santa Animation */
+@keyframes flyAcross {
+  0% {
+    transform: translateX(-100vw) translateY(10vh) rotate(5deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(120vw) translateY(-10vh) rotate(-5deg);
+    opacity: 1;
+  }
+  81% {
+    opacity: 0;
+    transform: translateX(120vw) translateY(-10vh) rotate(-5deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100vw) translateY(10vh) rotate(5deg);
+  }
+}
+
+.santa-container {
+  position: fixed;
+  top: 10%;
+  left: 0;
+  opacity: 0; /* Start invisible */
+  animation: flyAcross 15s linear infinite;
+  z-index: 1; /* Behind house, in front of snow/bg */
+  pointer-events: none;
 }
