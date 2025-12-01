@@ -8,10 +8,12 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     const response = await fetch("/api/auth/signin", {
       method: "POST",
@@ -24,6 +26,7 @@ export default function SignInPage() {
     } else {
       const data = await response.json();
       setError(data.error || "Something went wrong");
+      setLoading(false);
     }
   };
 
@@ -40,8 +43,9 @@ export default function SignInPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 mt-1 border rounded bg-white text-primary_text"
+              className="w-full p-2 mt-1 border rounded bg-white text-primary_text disabled:opacity-50"
               required
+              disabled={loading}
             />
           </div>
           <div>
@@ -53,15 +57,17 @@ export default function SignInPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 mt-1 border rounded bg-white text-primary_text relative "
+                className="w-full p-2 mt-1 border rounded bg-white text-primary_text relative disabled:opacity-50"
                 required
+                disabled={loading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute inset-y-0 right-2 top-1/2 -translate-y-1/2 text-sm text-dark_gray hover:text-black"
+                className="absolute inset-y-0 right-2 top-1/2 -translate-y-1/2 text-sm text-dark_gray hover:text-black disabled:opacity-50"
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 title={showPassword ? "Hide password" : "Show password"}
+                disabled={loading}
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -70,9 +76,14 @@ export default function SignInPage() {
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
             type="submit"
-            className="w-full px-4 py-2 font-bold text-primary_text bg-bone rounded-md "
+            className="w-full px-4 py-2 font-bold text-primary_text bg-bone rounded-md flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading}
           >
-            Sign In
+            {loading ? (
+              <div className="w-6 h-6 border-2 border-t-transparent border-primary_text rounded-full animate-spin"></div>
+            ) : (
+              "Sign In"
+            )}
           </button>
         </form>
         <div className="text-center">
