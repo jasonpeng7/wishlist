@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { supabase } from "../../../../utils/supabase";
 import Link from "next/link";
-import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../../wishlist_organizer/utils/auth";
 
 export default async function JoinGroupPage({
