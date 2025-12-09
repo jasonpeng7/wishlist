@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 import { supabase } from "../../../../../utils/supabase";
 import { revalidatePath } from "next/cache";
-import DeleteGroupButton from "@/app/components/DeleteGroup";
 import Link from "next/link";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
 import NavBar from "@/app/components/navbar";
 import GroupSettings from "./GroupSettings";
+import Santa from "@/app/components/Santa";
+import "../../../manage-group.css";
 
 interface GroupDetails {
   id: string;
@@ -168,95 +169,108 @@ export default async function ManageGroupPage({ params }: Props) {
 
   return (
     <>
-      <div className="font-raleway max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-0">
-        <NavBar />
-        <div className="flex font-raleway mb-4 md:pt-20 md:p-6">
-          <Link
-            href="/groups"
-            className=" text-primary_text font-medium rounded transition-transform transform active:scale-90"
-          >
-            {"< "}Back
-          </Link>
-        </div>
-        <div className="flex mb-4 md:px-6">
-          <h1 className="text-3xl font-bold text-primary_text">
-            Manage {group.name}
-          </h1>
+      <div className="relative min-h-screen overflow-hidden bg-[#090a0f]">
+        {/* Snow Effect */}
+        <div className="snow-container absolute inset-0 z-0">
+          {Array.from({ length: 50 }).map((_, i) => (
+            <div
+              key={i}
+              className="snowflake"
+              style={{
+                left: `${Math.random() * 100}vw`,
+                animationDuration: `${Math.random() * 3 + 2}s`,
+                animationDelay: `${Math.random() * 2}s`,
+                width: `${Math.random() * 5 + 5}px`,
+                height: `${Math.random() * 5 + 5}px`,
+              }}
+            />
+          ))}
         </div>
 
-        {/* invite code */}
-        <section className="mb-8 md:px-6">
-          <h2 className="text-xl font-semibold mb-4 text-primary_text">
-            Invite Code
-          </h2>
+        <Santa />
 
-          <div className="bg-primary_text p-6 rounded-lg justify-between">
-            <div className="flex flex-col md:flex-row md:justify-between  gap-4">
-              <div className="text-left">
-                <p className="text-sm text-white mb-1">
-                  Share this code to invite members:
+        <div className="relative z-10 font-raleway max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 shadow-2xl christmas-card">
+          <NavBar />
+          <div className="flex font-raleway mb-4 md:pt-20 md:p-6">
+            <Link
+              href="/groups"
+              className="text-[#4a3b2a] font-bold hover:text-[#c41e3a] transition-transform transform active:scale-90"
+            >
+              {"< "}Back
+            </Link>
+          </div>
+          <div className="flex mb-8 md:px-6 justify-center">
+            <h1 className="text-4xl font-extrabold text-[#c41e3a] drop-shadow-sm border-b-4 border-[#0b6b3a] pb-2 px-4 inline-block transform -rotate-1">
+              Manage {group.name}
+            </h1>
+          </div>
+
+          {/* Invite Code - Gift Tag Style */}
+          <section className="mb-12 md:px-6">
+            <h2 className="text-2xl font-bold mb-6 text-[#0b6b3a] flex items-center">
+              <span className="mr-2">🎁</span> Invite Code
+            </h2>
+
+            <div className="gift-tag p-6 rounded-r-lg shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-left flex-1">
+                <p className="text-sm text-gray-600 mb-2 font-semibold italic">
+                  To: Your Friends & Family
                 </p>
-                <p className="text-2xl font-mono text-[#bf9a2f]">
-                  {group.invite_code || "No code generated"}
+                <p className="text-sm text-gray-600 mb-2">
+                  Share this magic code to invite members:
                 </p>
+                <div className="bg-white border-2 border-[#bf9a2f] p-3 rounded text-center transform rotate-1 shadow-inner">
+                  <p className="text-3xl font-mono font-bold text-[#c41e3a] tracking-widest">
+                    {group.invite_code || "NO CODE"}
+                  </p>
+                </div>
               </div>
-              <form action={generateInviteCode}>
+              <form action={generateInviteCode} className="flex-shrink-0">
                 <input type="hidden" name="groupId" value={group.id} />
                 <button
                   type="submit"
-                  className="bg-green-600 text-dark_gray px-2 py-2 rounded
-                transition-transform transform active:scale-90"
+                  className="bg-[#0b6b3a] text-white font-bold px-6 py-3 rounded-full hover:bg-[#08522e] transition-transform transform active:scale-95 shadow-lg border-2 border-[#fff]"
                 >
-                  Generate New Code
+                  Generate New Code 🎄
                 </button>
               </form>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* members */}
-        <section className="mb-8 md:px-6">
-          <h2 className="text-xl font-semibold mb-4 text-primary_text">
-            Members ({memberDetails.length})
-          </h2>
-          <div className="rounded-lg overflow-hidden">
-            <div className="min-w-full">
-              <div className="bg-primary_text opacity-90">
-                <div className="hidden md:flex justify-between text-white">
-                  <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Name
-                  </h1>
-                  <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Email
-                  </h1>
-                  <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                    Role
-                  </h1>
+          {/* Members - Torn Paper List */}
+          <section className="mb-12 md:px-6">
+            <h2 className="text-2xl font-bold mb-6 text-[#0b6b3a] flex items-center">
+              <span className="mr-2">📝</span> Members List (
+              {memberDetails.length})
+            </h2>
+
+            <div className="space-y-4">
+              {memberDetails.length === 0 ? (
+                <div className="torn-paper-member text-center text-gray-500 italic p-8">
+                  No members found... just crickets and snow. 🦗❄️
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="hidden md:flex justify-between px-6 pb-2 text-[#4a3b2a] font-bold border-b-2 border-[#c41e3a] mb-2 mx-2">
+                    <span className="w-1/3">Name</span>
+                    <span className="w-1/3 text-center">Role</span>
+                    <span className="w-1/3 text-right">Action</span>
+                  </div>
 
-              <div className="bg-washed_gray w-full">
-                <div className="w-full">
-                  <div className="hidden md:block">
-                    {memberDetails.map((member) => (
-                      <div
-                        key={member.user_id}
-                        className="border-b border-dark_gray"
-                      >
-                        <div className="flex flex-row px-6 py-4">
-                          <div className="flex-1 truncate">
-                            {member.user.name}
-                          </div>
-                          <div className="flex-1 text-right capitalize">
-                            {member.role}
-                          </div>
-                        </div>
-
-                        {member.role != "admin" && (
-                          <form
-                            action={removeMember}
-                            className="flex px-6 mb-6 justify-end"
-                          >
+                  {memberDetails.map((member) => (
+                    <div
+                      key={member.user_id}
+                      className="torn-paper-member flex flex-col md:flex-row items-center justify-between gap-4"
+                    >
+                      <div className="w-full md:w-1/3 font-bold text-lg text-[#4a3b2a]">
+                        {member.user.name}
+                      </div>
+                      <div className="w-full md:w-1/3 text-center capitalize text-[#0b6b3a] font-semibold bg-white/50 rounded px-2 py-1">
+                        {member.role}
+                      </div>
+                      <div className="w-full md:w-1/3 flex justify-end">
+                        {member.role !== "admin" ? (
+                          <form action={removeMember}>
                             <input
                               type="hidden"
                               name="groupId"
@@ -269,85 +283,35 @@ export default async function ManageGroupPage({ params }: Props) {
                             />
                             <button
                               type="submit"
-                              className="text-primary_text hover:bg-red-700 rounded bg-red-600 px-4 py-2
-                      transition-transform transform active:scale-90 flex items-center justify-center"
+                              className="text-red-600 hover:text-red-800 font-bold border-b border-red-600 hover:border-red-800 transition-colors text-sm uppercase tracking-wide"
                             >
-                              Remove
+                              Remove ❌
                             </button>
                           </form>
+                        ) : (
+                          <span className="text-gray-400 text-sm italic">
+                            Owner 👑
+                          </span>
                         )}
                       </div>
-                    ))}
-                  </div>
-
-                  {/* Mobile view - column layout */}
-                  <div className="md:hidden font-raleway">
-                    <h1 className="bg-primary_text opacity-90 md:hidden px-6 py-3 text-center text-white font-raleway text-xs font-medium">
-                      DETAILS
-                    </h1>
-                    {memberDetails.map((member) => (
-                      <div
-                        key={member.user_id}
-                        className="border-b border-[#f7f9fb] p-4 space-y-2 bg-bone items-center"
-                      >
-                        <div className="flex flex-row justify-between">
-                          <div className="space-y-1 ">
-                            <div className="text-sm text-primary_text">
-                              Name:
-                            </div>
-                            <div>{member.user.name}</div>
-                          </div>
-                          <div className="space-y-1">
-                            <div className="text-sm text-primary_text">
-                              Role:
-                            </div>
-                            <div className="capitalize">{member.role}</div>
-                          </div>
-                        </div>
-
-                        {member.role != "admin" && (
-                          <form action={removeMember} className="flex mb-6">
-                            <input
-                              type="hidden"
-                              name="groupId"
-                              value={group.id}
-                            />
-                            <input
-                              type="hidden"
-                              name="userId"
-                              value={member.user_id}
-                            />
-                            <button type="submit" className="text-red-600">
-                              Remove {member.user.name}
-                            </button>
-                          </form>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {memberDetails.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={3}
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
-                      No members found
-                    </td>
-                  </tr>
-                )}
-              </div>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Group Setting Section */}
-        <GroupSettings
-          group={group}
-          deleteGroup={deleteGroup}
-          updateHideGiftGetters={updateHideGiftGetters}
-        />
+          {/* Group Settings */}
+          <section className="mb-8 md:px-6">
+            <div className="bg-[#f0f0f0] p-6 rounded-xl border-2 border-gray-200">
+              <GroupSettings
+                group={group}
+                deleteGroup={deleteGroup}
+                updateHideGiftGetters={updateHideGiftGetters}
+              />
+            </div>
+          </section>
+        </div>
       </div>
     </>
   );
