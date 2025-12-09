@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
 import NavBar from "@/app/components/navbar";
 import WishlistViewWrapper from "@/app/components/WishlistViewWrapper";
+import Santa from "@/app/components/Santa";
+import "../../../manage-group.css"; // Reuse card styles
 
 export const dynamic = "force-dynamic";
 
@@ -141,41 +143,63 @@ export default async function GroupWishlistsPage({
       });
 
     return (
-      <div className="font-raleway mx-auto max-w-[1000px] bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-0 pb-10">
-        <NavBar />
-        <div className="mb-4 md:p-6 md:pt-20">
-          <Link href="/groups" className="text-primary_text font-raleway">
-            {"< "}Back
-          </Link>
-        </div>
-        <div className="flex flex-col md:p-6">
-          <div
-            className="flex flex-row 
-                font-bold mb-4 text-primary_text font-raleway text-left 
-                relative"
-          >
-            <h1 className="text-3xl ">Wishlists for {groupDetails?.name}</h1>
-          </div>
-          <div className="flex">
-            <div className=" bg-green-600 rounded-md">
-              <Link
-                href={`/dashboard/?groupId=${groupId}`}
-                className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
-              >
-                <p>Add to my wishlist for {groupDetails?.name}</p>
-              </Link>
-            </div>
-          </div>
+      <div className="relative min-h-screen overflow-hidden bg-[#090a0f]">
+        {/* Snow Effect */}
+        <div className="snow-container absolute inset-0 z-0">
+          {Array.from({ length: 50 }).map((_, i) => (
+            <div
+              key={i}
+              className="snowflake"
+              style={{
+                left: `${Math.random() * 100}vw`,
+                animationDuration: `${Math.random() * 3 + 2}s`,
+                animationDelay: `${Math.random() * 2}s`,
+                width: `${Math.random() * 5 + 5}px`,
+                height: `${Math.random() * 5 + 5}px`,
+              }}
+            />
+          ))}
         </div>
 
-        <div className="py-12 md:px-6">
-          <WishlistViewWrapper
-            usersWithWishlists={usersWithWishlists}
-            groupId={groupId}
-            groupName={groupDetails?.name}
-            currentUserId={user.id}
-            showGiftAssignments={!groupDetails?.hide_gift_getters}
-          />
+        <Santa />
+
+        <div className="relative z-10 font-raleway mx-auto max-w-[1000px] bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-[100px] christmas-card shadow-2xl">
+          <NavBar />
+          <div className="mb-4 md:p-6 md:pt-20">
+            <Link
+              href="/groups"
+              className="text-[#4a3b2a] font-bold hover:text-[#c41e3a] transition-transform transform active:scale-90 flex items-center"
+            >
+              <span>←</span> <span className="ml-1">Back</span>
+            </Link>
+          </div>
+          <div className="flex flex-col md:p-6">
+            <div className="flex flex-row font-bold mb-4 text-[#4a3b2a] font-raleway text-left relative items-center gap-2">
+              <h1 className="text-3xl">Wishlists for {groupDetails?.name}</h1>
+              <span className="text-3xl">🎄</span>
+            </div>
+            <div className="flex">
+              <div className="bg-[#0b6b3a] rounded-md shadow-md border border-white/50">
+                <Link
+                  href={`/dashboard/?groupId=${groupId}`}
+                  className="flex transition-transform transform active:scale-90 text-white px-4 py-2 font-bold items-center"
+                >
+                  <span className="mr-2">🎁</span>
+                  <p>Add to my wishlist for {groupDetails?.name}</p>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="py-12 md:px-6">
+            <WishlistViewWrapper
+              usersWithWishlists={usersWithWishlists}
+              groupId={groupId}
+              groupName={groupDetails?.name}
+              currentUserId={user.id}
+              showGiftAssignments={!groupDetails?.hide_gift_getters}
+            />
+          </div>
         </div>
       </div>
     );
