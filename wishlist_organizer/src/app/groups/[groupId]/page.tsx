@@ -3,6 +3,8 @@ import { supabase } from "../../../../utils/supabase";
 import Link from "next/link";
 import { getSessionUser } from "../../../../../wishlist_organizer/utils/auth";
 import NavBar from "@/app/components/navbar";
+import Santa from "@/app/components/Santa";
+import "../../manage-group.css"; // Reuse card styles
 
 interface GroupDetails {
   id: string;
@@ -98,112 +100,107 @@ export default async function ViewGroupPage({
     .single()
     .then(({ data }) => data?.username);
 
-  const [memberDetails, creatorName] = (await Promise.all([
+  const [memberDetails] = (await Promise.all([
     memberDetailsPromise,
     creatorNamePromise,
   ])) as [MemberDetail[], string];
 
   return (
-    <div className="font-raleway bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-[100px]">
-      <NavBar />
-      <div className="flex font-raleway mb-4">
-        <Link
-          href="/groups"
-          className=" text-primary_text font-medium rounded transition-transform transform active:scale-90"
-        >
-          {"< "}Back
-        </Link>
+    <div className="relative min-h-screen overflow-hidden bg-[#090a0f]">
+      {/* Snow Effect */}
+      <div className="snow-container absolute inset-0 z-0">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <div
+            key={i}
+            className="snowflake"
+            style={{
+              left: `${Math.random() * 100}vw`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+              animationDelay: `${Math.random() * 2}s`,
+              width: `${Math.random() * 5 + 5}px`,
+              height: `${Math.random() * 5 + 5}px`,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="flex mb-8">
-        <div className=" bg-green-600 rounded-md">
+      <Santa />
+
+      <div className="relative z-10 font-raleway max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl p-6 md:p-8 lg:p-10 pb-[100px] christmas-card shadow-2xl">
+        <NavBar />
+        <div className="flex font-raleway mb-4 md:pt-20">
           <Link
-            href="/dashboard"
-            className="flex transition-transform transform active:scale-90 text-white px-4 py-2"
+            href="/groups"
+            className="text-[#4a3b2a] font-bold hover:text-[#c41e3a] transition-transform transform active:scale-90 flex items-center"
           >
-            <p>Add to my wishlist for {group.name}</p>
+            <span>←</span> <span className="ml-1">Back</span>
           </Link>
         </div>
-      </div>
 
-      {/* Members Section */}
-      <section className="">
-        <h2 className="text-xl font-semibold mb-4 text-primary_text">
-          Members ({memberDetails.length})
-        </h2>
-        <div className="rounded-lg overflow-hidden">
-          <div className="min-w-full">
-            <div className="bg-primary_text opacity-90 ">
-              <div className="hidden md:flex justify-between text-primary_text">
-                <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Name
-                </h1>
-                <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Email
-                </h1>
-                <h1 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Role
-                </h1>
-              </div>
-              <h1 className="flex px-6 py-3 md:hidden justify-center items-center text-white font-raleway text-xs font-medium">
-                DETAILS
-              </h1>
-            </div>
-            <div className="bg-bone w-full">
-              <div className="w-full">
-                {/* Desktop view - row layout */}
-                <div className="hidden md:block">
-                  {memberDetails.map((member) => (
-                    <div
-                      key={member.user_id}
-                      className="border-b border-dark_gray"
-                    >
-                      <div className="flex flex-row px-6 py-4">
-                        <div className="flex-1 truncate">
-                          {member.user.name}
-                        </div>
-                        <div className="flex-1 text-right capitalize">
-                          {member.role}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <h1 className="text-4xl font-extrabold text-[#c41e3a] drop-shadow-sm border-b-4 border-[#0b6b3a] pb-2 px-4 inline-block transform -rotate-1">
+            {group.name} 🎄
+          </h1>
 
-                {/* Mobile view - column layout */}
-                <div className="md:hidden font-raleway">
-                  {memberDetails.map((member) => (
-                    <div
-                      key={member.user_id}
-                      className="border-b border-[#f7f9fb] p-4 space-y-2 flex flex-row justify-between"
-                    >
-                      <div className="space-y-1 ">
-                        <div className="text-sm text-primary_text">Name:</div>
-                        <div>{member.user.name}</div>
-                      </div>
-                      <div className="space-y-1">
-                        <div className="text-sm text-primary_text">Role:</div>
-                        <div className="capitalize">{member.role}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {memberDetails.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    No members found
-                  </td>
-                </tr>
-              )}
-            </div>
-          </div>
+          {/* <div className="bg-[#0b6b3a] rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 border-2 border-white">
+            <Link
+              href="/dashboard"
+              className="flex items-center text-white px-6 py-3 font-bold"
+            >
+              <span>Update Wishlist</span> <span className="ml-2">🎁</span>
+            </Link>
+          </div> */}
         </div>
-      </section>
+
+        {/* Members Section */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6 text-[#0b6b3a] flex items-center">
+            <span className="mr-2">👥</span> Group Members (
+            {memberDetails.length})
+          </h2>
+
+          <div className="space-y-4">
+            {memberDetails.length === 0 ? (
+              <div className="torn-paper-member text-center text-gray-500 italic p-8">
+                No members found... just crickets and snow. 🦗❄️
+              </div>
+            ) : (
+              <>
+                <div className="hidden md:flex justify-between px-6 pb-2 text-[#4a3b2a] font-bold border-b-2 border-[#c41e3a] mb-2 mx-2">
+                  <span className="w-1/2">Name</span>
+                  <span className="w-1/2 text-right">Role</span>
+                </div>
+
+                {memberDetails.map((member) => (
+                  <div
+                    key={member.user_id}
+                    className="torn-paper-member flex flex-row items-center justify-between gap-4"
+                  >
+                    <div className="w-full md:w-1/2 font-bold text-lg text-[#4a3b2a] flex items-center">
+                      <span className="mr-2 text-xl">
+                        {member.role === "admin" ? "🎅" : "🧝"}
+                      </span>
+                      {member.user.name}
+                    </div>
+                    <div className="w-full md:w-1/2 text-center md:text-right capitalize text-[#0b6b3a] font-semibold">
+                      <span className="bg-white/50 rounded px-3 py-1 border border-[#0b6b3a]/20">
+                        {member.role}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* Festive decoration at bottom */}
+        <div className="mt-8 text-center opacity-50">
+          <div className="inline-block border-t-2 border-gray-300 w-16 mx-2 mb-1"></div>
+          <span className="text-2xl">❄️</span>
+          <div className="inline-block border-t-2 border-gray-300 w-16 mx-2 mb-1"></div>
+        </div>
+      </div>
     </div>
   );
 }
