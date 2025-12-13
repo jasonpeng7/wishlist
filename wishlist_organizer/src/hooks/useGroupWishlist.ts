@@ -7,6 +7,7 @@ export type WishlistItem = {
   store?: string | null;
   description?: string | null;
   link?: string | null;
+  favorited?: boolean;
   image_url?: string | null;
   price?: number | null;
   user_id: string;
@@ -121,6 +122,7 @@ export const useGroupWishlist = (groupId: string, currentUserId: string) => {
               store: item.store,
               description: item.description,
               link: item.link,
+              favorited: item.favorited,
               image_url: item.image_url,
               price: item.price,
               user_id: item.user_id,
