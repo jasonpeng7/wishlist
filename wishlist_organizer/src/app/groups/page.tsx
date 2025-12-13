@@ -3,7 +3,7 @@ import Link from "next/link";
 import NavBar from "@/app/components/navbar";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 import { redirect } from "next/navigation";
-import { Settings, Gift, User } from "lucide-react";
+import { Settings, Gift, User, Snowflake, Sparkles } from "lucide-react";
 
 export default async function GroupsPage() {
   const user = await getSessionUser();
@@ -30,165 +30,192 @@ export default async function GroupsPage() {
   ]);
 
   return (
-    <div className="max-w-[1000px] mx-auto bg-[#f7f9fb] min-h-screen mt-20 rounded-t-3xl pb-20">
-      <NavBar />
-      <div className="font-raleway text-primary_text p-6 md:pt-20">
-        <h1 className="text-3xl font-bold mb-4 md:mb-0">My Groups</h1>
-      </div>
+    <div className="max-w-[1000px] mx-auto bg-[#fdfbf7] min-h-screen mt-20 rounded-t-3xl pb-20 relative overflow-hidden border-x-4 border-[#c41e3a]">
+      {/* Snow Background Pattern */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#b0c4de_1px,transparent_1px)] [background-size:20px_20px] z-0"></div>
 
-      {/* Groups I Manage */}
-      <section className="font-raleway text-primary_text mx-[25px] sm:mx-0 md:px-6">
-        <h2 className="text-xl font-semibold mb-4">Groups I Manage</h2>
-        <div className="flex mb-4 ">
-          <Link
-            href="/groups/create"
-            className="bg-bone px-4 py-2 rounded-lg 
-                transition-transform transform active:scale-90 
-                flex items-center justify-center text-center"
-          >
-            <p className="text-dark_gray font-medium">Create a group</p>
-          </Link>
+      {/* Decorative Holly Corners */}
+      <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_0_0,#0b6b3a_40%,transparent_41%)] opacity-20 pointer-events-none rounded-br-full z-0"></div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_100%_0,#c41e3a_40%,transparent_41%)] opacity-20 pointer-events-none rounded-bl-full z-0"></div>
+
+      <div className="relative z-10">
+        <NavBar />
+        <div className="font-raleway text-[#4a3b2a] p-6 md:pt-20 flex items-center gap-3">
+          <h1 className="text-4xl font-bold mb-4 md:mb-0 text-[#c41e3a] drop-shadow-sm flex items-center gap-2">
+            <Snowflake className="text-[#bf9a2f]" />
+            My Groups
+            <Snowflake className="text-[#bf9a2f]" />
+          </h1>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {adminGroups?.map((group) => (
-            <div
-              key={group.id}
-              className="relative bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group"
+
+        {/* Groups I Manage */}
+        <section className="font-raleway text-[#4a3b2a] mx-[25px] sm:mx-0 md:px-6 relative">
+          <div className="flex items-center gap-2 mb-4 border-b-2 border-[#0b6b3a]/20 pb-2">
+            <h2 className="text-2xl font-bold text-[#0b6b3a]">
+              Groups I Manage
+            </h2>
+            <Sparkles size={20} className="text-[#bf9a2f]" />
+          </div>
+
+          <div className="flex mb-6">
+            <Link
+              href="/groups/create"
+              className="bg-[#c41e3a] text-white px-6 py-3 rounded-full 
+                  transition-transform transform active:scale-95 hover:bg-[#a01830] shadow-md
+                  flex items-center justify-center text-center font-bold border-2 border-white"
             >
-              {/* Christmas Ribbon Decoration (Red for Admin) */}
-              <div className="absolute top-0 left-6 w-8 h-full bg-red-600/90 shadow-sm z-0">
-                <div className="absolute top-0 inset-x-0 h-full border-l border-r border-white/20"></div>
-              </div>
-
-              {/* Gift Bow/Icon */}
-              <div className="absolute top-6 left-6 w-8 flex justify-center z-10">
-                <div className="bg-white rounded-full p-1 shadow-sm border border-red-100">
-                  <Gift size={16} className="text-red-600" />
-                </div>
-              </div>
-
-              <div className="pl-20 pr-5 py-5 relative z-0">
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-lg text-slate-800 font-raleway leading-tight truncate">
-                    {group.name}
-                  </h3>
-                  <Link
-                    href={`/groups/${group.id}/manage`}
-                    className="text-slate-400 hover:text-slate-600 transition-colors"
-                    title="Group Settings"
-                  >
-                    <Settings size={18} />
-                  </Link>
-                </div>
-
-                <div className="flex items-center gap-2 text-slate-500 text-xs font-medium mb-6 bg-slate-50 w-fit px-2 py-1 rounded-full">
-                  <User size={12} />
-                  <span>{group.user_groups?.length || 0} members</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <Link
-                    href={`/groups/${group.id}/manage`}
-                    className="flex items-center justify-center text-center text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 py-2.5 rounded-lg transition-colors"
-                  >
-                    Invite
-                  </Link>
-                  <Link
-                    href={`/groups/${group.id}/wishlists`}
-                    className="flex items-center justify-center text-center text-xs font-bold text-white bg-red-600 hover:bg-red-700 py-2.5 rounded-lg transition-colors shadow-sm"
-                  >
-                    Wishlists
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        {(!adminGroups || adminGroups.length === 0) && (
-          <p className="text-gray-500">
-            You haven&apos;t created any groups yet. Create one before you start
-            making a wishlist!
-          </p>
-        )}
-      </section>
-
-      {/* Groups I'm In */}
-      <section className="font-raleway mt-[20px] mx-[25px] sm:mx-0 md:px-6">
-        <h2 className="text-xl font-semibold mb-4 text-primary_text">
-          Groups I&apos;m In
-        </h2>
-        <div className="flex mb-4">
-          <Link
-            href="/groups/join"
-            className="bg-bone px-4 py-2 rounded-lg 
-              transition-transform transform active:scale-90 
-              flex items-center justify-center"
-          >
-            <p className="text-dark_gray font-medium">Join a group</p>
-          </Link>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {memberGroups?.map((memberGroup) => {
-            const group = Array.isArray(memberGroup.group)
-              ? memberGroup.group[0]
-              : memberGroup.group;
-
-            if (!group) return null;
-
-            return (
+              <p>Create a Holiday Group 🎄</p>
+            </Link>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {adminGroups?.map((group) => (
               <div
                 key={group.id}
-                className="relative bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group"
+                className="relative bg-white rounded-xl shadow-lg border-2 border-[#bf9a2f]/30 overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 group"
               >
-                {/* Green Ribbon for Member Groups */}
-                <div className="absolute top-0 left-6 w-8 h-full bg-green-700/90 shadow-sm z-0">
-                  <div className="absolute top-0 inset-x-0 h-full border-l border-r border-white/20"></div>
+                {/* Christmas Ribbon Decoration (Red for Admin) */}
+                <div className="absolute top-0 left-6 w-10 h-full bg-[#c41e3a] shadow-md z-0">
+                  <div className="absolute top-0 inset-x-0 h-full border-l-2 border-r-2 border-[#bf9a2f]/50 border-dashed"></div>
                 </div>
 
-                <div className="absolute top-6 left-6 w-8 flex justify-center z-10">
-                  <div className="bg-white rounded-full p-1 shadow-sm border border-green-100">
-                    <Gift size={16} className="text-green-700" />
+                {/* Gift Bow/Icon */}
+                <div className="absolute top-6 left-6 w-10 flex justify-center z-10">
+                  <div className="bg-white rounded-full p-1.5 shadow-md border-2 border-[#c41e3a]">
+                    <Gift size={20} className="text-[#c41e3a]" />
                   </div>
                 </div>
 
-                <div className="pl-20 pr-5 py-5 relative z-0">
+                <div className="pl-24 pr-5 py-6 relative z-0">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-bold text-lg text-slate-800 font-raleway leading-tight truncate">
+                    <h3 className="font-bold text-xl text-[#4a3b2a] font-raleway leading-tight truncate">
                       {group.name}
                     </h3>
+                    <Link
+                      href={`/groups/${group.id}/manage`}
+                      className="text-[#bf9a2f] hover:text-[#0b6b3a] transition-colors"
+                      title="Group Settings"
+                    >
+                      <Settings size={20} />
+                    </Link>
                   </div>
 
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-medium mb-6 bg-slate-50 w-fit px-2 py-1 rounded-full">
-                    <User size={12} />
-                    <span>{group.user_groups?.length || 0} members</span>
+                  <div className="flex items-center gap-2 text-[#0b6b3a] text-sm font-bold mb-6 bg-[#0b6b3a]/10 w-fit px-3 py-1.5 rounded-full border border-[#0b6b3a]/20">
+                    <User size={14} />
+                    <span>{group.user_groups?.length || 0} elves</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <Link
-                      href={`/groups/${group.id}`}
-                      className="flex items-center justify-center text-center text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 py-2.5 rounded-lg transition-colors"
+                      href={`/groups/${group.id}/manage`}
+                      className="flex items-center justify-center text-center text-xs font-bold text-[#4a3b2a] bg-[#fdfbf7] border border-[#bf9a2f] hover:bg-[#bf9a2f]/10 py-2.5 rounded-lg transition-colors"
                     >
-                      Details
+                      Invite
                     </Link>
                     <Link
                       href={`/groups/${group.id}/wishlists`}
-                      className="flex items-center justify-center text-center text-xs font-bold text-white bg-green-700 hover:bg-green-800 py-2.5 rounded-lg transition-colors shadow-sm"
+                      className="flex items-center justify-center text-center text-xs font-bold text-white bg-[#c41e3a] hover:bg-[#a01830] py-2.5 rounded-lg transition-colors shadow-sm border border-[#c41e3a]"
                     >
                       Wishlists
                     </Link>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-        {(!memberGroups || memberGroups.length === 0) && (
-          <p className="text-gray-500">
-            You&apos;re not a member of any groups yet. Join one before making
-            your wishlist!
-          </p>
-        )}
-      </section>
+            ))}
+          </div>
+          {(!adminGroups || adminGroups.length === 0) && (
+            <div className="bg-white/80 p-6 rounded-lg border-2 border-dashed border-[#bf9a2f] text-center">
+              <p className="text-[#4a3b2a] font-medium">
+                You haven&apos;t created any holiday groups yet. <br />
+                Create one to start the gift exchange! 🎁
+              </p>
+            </div>
+          )}
+        </section>
+
+        {/* Groups I'm In */}
+        <section className="font-raleway mt-12 mx-[25px] sm:mx-0 md:px-6">
+          <div className="flex items-center gap-2 mb-4 border-b-2 border-[#0b6b3a]/20 pb-2">
+            <h2 className="text-2xl font-bold text-[#0b6b3a]">
+              Groups I&apos;m In
+            </h2>
+            <Gift size={20} className="text-[#bf9a2f]" />
+          </div>
+
+          <div className="flex mb-6">
+            <Link
+              href="/groups/join"
+              className="bg-[#0b6b3a] text-white px-6 py-3 rounded-full 
+                transition-transform transform active:scale-95 hover:bg-[#08522e] shadow-md
+                flex items-center justify-center font-bold border-2 border-white"
+            >
+              <p>Join a Holiday Group 🎅</p>
+            </Link>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {memberGroups?.map((memberGroup) => {
+              const group = Array.isArray(memberGroup.group)
+                ? memberGroup.group[0]
+                : memberGroup.group;
+
+              if (!group) return null;
+
+              return (
+                <div
+                  key={group.id}
+                  className="relative bg-white rounded-xl shadow-lg border-2 border-[#bf9a2f]/30 overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 group"
+                >
+                  {/* Green Ribbon for Member Groups */}
+                  <div className="absolute top-0 left-6 w-10 h-full bg-[#0b6b3a] shadow-md z-0">
+                    <div className="absolute top-0 inset-x-0 h-full border-l-2 border-r-2 border-[#bf9a2f]/50 border-dashed"></div>
+                  </div>
+
+                  <div className="absolute top-6 left-6 w-10 flex justify-center z-10">
+                    <div className="bg-white rounded-full p-1.5 shadow-md border-2 border-[#0b6b3a]">
+                      <Gift size={20} className="text-[#0b6b3a]" />
+                    </div>
+                  </div>
+
+                  <div className="pl-24 pr-5 py-6 relative z-0">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="font-bold text-xl text-[#4a3b2a] font-raleway leading-tight truncate">
+                        {group.name}
+                      </h3>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-[#c41e3a] text-sm font-bold mb-6 bg-[#c41e3a]/10 w-fit px-3 py-1.5 rounded-full border border-[#c41e3a]/20">
+                      <User size={14} />
+                      <span>{group.user_groups?.length || 0} elves</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <Link
+                        href={`/groups/${group.id}`}
+                        className="flex items-center justify-center text-center text-xs font-bold text-[#4a3b2a] bg-[#fdfbf7] border border-[#bf9a2f] hover:bg-[#bf9a2f]/10 py-2.5 rounded-lg transition-colors"
+                      >
+                        Details
+                      </Link>
+                      <Link
+                        href={`/groups/${group.id}/wishlists`}
+                        className="flex items-center justify-center text-center text-xs font-bold text-white bg-[#0b6b3a] hover:bg-[#08522e] py-2.5 rounded-lg transition-colors shadow-sm border border-[#0b6b3a]"
+                      >
+                        Wishlists
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {(!memberGroups || memberGroups.length === 0) && (
+            <div className="bg-white/80 p-6 rounded-lg border-2 border-dashed border-[#bf9a2f] text-center">
+              <p className="text-[#4a3b2a] font-medium">
+                You&apos;re not a member of any groups yet. <br />
+                Join one to see what everyone wants for Christmas! 🎄
+              </p>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
