@@ -6,7 +6,6 @@ import { supabase } from "../../../utils/supabase";
 import WishlistItems from "./WishListItems";
 import WishlistForm from "./WishListForm";
 import NavBar from "../components/navbar";
-import RibbonDivider from "../components/RibbonDivider";
 
 interface User {
   id: string;
@@ -56,7 +55,6 @@ export default function DashboardView({ user }: DashboardViewProps) {
               <h1 className="text-3xl font-bold text-primary_text mb-2 text-center">
                 Start Adding Items To Your Wishlist!
               </h1>
-              <RibbonDivider />
               <div className="w-full">
                 <WishlistForm userId={user.id} />
               </div>
