@@ -154,7 +154,7 @@ export const useGroupWishlist = (groupId: string, currentUserId: string) => {
       };
     },
     enabled: !!groupId && !!currentUserId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 1, // 1 minutes
   });
 };
 
