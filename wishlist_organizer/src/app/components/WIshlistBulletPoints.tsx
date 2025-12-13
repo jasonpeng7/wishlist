@@ -17,7 +17,7 @@ import {
   SwipeAction,
   Type,
 } from "react-swipeable-list";
-import { Trash2 } from "lucide-react";
+import { Trash2, Heart } from "lucide-react";
 
 type Props = {
   groupId: string;
@@ -29,12 +29,14 @@ const WishlistItemRow = React.memo(
     item,
     onViewItem,
     onRemoveItem,
+    onFavoriteItem,
     currentUserId,
     isMyList,
   }: {
     item: WishlistItem;
     onViewItem: (item: WishlistItem) => void;
     onRemoveItem: (itemId: string) => void;
+    onFavoriteItem: (item: WishlistItem) => void;
     currentUserId: string;
     isMyList: boolean;
   }) => {
@@ -45,6 +47,7 @@ const WishlistItemRow = React.memo(
       !isMyList &&
       item.assignment?.status === "will_get" &&
       item.assignment?.assigned_to !== currentUserId;
+    const isFavorited = item.favorited;
 
     const trailingActions = () => (
       <TrailingActions>
@@ -65,8 +68,14 @@ const WishlistItemRow = React.memo(
         <SwipeableListItem
           trailingActions={isMyList ? trailingActions() : undefined}
         >
-          <div className="group flex items-center justify-between py-3 border-b border-slate-400/20 last:border-0 hover:bg-black/5 transition-colors px-2 rounded-sm w-full">
-            <div className="flex flex-col truncate pr-4">
+          <div
+            className={`group flex items-center justify-between py-3 border-b border-slate-400/20 last:border-0 hover:bg-black/5 transition-colors px-2 rounded-sm w-full ${
+              isFavorited
+                ? "bg-red-50/80 border-l-4 border-l-red-500 shadow-sm"
+                : ""
+            }`}
+          >
+            <div className="flex-1 min-w-0 flex flex-col pr-4">
               <h4
                 className={`font-bold text-sm truncate font-raleway ${
                   isSelfAssigned
@@ -79,18 +88,43 @@ const WishlistItemRow = React.memo(
               >
                 {item.name}
               </h4>
+
               {isOtherAssigned && item.assignedUsername && (
                 <span className="text-xs text-slate-400 italic font-raleway">
                   item has been claimed!
                 </span>
               )}
+              {isFavorited && (
+                <div className="flex items-center gap-1 text-xs text-red-600 font-bold mt-1 animate-pulse">
+                  <Heart size={20} fill="currentColor" />
+                  <span>favorited item!</span>
+                </div>
+              )}
             </div>
-            <button
-              onClick={() => onViewItem(item)}
-              className="flex-shrink-0 text-xs font-bold bg-transparent text-slate_gray border border-slate_gray px-3 py-1 rounded hover:bg-slate_gray hover:text-white transition-colors font-raleway"
-            >
-              View Item
-            </button>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => onViewItem(item)}
+                className="flex-shrink-0 text-xs font-bold bg-transparent text-slate_gray border border-slate_gray px-3 py-1 rounded hover:bg-slate_gray hover:text-white transition-colors font-raleway h-8 flex items-center justify-center"
+              >
+                View
+              </button>
+              {isMyList && (
+                <button
+                  onClick={() => onFavoriteItem(item)}
+                  className={`flex-shrink-0  px-2 py-1 rounded transition-colors font-raleway h-8 flex items-center justify-center ${
+                    isFavorited
+                      ? "bg-red-50 text-red-600 "
+                      : "bg-transparent text-slate_gray"
+                  }`}
+                  aria-label={isFavorited ? "Unfavorite item" : "Favorite item"}
+                >
+                  <Heart
+                    size={16}
+                    fill={isFavorited ? "currentColor" : "none"}
+                  />
+                </button>
+              )}
+            </div>
           </div>
         </SwipeableListItem>
       </SwipeableList>
@@ -106,6 +140,7 @@ const UserWishlistSection = React.memo(
     items,
     onViewItem,
     onRemoveItem,
+    onFavoriteItem,
     currentUserId,
     listOwnerId,
   }: {
@@ -113,6 +148,7 @@ const UserWishlistSection = React.memo(
     items: WishlistItem[];
     onViewItem: (item: WishlistItem) => void;
     onRemoveItem: (itemId: string) => void;
+    onFavoriteItem: (item: WishlistItem) => void;
     currentUserId: string;
     listOwnerId: string;
   }) => {
@@ -136,13 +172,14 @@ const UserWishlistSection = React.memo(
             </div>
           </div>
 
-          <div className="pl-2 flex flex-col gap-1">
+          <div className="flex flex-col gap-1">
             {items.map((item) => (
               <WishlistItemRow
                 key={item.id}
                 item={item}
                 onViewItem={onViewItem}
                 onRemoveItem={onRemoveItem}
+                onFavoriteItem={onFavoriteItem}
                 currentUserId={currentUserId}
                 isMyList={isMyList}
               />
@@ -199,6 +236,22 @@ export default function WishlistBulletPoints({
     setSelectedItem(item);
   }, []);
 
+  const handleFavoriteItem = useCallback(
+    async (item: WishlistItem) => {
+      const { error } = await supabase
+        .from("wishlists")
+        .update({ favorited: !item.favorited })
+        .eq("id", item.id);
+
+      if (error) {
+        console.error("Error favoriting item:", error);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["groupWishlist", groupId] });
+      }
+    },
+    [groupId, queryClient]
+  );
+
   const handleCloseModal = () => {
     setSelectedItem(null);
   };
@@ -239,13 +292,22 @@ export default function WishlistBulletPoints({
             items={user.items}
             onViewItem={handleViewItem}
             onRemoveItem={handleRemoveItem}
+            onFavoriteItem={handleFavoriteItem}
             currentUserId={currentUserId}
             listOwnerId={user.id}
           />
         ))}
       </div>
     );
-  }, [data, isLoading, error, currentUserId, handleViewItem, handleRemoveItem]);
+  }, [
+    data,
+    isLoading,
+    error,
+    currentUserId,
+    handleViewItem,
+    handleRemoveItem,
+    handleFavoriteItem,
+  ]);
 
   return (
     <div className="w-full max-w-6xl mx-auto pb-12">
