@@ -99,9 +99,9 @@ export default async function GroupsPage() {
                     </Link>
                   </div>
 
-                  <div className="flex items-center gap-2 text-[#0b6b3a] text-sm font-bold mb-6 bg-[#0b6b3a]/10 w-fit px-3 py-1.5 rounded-full border border-[#0b6b3a]/20">
+                  <div className="flex items-center gap-2 text-[#0b6b3a] text-sm font-regular mb-6 bg-[#0b6b3a]/10 w-fit px-3 py-1.5 rounded-full border border-[#0b6b3a]/20">
                     <User size={14} />
-                    <span>{group.user_groups?.length || 0} elves</span>
+                    <span>{group.user_groups?.length || 0} members</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
@@ -182,9 +182,9 @@ export default async function GroupsPage() {
                       </h3>
                     </div>
 
-                    <div className="flex items-center gap-2 text-[#c41e3a] text-sm font-bold mb-6 bg-[#c41e3a]/10 w-fit px-3 py-1.5 rounded-full border border-[#c41e3a]/20">
+                    <div className="flex items-center gap-2 text-[#c41e3a] text-sm font-regular mb-6 bg-[#c41e3a]/10 w-fit px-3 py-1.5 rounded-full border border-[#c41e3a]/20">
                       <User size={14} />
-                      <span>{group.user_groups?.length || 0} elves</span>
+                      <span>{group.user_groups?.length || 0} members</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
