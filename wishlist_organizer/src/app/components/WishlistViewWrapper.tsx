@@ -63,15 +63,18 @@ export default function WishlistViewWrapper({
       {usersWithWishlists.length > 0 && (
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
           {/* Assigned Gifts Button */}
-          <div>
+          <div className="flex self-start w-full">
             {!isLoading &&
               UserAssignedGifts &&
               UserAssignedGifts.length > 0 && (
                 <button
                   onClick={() => setIsAssignmentsModalOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg shadow-sm hover:bg-emerald-700 transition-colors font-raleway text-sm font-semibold"
+                  className="flex w-full justify-center items-center gap-2 px-4 py-2 bg-[#d4af37] text-white rounded-lg shadow-md hover:bg-[#c5a028] hover:shadow-lg transition-all transform active:scale-95 font-raleway text-sm font-bold border-2 border-[#d42426]"
                 >
-                  <Gift size={18} />
+                  <Gift
+                    size={18}
+                    className="text-[#d42426] fill-[#d42426]/20"
+                  />
                   <span>
                     Things you&apos;re getting ({UserAssignedGifts.length})
                   </span>
