@@ -3,7 +3,9 @@
 import { useState } from "react";
 import WishlistCarousel from "./WishlistCarousel";
 import WishlistBulletPoints from "./WIshlistBulletPoints";
-import { LayoutGrid, List } from "lucide-react";
+import AssignedGiftsModal from "./AssignedGiftsModal";
+import { LayoutGrid, List, Gift } from "lucide-react";
+import { useMyGroupAssignments } from "@/hooks/useMyGroupAssignments";
 
 type WishlistItem = {
   id: string;
@@ -41,13 +43,42 @@ export default function WishlistViewWrapper({
   showGiftAssignments,
 }: Props) {
   const [viewMode, setViewMode] = useState<"carousel" | "list">("list");
+  const [isAssignmentsModalOpen, setIsAssignmentsModalOpen] = useState(false);
+  const {
+    data: UserAssignedGifts,
+    isLoading,
+    refetch: refetchAssignments,
+  } = useMyGroupAssignments(groupId, currentUserId);
 
   return (
     <div className="flex flex-col w-full">
+      <AssignedGiftsModal
+        isOpen={isAssignmentsModalOpen}
+        onClose={() => setIsAssignmentsModalOpen(false)}
+        assignedGifts={UserAssignedGifts || []}
+        onOpen={() => refetchAssignments()}
+      />
+
       {/* Header & Toggle */}
       {usersWithWishlists.length > 0 && (
         <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
-          {/* Title is handled by parent usually, but we can add controls here */}
+          {/* Assigned Gifts Button */}
+          <div>
+            {!isLoading &&
+              UserAssignedGifts &&
+              UserAssignedGifts.length > 0 && (
+                <button
+                  onClick={() => setIsAssignmentsModalOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg shadow-sm hover:bg-emerald-700 transition-colors font-raleway text-sm font-semibold"
+                >
+                  <Gift size={18} />
+                  <span>
+                    Things you&apos;re getting ({UserAssignedGifts.length})
+                  </span>
+                </button>
+              )}
+          </div>
+
           <div className="flex bg-white p-1 rounded-lg border border-bone shadow-sm ml-auto">
             <button
               onClick={() => setViewMode("list")}
