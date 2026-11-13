@@ -1,10 +1,11 @@
 import { supabase } from "../../../../../utils/supabase";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { withInviteReturn } from "../../../../../utils/invites";
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, next } = await request.json();
 
     if (!email) {
       return NextResponse.json(
@@ -54,7 +55,8 @@ export async function POST(request: Request) {
       }
 
       // Send password reset email via Mailgun
-      const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
+      // add localhost for testing
+      const resetLink = withInviteReturn(`${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`, typeof next === "string" ? next : null);
       
       try {
         const formData = new URLSearchParams();

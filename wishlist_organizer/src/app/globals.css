@@ -315,3 +315,23 @@
   z-index: 1; /* Behind house, in front of snow/bg */
   pointer-events: none;
 }
+
+/* Shared accessible navigation and dialogs. */
+.app-nav { position: fixed; z-index: 50; bottom: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-around; gap: 4px; min-height: 72px; padding: 6px 8px max(6px, env(safe-area-inset-bottom)); border-top: 1px solid #d8d9ce; background: #fdfbf7; color: #253e37; }
+.app-nav > :is(a, button) { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3px; min-height: 48px; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+.app-nav > .app-nav-brand { display: none; }
+.app-nav [aria-current="page"] { background: #e5ebe0; box-shadow: inset 0 -3px #315b47; }
+.app-nav > button { color: #942c3b; }
+.app-nav-error { position: absolute; bottom: 100%; left: 8px; right: 8px; padding: 12px; background: #fff2ef; color: #8b2337; border: 1px solid #c98b8b; border-radius: 8px; font-size: 14px; }
+.app-dialog { width: min(32rem, calc(100% - 2rem)); max-height: 90dvh; margin: auto; padding: 0; border: 0; border-radius: 12px; background: transparent; overflow-y: auto; color: inherit; }
+.app-dialog::backdrop { background: rgb(0 0 0 / .6); }
+.app-dialog :focus-visible, .app-nav :focus-visible { outline: 3px solid #3f7869; outline-offset: 3px; }
+@media (min-width: 768px) {
+  .app-nav { top: 16px; bottom: auto; left: 50%; right: auto; transform: translateX(-50%); width: min(1000px, calc(100% - 32px)); min-height: 64px; padding: 6px 16px; border: 1px solid #d8d9ce; border-radius: 16px; justify-content: flex-end; gap: 12px; }
+  .app-nav > :is(a, button) { flex-direction: row; gap: 8px; font-size: 14px; }
+  .app-nav > .app-nav-brand { display: flex; margin-right: auto; }
+  .app-nav-error { top: 100%; bottom: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

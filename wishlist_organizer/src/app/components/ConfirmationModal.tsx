@@ -25,6 +25,7 @@ export default function ConfirmationModal({
   return (
     <Modal
       isOpen={isOpen}
+      busy={isDeleting}
       onClose={onClose}
       title={title}
       className="bg-white"
@@ -35,6 +36,7 @@ export default function ConfirmationModal({
         <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
+            disabled={isDeleting}
             className="px-4 py-2 rounded-md text-slate_gray hover:bg-gray-100 transition-colors font-medium"
           >
             {cancelText}

@@ -1,51 +1,15 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
-import { Copy, Check, ExternalLink } from 'lucide-react';
+import { ExternalLink } from "lucide-react";
+import CopyButton from "./CopyButton";
 
-const CopyLinkButton = ({ link }: { link: string }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent link click when copying
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
+export default function CopyLinkButton({ link }: { link: string }) {
   return (
-    <div className="flex items-center gap-2">
-      <a 
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-1 text-sm text-bone hover:underline truncate max-w-[200px]"
-      >
-        <ExternalLink size={14} />
-        <span className="truncate">{link}</span>
+    <div className="flex flex-wrap items-center gap-2">
+      <a href={link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-bone underline break-all">
+        <ExternalLink size={14} aria-hidden="true" /><span>{link}</span>
       </a>
-      <button 
-        onClick={handleCopy}
-        className="flex items-center gap-1 text-sm bg-bone text-dark_gray px-2 py-1 rounded-md ml-2"
-      >
-        {copied ? (
-          <>
-            <Check size={14} />
-            <span className="text-xs">Copied!</span>
-          </>
-        ) : (
-          <>
-            <Copy size={14} />
-            <span className="text-xs">Copy</span>
-          </>
-        )}
-      </button>
+      <CopyButton value={link} label="Copy link" />
     </div>
   );
-};
-
-export default CopyLinkButton;
+}

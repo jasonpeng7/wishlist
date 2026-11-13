@@ -5,7 +5,10 @@ import Link from "next/link";
 import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth";
 import NavBar from "@/app/components/navbar";
 import GroupSettings from "./GroupSettings";
+import InviteLink from "@/app/components/InviteLink";
+import SubmitButton from "@/app/components/SubmitButton";
 import Santa from "@/app/components/Santa";
+import Snowfall from "@/app/components/Snowfall";
 import "../../../manage-group.css";
 
 interface GroupDetails {
@@ -33,7 +36,7 @@ interface Props {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function ManageGroupPage({ params }: Props) {
+export default async function ManageGroupPage({ params, searchParams }: Props) {
   const user = await getSessionUser();
 
   if (!user) {
@@ -97,10 +100,12 @@ export default async function ManageGroupPage({ params }: Props) {
     }
   }
 
-  async function generateInviteCode(formData: FormData) {
+  async function generateInviteLink() {
     "use server";
 
-    const groupId = formData.get("groupId") as string;
+    const actor = await getSessionUser();
+    if (!group || !actor || group.creator_id !== actor.id) redirect("/groups");
+    const groupId = group.id;
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
     const { error } = await supabase
@@ -110,10 +115,11 @@ export default async function ManageGroupPage({ params }: Props) {
 
     if (error) {
       console.error("Error generating invite code:", error);
-      return;
+      redirect(`/groups/${groupId}/manage?error=The%20invitation%20link%20could%20not%20be%20generated.%20Please%20try%20again.`);
     }
 
     revalidatePath(`/groups/${groupId}/manage`);
+    redirect(`/groups/${groupId}/manage`);
   }
 
   async function removeMember(formData: FormData) {
@@ -134,10 +140,11 @@ export default async function ManageGroupPage({ params }: Props) {
 
     if (error) {
       console.error("Error removing member:", error);
-      return;
+      redirect(`/groups/${groupId}/manage?error=The%20member%20could%20not%20be%20removed.%20Please%20try%20again.`);
     }
 
     revalidatePath(`/groups/${groupId}/manage`);
+    redirect(`/groups/${groupId}/manage`);
   }
 
   async function deleteGroup(formData: FormData) {
@@ -152,7 +159,7 @@ export default async function ManageGroupPage({ params }: Props) {
 
     if (userGroupsError) {
       console.error("Error deleting user_groups: ", userGroupsError);
-      return;
+      redirect(`/groups/${groupId}/manage?error=The%20group%20could%20not%20be%20deleted.%20Please%20try%20again.`);
     }
 
     const { error: GroupError } = await supabase
@@ -162,6 +169,7 @@ export default async function ManageGroupPage({ params }: Props) {
 
     if (GroupError) {
       console.error("Error deleting group: ", GroupError);
+      redirect(`/groups/${groupId}/manage?error=The%20group%20could%20not%20be%20deleted.%20Please%20try%20again.`);
     }
 
     redirect("/groups");
@@ -170,22 +178,7 @@ export default async function ManageGroupPage({ params }: Props) {
   return (
     <>
       <div className="relative min-h-screen overflow-hidden bg-[#090a0f]">
-        {/* Snow Effect */}
-        <div className="snow-container absolute inset-0 z-0">
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div
-              key={i}
-              className="snowflake"
-              style={{
-                left: `${Math.random() * 100}vw`,
-                animationDuration: `${Math.random() * 3 + 2}s`,
-                animationDelay: `${Math.random() * 2}s`,
-                width: `${Math.random() * 5 + 5}px`,
-                height: `${Math.random() * 5 + 5}px`,
-              }}
-            />
-          ))}
-        </div>
+        <Snowfall />
 
         <Santa />
 
@@ -205,34 +198,27 @@ export default async function ManageGroupPage({ params }: Props) {
             </h1>
           </div>
 
+          {typeof searchParams.error === "string" && <p role="alert" className="mb-6 rounded-lg bg-red-50 p-4 text-red-800">{searchParams.error}</p>}
           {/* Invite Code - Gift Tag Style */}
           <section className="mb-12 md:px-6">
             <h2 className="text-2xl font-bold mb-6 text-[#0b6b3a] flex items-center">
-              <span className="mr-2">🎁</span> Invite Code
+              <span className="mr-2">🎁</span> Invitation link
             </h2>
 
             <div className="gift-tag p-6 rounded-r-lg shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="text-left flex-1">
+              <div className="text-left flex-1 min-w-0 max-w-full">
                 <p className="text-sm text-gray-600 mb-2 font-semibold italic">
                   To: Your Friends & Family
                 </p>
-                <p className="text-sm text-gray-600 mb-2">
-                  Share this magic code to invite members:
-                </p>
-                <div className="bg-white border-2 border-[#bf9a2f] p-3 rounded text-center transform rotate-1 shadow-inner">
-                  <p className="text-3xl font-mono font-bold text-[#c41e3a] tracking-widest">
-                    {group.invite_code || "NO CODE"}
-                  </p>
-                </div>
+                {group.invite_code ? <InviteLink inviteId={group.invite_code} /> : <p className="text-sm text-slate_gray">Generate a link to invite people to this group.</p>}
               </div>
-              <form action={generateInviteCode} className="flex-shrink-0">
-                <input type="hidden" name="groupId" value={group.id} />
-                <button
-                  type="submit"
+              <form action={generateInviteLink} className="flex-shrink-0">
+                <SubmitButton
+                  pendingText="Generating link…"
                   className="bg-[#0b6b3a] text-white font-bold px-6 py-3 rounded-full hover:bg-[#08522e] transition-transform transform active:scale-95 shadow-lg border-2 border-[#fff]"
                 >
-                  Generate New Code 🎄
-                </button>
+                  {group.invite_code ? "Replace invite link" : "Generate invite link"}
+                </SubmitButton>
               </form>
             </div>
           </section>
@@ -281,12 +267,12 @@ export default async function ManageGroupPage({ params }: Props) {
                               name="userId"
                               value={member.user_id}
                             />
-                            <button
-                              type="submit"
+                            <SubmitButton
+                              pendingText="Removing…"
                               className="text-red-600 hover:text-red-800 font-bold border-b border-red-600 hover:border-red-800 transition-colors text-sm uppercase tracking-wide"
                             >
-                              Remove ❌
-                            </button>
+                              Remove member
+                            </SubmitButton>
                           </form>
                         ) : (
                           <span className="text-gray-400 text-sm italic">

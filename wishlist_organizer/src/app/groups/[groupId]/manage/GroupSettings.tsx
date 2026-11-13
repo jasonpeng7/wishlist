@@ -48,6 +48,9 @@ export default function GroupSettings({
             <span className="text-white">Hide Gift Getters</span>
             <button
               onClick={handleToggle}
+              role="switch"
+              aria-label="Hide Gift Getters"
+              aria-checked={currentSetting}
               className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors ${
                 currentSetting ? "bg-green-500" : "bg-red-600"
               }`}

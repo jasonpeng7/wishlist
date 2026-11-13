@@ -56,7 +56,7 @@ export default function WishlistViewWrapper({
         isOpen={isAssignmentsModalOpen}
         onClose={() => setIsAssignmentsModalOpen(false)}
         assignedGifts={UserAssignedGifts || []}
-        onOpen={() => refetchAssignments()}
+        onOpen={refetchAssignments}
       />
 
       {/* Header & Toggle */}
@@ -69,14 +69,14 @@ export default function WishlistViewWrapper({
               UserAssignedGifts.length > 0 && (
                 <button
                   onClick={() => setIsAssignmentsModalOpen(true)}
-                  className="flex w-full justify-center items-center gap-2 px-4 py-2 bg-[#d4af37] text-white rounded-lg shadow-md hover:bg-[#c5a028] hover:shadow-lg transition-all transform active:scale-95 font-raleway text-sm font-bold border-2 border-[#d42426]"
+                  className="flex w-full justify-center items-center gap-2 px-4 py-2 bg-[#e9ddb1] text-[#4a3b2a] rounded-lg shadow-md hover:bg-[#c5a028] hover:shadow-lg transition-all transform active:scale-95 font-raleway text-sm font-bold border-2 border-[#d42426]"
                 >
                   <Gift
                     size={18}
                     className="text-[#d42426] fill-[#d42426]/20"
                   />
                   <span>
-                    Things you&apos;re getting ({UserAssignedGifts.length})
+                    Gifts I&apos;m giving ({UserAssignedGifts.length})
                   </span>
                 </button>
               )}
@@ -91,6 +91,7 @@ export default function WishlistViewWrapper({
                   : "text-primary_text hover:bg-slate-50"
               }`}
               aria-label="List View"
+              aria-pressed={viewMode === "list"}
             >
               <List size={18} />
               <span className="hidden sm:inline">List</span>
@@ -103,6 +104,7 @@ export default function WishlistViewWrapper({
                   : "text-primary_text hover:bg-slate-50"
               }`}
               aria-label="Carousel View"
+              aria-pressed={viewMode === "carousel"}
             >
               <LayoutGrid size={18} />
               <span className="hidden sm:inline">Carousel</span>

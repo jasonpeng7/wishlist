@@ -25,10 +25,10 @@ export default async function LandingPage() {
       {/* Two lines of text just above the popup */}
       <div className="z-10 absolute left-0 right-0 bottom-[32vh] sm:bottom-[34vh] flex flex-col items-center px-6 mb-4">
         <p className="text-center font-raleway text-white text-base sm:text-base">
-          Organize wishlists for yourself and groups.
+          Share wishlists with your groups.
         </p>
         <p className="text-center font-raleway text-white sm:text-base">
-          Track and share effortlessly.
+          Find thoughtful gifts for your people.
         </p>
       </div>
 

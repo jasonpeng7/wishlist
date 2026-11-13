@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useGroupWishlist, WishlistItem } from "../../hooks/useGroupWishlist";
 import { supabase } from "../../../utils/supabase";
 import GiftAssignment from "./GiftAssignment";
+import QuickClaim from "./QuickClaim";
 import Loader from "./Loader";
 import Modal from "./Modal";
 import ConfirmationModal from "./ConfirmationModal";
@@ -32,6 +33,7 @@ const WishlistItemRow = React.memo(
     onFavoriteItem,
     currentUserId,
     isMyList,
+    showGiftAssignments,
   }: {
     item: WishlistItem;
     onViewItem: (item: WishlistItem) => void;
@@ -39,6 +41,7 @@ const WishlistItemRow = React.memo(
     onFavoriteItem: (item: WishlistItem) => void;
     currentUserId: string;
     isMyList: boolean;
+    showGiftAssignments: boolean;
   }) => {
     const isSelfAssigned =
       item.assignment?.status === "will_get" &&
@@ -68,7 +71,12 @@ const WishlistItemRow = React.memo(
         <SwipeableListItem
           trailingActions={isMyList ? trailingActions() : undefined}
         >
-          <div
+          <QuickClaim
+            itemId={item.id}
+            userId={currentUserId}
+            creatorId={item.user_id}
+            currentAssignment={item.assignment}
+            enabled={showGiftAssignments}
             className={`group flex items-center justify-between py-3 border-b border-slate-400/20 last:border-0 hover:bg-black/5 transition-colors px-2 rounded-sm w-full ${
               isFavorited
                 ? "bg-red-50/80 border-l-4 border-l-red-500 shadow-sm"
@@ -77,11 +85,11 @@ const WishlistItemRow = React.memo(
           >
             <div className="flex-1 min-w-0 flex flex-col pr-4">
               <h4
-                className={`font-bold text-sm truncate font-raleway ${
+                className={`font-bold text-sm break-words font-raleway ${
                   isSelfAssigned
                     ? "text-green-700"
                     : isOtherAssigned
-                    ? "line-through text-slate-400 decoration-slate-400"
+                    ? "line-through text-slate-600 decoration-slate-600"
                     : "text-slate_gray"
                 }`}
                 title={item.name}
@@ -90,8 +98,8 @@ const WishlistItemRow = React.memo(
               </h4>
 
               {isOtherAssigned && item.assignedUsername && (
-                <span className="text-xs text-slate-400 italic font-raleway">
-                  item has been claimed!
+                <span className="text-xs text-slate-600 italic font-raleway">
+                  Claimed by someone else
                 </span>
               )}
               {isFavorited && (
@@ -104,10 +112,12 @@ const WishlistItemRow = React.memo(
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={() => onViewItem(item)}
+                aria-label={`View ${item.name}`}
                 className="flex-shrink-0 text-xs font-bold bg-transparent text-slate_gray border border-slate_gray px-3 py-1 rounded hover:bg-slate_gray hover:text-white transition-colors font-raleway h-8 flex items-center justify-center"
               >
                 View
               </button>
+              {isMyList && <button type="button" onClick={() => onRemoveItem(item.id)} aria-label={`Delete ${item.name}`} className="min-h-11 min-w-11 p-2 text-red-800"><Trash2 size={18} aria-hidden="true" /></button>}
               {isMyList && (
                 <button
                   onClick={() => onFavoriteItem(item)}
@@ -125,7 +135,7 @@ const WishlistItemRow = React.memo(
                 </button>
               )}
             </div>
-          </div>
+          </QuickClaim>
         </SwipeableListItem>
       </SwipeableList>
     );
@@ -143,6 +153,7 @@ const UserWishlistSection = React.memo(
     onFavoriteItem,
     currentUserId,
     listOwnerId,
+    showGiftAssignments,
   }: {
     username: string;
     items: WishlistItem[];
@@ -151,6 +162,7 @@ const UserWishlistSection = React.memo(
     onFavoriteItem: (item: WishlistItem) => void;
     currentUserId: string;
     listOwnerId: string;
+    showGiftAssignments: boolean;
   }) => {
     const isMyList = currentUserId === listOwnerId;
     return (
@@ -166,6 +178,7 @@ const UserWishlistSection = React.memo(
                 </h3>
               </div>
 
+              {!isMyList && showGiftAssignments && <p className="text-sm text-slate_gray">Double-tap an available item to claim it.</p>}
               <p className="text-sm font-normal text-slate_gray/60">
                 ({items.length} {items.length === 1 ? "item" : "items"})
               </p>
@@ -182,6 +195,7 @@ const UserWishlistSection = React.memo(
                 onFavoriteItem={onFavoriteItem}
                 currentUserId={currentUserId}
                 isMyList={isMyList}
+                showGiftAssignments={showGiftAssignments}
               />
             ))}
           </div>
@@ -295,6 +309,7 @@ export default function WishlistBulletPoints({
             onFavoriteItem={handleFavoriteItem}
             currentUserId={currentUserId}
             listOwnerId={user.id}
+            showGiftAssignments={!data.hideGiftGetters}
           />
         ))}
       </div>
@@ -314,16 +329,16 @@ export default function WishlistBulletPoints({
       {/* Legend */}
       <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 mb-8 text-sm font-raleway text-slate_gray bg-[#fdfbf7]/80 py-3 px-6 rounded-full shadow-sm w-fit mx-auto border border-bone">
         <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-700"></div>
+          <div className="w-4 h-4 rounded bg-[#eaf3e8] border border-green-800/30"></div>
           <span className="font-bold text-green-700">
-            You&apos;re getting this
+            Claimed by you
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="line-through text-slate-400 decoration-slate-400">
+          <span className="line-through text-slate-600 decoration-slate-600">
             Crossed out
           </span>
-          <span className="text-slate-500">Claimed by others</span>
+          <span className="text-slate-600">Claimed by others</span>
         </div>
       </div>
 
@@ -339,12 +354,6 @@ export default function WishlistBulletPoints({
       >
         {selectedItem && (
           <div className="flex flex-col gap-4 font-raleway  p-1 pb-6">
-            <button
-              onClick={handleCloseModal}
-              className="absolute top-4 right-4 text-slate_gray font-bold text-xl hover:text-red-600 transition-colors z-20"
-            >
-              X
-            </button>
             <div className="relative w-full h-64 bg-slate-50 rounded-md overflow-hidden border border-slate-100 shrink-0">
               <Image
                 src={selectedItem.image_url || "/placeholder.webp"}

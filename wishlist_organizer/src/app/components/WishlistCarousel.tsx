@@ -3,9 +3,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import GiftAssignment from "./GiftAssignment";
+import QuickClaim from "./QuickClaim";
 
 type WishlistItem = {
   id: string;
@@ -28,6 +29,8 @@ type PropType = {
   options?: EmblaOptionsType;
   currentUserId: string;
   showGiftAssignments: boolean;
+  onEditItem?: (id: string) => void;
+  onDeleteItem?: (id: string) => void;
 };
 
 const WishlistCarousel: React.FC<PropType> = ({
@@ -36,6 +39,8 @@ const WishlistCarousel: React.FC<PropType> = ({
   options,
   currentUserId,
   showGiftAssignments,
+  onEditItem,
+  onDeleteItem,
 }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     ...options,
@@ -79,7 +84,7 @@ const WishlistCarousel: React.FC<PropType> = ({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (!emblaApi) return;
+      if (!emblaApi || e.target !== e.currentTarget) return;
       switch (e.key) {
         case "ArrowLeft":
           e.preventDefault();
@@ -128,7 +133,14 @@ const WishlistCarousel: React.FC<PropType> = ({
               className="flex-grow-0 flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 pl-4"
               key={item.id}
             >
-              <div className="lined-paper torn-paper p-6 rounded-t-sm h-full flex flex-col filter drop-shadow-sm">
+              <QuickClaim
+                itemId={item.id}
+                userId={currentUserId}
+                creatorId={item.user_id}
+                currentAssignment={item.assignment}
+                enabled={showGiftAssignments}
+                className="lined-paper torn-paper p-6 rounded-t-sm h-full flex flex-col filter drop-shadow-sm">
+                {showGiftAssignments && item.user_id !== currentUserId && <p className="mb-2 text-xs text-slate_gray">Double-tap to claim an available gift.</p>}
                 <div className="relative w-full h-48 mb-4 border border-slate-100 rounded overflow-hidden bg-white">
                   <Image
                     src={item.image_url || "/placeholder.webp"}
@@ -151,10 +163,16 @@ const WishlistCarousel: React.FC<PropType> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white bg-slate_gray hover:bg-slate_gray/90 text-sm rounded-md p-2 w-fit mb-3 font-raleway transition-colors"
-                    tabIndex={-1} // Items inside are not tabbable individually
+                    aria-label={`View ${item.name} at the store (opens in a new tab)`}
                   >
                     View Item
                   </a>
+                )}
+                {item.user_id === currentUserId && (onEditItem || onDeleteItem) && (
+                  <div className="flex flex-wrap gap-3 mt-3 border-t border-bone pt-2">
+                    {onEditItem && <button id={`edit-${item.id}`} type="button" onClick={() => onEditItem(item.id)} aria-label={`Edit ${item.name}`} className="flex items-center gap-2 py-3 px-2 text-[#315b47] text-sm"><Pencil size={18} aria-hidden="true" />Edit</button>}
+                    {onDeleteItem && <button type="button" onClick={() => onDeleteItem(item.id)} aria-label={`Delete ${item.name}`} className="flex items-center gap-2 py-3 px-2 text-red-800 text-sm"><Trash2 size={18} aria-hidden="true" />Delete</button>}
+                  </div>
                 )}
                 {showGiftAssignments && (
                   <div className="mt-auto pt-2 border-t border-slate-200/50">
@@ -167,7 +185,7 @@ const WishlistCarousel: React.FC<PropType> = ({
                     />
                   </div>
                 )}
-              </div>
+              </QuickClaim>
             </div>
           ))}
         </div>

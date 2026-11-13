@@ -2,25 +2,24 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { supabase } from "../../../utils/supabase";
-import { Pencil, Trash2, X, Check } from "lucide-react"; // Using lucide-react for icons
+import { Pencil, Trash2 } from "lucide-react";
 import Modal from "../components/Modal";
+import WishlistCarousel from "../components/WishlistCarousel";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 type WishlistItem = {
   id: string;
   item_name: string;
-  group: {
-    id: string;
-    name: string;
-  };
+  group: { id: string; name: string } | null;
   description: string;
   link: string | null;
   store: string;
   created_at: string;
+  image_url?: string | null;
 };
 
-export default function WishlistItems({ userId }: { userId: string }) {
+export default function WishlistItems({ userId, groupId, viewMode }: { userId: string; groupId: string; viewMode: "list" | "carousel" }) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [items, setItems] = useState<WishlistItem[]>([]);
@@ -28,294 +27,128 @@ export default function WishlistItems({ userId }: { userId: string }) {
   const [editedName, setEditedName] = useState("");
   const [editedStore, setEditedStore] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<WishlistItem | null>(null);
-  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [status, setStatus] = useState("");
+  const filteredItems = useMemo(() => groupId ? items.filter((item) => item.group?.id === groupId) : items, [items, groupId]);
 
-  const uniqueGroups = useMemo(() => {
-    const groups = items.map((item) => item.group);
-    const unique = new Map();
-    groups.forEach((g) => {
-      if (g && g.id) unique.set(g.id, g);
+  const carouselGroups = useMemo(() => {
+    const grouped = new Map<string, { name: string; items: WishlistItem[] }>();
+    filteredItems.forEach((item) => {
+      const key = item.group?.id || "unavailable";
+      if (!grouped.has(key)) grouped.set(key, { name: item.group?.name || "Unavailable group", items: [] });
+      grouped.get(key)!.items.push(item);
     });
-    return Array.from(unique.values());
-  }, [items]);
-
-  const filteredItems = useMemo(() => {
-    if (!selectedGroupId) return items;
-    return items.filter((item) => item.group.id === selectedGroupId);
-  }, [items, selectedGroupId]);
+    return Array.from(grouped, ([id, group]) => ({ id, ...group }));
+  }, [filteredItems]);
 
   const fetchItems = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("wishlists")
-      .select(
-        `
-            *,
-            group: groups(id, name)
-        `
-      )
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching items:", error);
-      return;
-    }
-
-    setItems(data || []);
+    try {
+      const { data, error: fetchError } = await supabase.from("wishlists").select("*, group:groups(id, name)").eq("user_id", userId).order("created_at", { ascending: false });
+      if (fetchError) throw fetchError;
+      setItems(data || []);
+      setError("");
+    } catch {
+      setError("Your wishes could not be loaded. Please try again.");
+    } finally { setLoading(false); }
   }, [userId]);
 
-  useEffect(() => {
-    fetchItems();
-  }, [userId, fetchItems]);
+  useEffect(() => { fetchItems(); }, [fetchItems]);
+  useEffect(() => { if (editingId) document.getElementById(`name-${editingId}`)?.focus(); }, [editingId]);
 
   const handleEdit = (item: WishlistItem) => {
+    setError(""); setStatus("");
     setEditingId(item.id);
     setEditedName(item.item_name);
-    setEditedStore(item.store);
-    setEditedDescription(item.description);
+    setEditedStore(item.store || "");
+    setEditedDescription(item.description || "");
   };
 
-  const handleSave = async () => {
-    if (!editingId) return;
-
-    const { error } = await supabase
-      .from("wishlists")
-      .update({
-        item_name: editedName,
-        store: editedStore,
-        description: editedDescription,
-      })
-      .eq("id", editingId);
-
-    if (error) {
-      console.error("Error updating item:", error);
-      return;
-    }
-
-    setEditingId(null);
-    fetchItems();
-
-    // Invalidate React Query cache for the group
-    const item = items.find((i) => i.id === editingId);
-    if (item?.group?.id) {
-      queryClient.invalidateQueries({
-        queryKey: ["groupWishlist", item.group.id],
-      });
-    }
-    router.refresh();
-  };
-
-  const openDeleteModal = (item: WishlistItem) => {
-    setItemToDelete(item);
-    setIsDeleteModalOpen(true);
+  const handleSave = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!editingId || busy) return;
+    if (!editedName.trim()) { setError("Enter a name for your wish."); return; }
+    setBusy(true); setError(""); setStatus("");
+    try {
+      const { error: updateError } = await supabase.from("wishlists").update({ item_name: editedName.trim(), store: editedStore, description: editedDescription }).eq("id", editingId);
+      if (updateError) throw updateError;
+      const item = items.find((wish) => wish.id === editingId);
+      if (item?.group) await queryClient.invalidateQueries({ queryKey: ["groupWishlist", item.group.id] });
+      setEditingId(null);
+      await fetchItems();
+      requestAnimationFrame(() => document.getElementById(`edit-${editingId}`)?.focus());
+      setStatus("Changes saved.");
+      router.refresh();
+    } catch { setError("Your changes could not be saved. Please try again."); }
+    finally { setBusy(false); }
   };
 
   const confirmDelete = async () => {
-    if (!itemToDelete) return;
-    const { error } = await supabase
-      .from("wishlists")
-      .delete()
-      .eq("id", itemToDelete.id);
-    if (error) {
-      console.error("Error deleting item:", error);
-      return;
-    }
-    setIsDeleteModalOpen(false);
-
-    // Invalidate cache before clearing itemToDelete
-    if (itemToDelete?.group?.id) {
-      queryClient.invalidateQueries({
-        queryKey: ["groupWishlist", itemToDelete.group.id],
-      });
-    }
-
-    setItemToDelete(null);
-    fetchItems();
-    router.refresh();
+    if (!itemToDelete || busy) return;
+    setBusy(true); setError(""); setStatus("");
+    try {
+      const { error: deleteError } = await supabase.from("wishlists").delete().eq("id", itemToDelete.id);
+      if (deleteError) throw deleteError;
+      if (itemToDelete.group) await queryClient.invalidateQueries({ queryKey: ["groupWishlist", itemToDelete.group.id] });
+      setItemToDelete(null);
+      await fetchItems();
+      setStatus("Wish deleted.");
+      router.refresh();
+    } catch { setError("This wish could not be deleted. Please try again."); }
+    finally { setBusy(false); }
   };
 
   return (
     <>
-      <Modal
-        title="Delete Item"
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        actions={
-          <>
-            <button
-              onClick={() => setIsDeleteModalOpen(false)}
-              className="px-4 py-2 rounded text-white"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={confirmDelete}
-              className="px-4 py-2 rounded bg-red-600 text-white"
-            >
-              Delete
-            </button>
-          </>
-        }
-      >
-        <p className="text-white/70">
-          Are you sure you want to delete
-          {itemToDelete ? ` "${itemToDelete.item_name}"` : " this item"}? This
-          action cannot be undone.
-        </p>
+      <Modal title="Delete wish" isOpen={!!itemToDelete} busy={busy} onClose={() => setItemToDelete(null)} className="bg-white" titleClassName="text-slate_gray" actions={<>
+        <button type="button" disabled={busy} onClick={() => setItemToDelete(null)} className="px-4 py-3 text-slate_gray">Cancel</button>
+        <button type="button" onClick={confirmDelete} disabled={busy} className="px-4 py-3 rounded-lg bg-red-700 text-white disabled:opacity-60">{busy ? "Deleting…" : "Delete wish"}</button>
+      </>}>
+        <p className="text-slate_gray">Delete &quot;{itemToDelete?.item_name}&quot;? This cannot be undone.</p>
+        {error && <p role="alert" className="mt-3 text-red-800">{error}</p>}
       </Modal>
-      {items.length > 0 && (
-        <div className="flex justify-start mb-4 font-raleway sm:mx-0 items-center gap-2">
-          <h1 className="text-slate_gray font-bold text-sm">
-            Filter by Group:
-          </h1>
-          <select
-            value={selectedGroupId}
-            onChange={(e) => setSelectedGroupId(e.target.value)}
-            className="p-1 rounded-md bg-[#96d8a2] border border-slate-300 text-slate_gray shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
-          >
-            <option value="">All Groups</option>
-            {uniqueGroups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {items.length === 0 ? (
-        <div className="flex justify-center items-center w-full mb-20">
-          <p className="text-primary_text text-lg font-raleway">No items yet</p>
-        </div>
-      ) : filteredItems.length === 0 ? (
-        <div className="flex justify-center items-center w-full mb-20">
-          <p className="text-primary_text text-lg font-raleway">
-            No items found for this group
-          </p>
+      <Modal title="Edit wish" isOpen={!!editingId} busy={busy} onClose={() => setEditingId(null)} className="bg-[#fdfbf7]" titleClassName="text-slate_gray">
+        {editingId && <form onSubmit={handleSave} aria-label="Edit wish" aria-busy={busy}>
+          <fieldset disabled={busy} className="min-w-0 w-full space-y-4 text-slate_gray">
+            <div><label htmlFor={`name-${editingId}`}>Wish name</label><input id={`name-${editingId}`} value={editedName} onChange={(event) => setEditedName(event.target.value)} required className="w-full min-w-0 max-w-full mt-2 p-3 text-base rounded-lg border border-slate-500" /></div>
+            <div><label htmlFor={`store-${editingId}`}>Brand or store</label><input id={`store-${editingId}`} value={editedStore} onChange={(event) => setEditedStore(event.target.value)} className="w-full min-w-0 max-w-full mt-2 p-3 text-base rounded-lg border border-slate-500" /></div>
+            <div><label htmlFor={`description-${editingId}`}>Description</label><textarea id={`description-${editingId}`} value={editedDescription} onChange={(event) => setEditedDescription(event.target.value)} className="w-full min-w-0 max-w-full mt-2 p-3 text-base rounded-lg border border-slate-500 resize-y" /></div>
+            {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-red-800">{error}</p>}
+            <div className="flex flex-wrap gap-2"><button type="submit" className="px-4 py-3 rounded-lg bg-[#315b47] text-white">{busy ? "Saving…" : "Save changes"}</button><button type="button" onClick={() => setEditingId(null)} className="px-4 py-3">Cancel</button></div>
+          </fieldset>
+        </form>}
+      </Modal>
+      {error && !itemToDelete && !editingId && <div role="alert" className="mb-4 p-3 rounded-lg bg-red-50 text-red-800">{error} <button type="button" onClick={fetchItems} className="underline p-2">Reload wishes</button></div>}
+      <p role="status" className="mb-4">{loading ? "Loading wishes…" : status}</p>
+      {!loading && filteredItems.length === 0 && <p className="py-8">{groupId ? "You haven't added any wishes to this group yet." : "No wishes yet. Choose Add a wish to start."}</p>}
+      {viewMode === "carousel" ? (
+        <div className="min-w-0 space-y-10">
+          {carouselGroups.map((group) => <section key={group.id} className="min-w-0">
+            <h2 className="mb-4 text-xl font-bold text-[#315b47]">{group.name}</h2>
+            <WishlistCarousel
+              items={group.items.map((item) => ({ id: item.id, name: item.item_name, description: item.description, link: item.link, image_url: item.image_url, user_id: userId }))}
+              shelfTitle={`Your wishlist for ${group.name}`}
+              currentUserId={userId}
+              showGiftAssignments={false}
+              onEditItem={(id) => { const item = items.find((wish) => wish.id === id); if (item) handleEdit(item); }}
+              onDeleteItem={(id) => { const item = items.find((wish) => wish.id === id); if (item) { setError(""); setStatus(""); setItemToDelete(item); } }}
+            />
+          </section>)}
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 sm:mx-0 mb-[100px] font-raleway">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="p-6 pt-8 rounded-md bg-[#ede2cb] border border-slate-200 shadow-md h-48 relative font-raleway"
-            >
-              {/* Santa Hat Decoration */}
-              <div className="absolute -top-2 -right-2 w-12 h-12 rotate-12 opacity-90 pointer-events-none z-10">
-                <svg
-                  viewBox="0 0 100 100"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M20 80 Q 50 10 80 80" fill="#d62828" />
-                  <circle cx="80" cy="80" r="12" fill="#fff" />
-                  <rect
-                    x="15"
-                    y="75"
-                    width="70"
-                    height="18"
-                    rx="8"
-                    fill="#fff"
-                  />
-                </svg>
-              </div>
-              <div className="h-full overflow-y-auto pr-2">
-                <div className="space-y-2">
-                  {editingId === item.id ? (
-                    <div className="flex flex-col gap-2 relative pb-[25px]">
-                      <h1 className="flex text-orange-500 underline mb-2">
-                        Editing Item
-                      </h1>
-
-                      <h1 className="text-slate_gray font-bold text-sm">
-                        Item name:
-                      </h1>
-
-                      <input
-                        type="text"
-                        value={editedName}
-                        onChange={(e) => setEditedName(e.target.value)}
-                        className="w-full p-1 rounded bg-white border border-slate-300 text-slate_gray"
-                      />
-
-                      <h1 className="text-slate_gray font-bold text-sm">
-                        Store:
-                      </h1>
-
-                      <input
-                        type="text"
-                        value={editedStore}
-                        onChange={(e) => setEditedStore(e.target.value)}
-                        className="w-full p-1 rounded bg-white border border-slate-300 text-slate_gray"
-                      />
-
-                      <h1 className="text-slate_gray font-bold text-sm">
-                        Description:
-                      </h1>
-
-                      <textarea
-                        value={editedDescription}
-                        onChange={(e) => setEditedDescription(e.target.value)}
-                        className="w-full p-1 rounded bg-white border border-slate-300 text-slate_gray"
-                      />
-
-                      <div className="absolute top-0 right-2">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={handleSave}
-                            className="text-green-500"
-                          >
-                            <Check size={24} />
-                          </button>
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="text-red-500"
-                          >
-                            <X size={24} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <h3 className="font-bold text-slate_gray text-lg pr-8">
-                        {item.item_name}{" "}
-                        <span className="font-normal text-base">
-                          from {item.store}
-                        </span>
-                      </h3>
-                      <h1 className="font-normal text-slate_gray/70 text-sm uppercase tracking-wide mt-1">
-                        Group:{" "}
-                        <span className="text-slate_gray font-semibold">
-                          {item.group.name}
-                        </span>
-                      </h1>
-                      <p className="text-xs text-slate_gray/50 mt-4 italic">
-                        Added on:{" "}
-                        {new Date(item.created_at).toLocaleDateString()}
-                      </p>
-                      <div className="absolute bottom-4 right-2 flex gap-8">
-                        <button
-                          onClick={() => handleEdit(item)}
-                          className="text-blue-500 hover:text-blue-600"
-                        >
-                          <Pencil size={24} />
-                        </button>
-                        <button
-                          onClick={() => openDeleteModal(item)}
-                          className="text-red-500 hover:text-red-600"
-                        >
-                          <Trash2 size={24} />
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          {filteredItems.map((item) => <article key={item.id} className="p-5 lined-paper torn-paper rounded-t-lg border border-bone min-w-0">
+            <h2 className="font-bold text-lg break-words">{item.item_name}</h2>
+            {item.store && <p className="mt-1">{item.store}</p>}
+            <p className="mt-3 text-sm">Group: {item.group?.name || "Unavailable group"}</p>
+            <p className="mt-1 text-sm text-slate-600">Added on {new Date(item.created_at).toLocaleDateString()}</p>
+            <div className="flex flex-wrap gap-3 mt-4">
+              <button type="button" id={`edit-${item.id}`} onClick={() => handleEdit(item)} disabled={busy} aria-label={`Edit ${item.item_name}`} className="flex items-center gap-2 py-3 px-2 text-[#315b47]"><Pencil size={18} aria-hidden="true" />Edit</button>
+              <button type="button" onClick={() => { setError(""); setStatus(""); setItemToDelete(item); }} disabled={busy} aria-label={`Delete ${item.item_name}`} className="flex items-center gap-2 py-3 px-2 text-red-800"><Trash2 size={18} aria-hidden="true" />Delete</button>
             </div>
-          ))}
+          </article>)}
         </div>
       )}
     </>

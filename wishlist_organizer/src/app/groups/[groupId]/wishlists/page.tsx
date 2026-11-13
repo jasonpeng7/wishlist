@@ -5,6 +5,7 @@ import { getSessionUser } from "../../../../../../wishlist_organizer/utils/auth"
 import NavBar from "@/app/components/navbar";
 import WishlistViewWrapper from "@/app/components/WishlistViewWrapper";
 import Santa from "@/app/components/Santa";
+import Snowfall from "@/app/components/Snowfall";
 import "../../../manage-group.css"; // Reuse card styles
 
 export const dynamic = "force-dynamic";
@@ -144,22 +145,7 @@ export default async function GroupWishlistsPage({
 
     return (
       <div className="relative min-h-screen overflow-hidden bg-[#090a0f]">
-        {/* Snow Effect */}
-        <div className="snow-container absolute inset-0 z-0">
-          {Array.from({ length: 50 }).map((_, i) => (
-            <div
-              key={i}
-              className="snowflake"
-              style={{
-                left: `${Math.random() * 100}vw`,
-                animationDuration: `${Math.random() * 3 + 2}s`,
-                animationDelay: `${Math.random() * 2}s`,
-                width: `${Math.random() * 5 + 5}px`,
-                height: `${Math.random() * 5 + 5}px`,
-              }}
-            />
-          ))}
-        </div>
+        <Snowfall />
 
         <Santa />
 
@@ -185,7 +171,7 @@ export default async function GroupWishlistsPage({
                   className="flex transition-transform transform active:scale-90 text-white px-4 py-2 font-bold items-center"
                 >
                   <span className="mr-2">🎁</span>
-                  <p>Add to my wishlist for {groupDetails?.name}</p>
+                  <p>Add a wish</p>
                 </Link>
               </div>
             </div>

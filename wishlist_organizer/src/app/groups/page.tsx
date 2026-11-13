@@ -1,6 +1,8 @@
 import { supabase } from "../../../utils/supabase";
 import Link from "next/link";
 import NavBar from "@/app/components/navbar";
+import Snowfall from "@/app/components/Snowfall";
+import OnboardingModal from "@/app/components/OnboardingModal";
 import { getSessionUser } from "../../../../wishlist_organizer/utils/auth";
 import { redirect } from "next/navigation";
 import { Settings, Gift, User, Snowflake, Sparkles } from "lucide-react";
@@ -24,28 +26,40 @@ export default async function GroupsPage() {
     .eq("user_id", user.id)
     .eq("role", "member");
 
-  const [{ data: adminGroups }, { data: memberGroups }] = await Promise.all([
+  const membershipCountPromise = supabase.from("user_groups").select("group_id", { count: "exact", head: true }).eq("user_id", user.id);
+
+  const [{ data: adminGroups, error: adminError }, { data: memberGroups, error: memberError }, { count, error: countError }] = await Promise.all([
     adminGroupsPromise,
     memberGroupsPromise,
+    membershipCountPromise,
   ]);
 
   return (
-    <div className="max-w-[1000px] mx-auto bg-[#fdfbf7] min-h-screen mt-20 rounded-t-3xl pb-20 relative overflow-hidden border-x-4 border-[#c41e3a]">
-      {/* Snow Background Pattern */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#b0c4de_1px,transparent_1px)] [background-size:20px_20px] z-0"></div>
-
+    <div className="relative min-h-screen overflow-x-clip bg-[#090a0f] pt-20">
+      <Snowfall />
+    <div className="max-w-[1000px] mx-auto bg-[#fdfbf7] min-h-screen rounded-t-3xl pb-28 relative overflow-hidden border-x-4 border-[#c41e3a]">
       {/* Decorative Holly Corners */}
       <div className="absolute top-0 left-0 w-32 h-32 bg-[radial-gradient(circle_at_0_0,#0b6b3a_40%,transparent_41%)] opacity-20 pointer-events-none rounded-br-full z-0"></div>
       <div className="absolute top-0 right-0 w-32 h-32 bg-[radial-gradient(circle_at_100%_0,#c41e3a_40%,transparent_41%)] opacity-20 pointer-events-none rounded-bl-full z-0"></div>
 
       <div className="relative z-10">
         <NavBar />
+        {!countError && count === 0 && !adminGroups?.length && <OnboardingModal userId={user.id} />}
+        {(adminError || memberError) && <p role="alert" className="p-6 text-red-800">Some groups could not be loaded. Please refresh to try again.</p>}
         <div className="font-raleway text-[#4a3b2a] p-6 md:pt-20 flex items-center gap-3">
           <h1 className="text-4xl font-bold mb-4 md:mb-0 text-[#c41e3a] drop-shadow-sm flex items-center gap-2">
             <Snowflake className="text-[#bf9a2f]" />
             My Groups
             <Snowflake className="text-[#bf9a2f]" />
           </h1>
+        </div>
+
+        <div className="px-6 mb-8">
+          <p className="text-slate_gray mb-4">Choose a group to see everyone&apos;s wishlists. Every wish belongs to a group.</p>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/groups/create" className="rounded-lg bg-[#a63142] text-white px-5 py-3 font-semibold">Create a group</Link>
+            <Link href="/groups/join" className="rounded-lg border border-[#315b47] text-[#315b47] px-5 py-3 font-semibold">Join a group</Link>
+          </div>
         </div>
 
         {/* Groups I Manage */}
@@ -57,16 +71,6 @@ export default async function GroupsPage() {
             <Sparkles size={20} className="text-[#bf9a2f]" />
           </div>
 
-          <div className="flex mb-6">
-            <Link
-              href="/groups/create"
-              className="bg-[#c41e3a] text-white px-6 py-3 rounded-full 
-                  transition-transform transform active:scale-95 hover:bg-[#a01830] shadow-md
-                  flex items-center justify-center text-center font-bold border-2 border-white"
-            >
-              <p>Create a Holiday Group 🎄</p>
-            </Link>
-          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {adminGroups?.map((group) => (
               <div
@@ -87,13 +91,14 @@ export default async function GroupsPage() {
 
                 <div className="pl-24 pr-5 py-6 relative z-0">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-bold text-xl text-[#4a3b2a] font-raleway leading-tight truncate">
+                    <h3 className="font-bold text-xl text-[#4a3b2a] font-raleway leading-tight break-words min-w-0">
                       {group.name}
                     </h3>
                     <Link
                       href={`/groups/${group.id}/manage`}
-                      className="text-[#bf9a2f] hover:text-[#0b6b3a] transition-colors"
+                      className="text-[#735717] hover:text-[#0b6b3a] transition-colors p-2"
                       title="Group Settings"
+                      aria-label={`Settings for ${group.name}`}
                     >
                       <Settings size={20} />
                     </Link>
@@ -122,7 +127,7 @@ export default async function GroupsPage() {
               </div>
             ))}
           </div>
-          {(!adminGroups || adminGroups.length === 0) && (
+          {!adminError && (!adminGroups || adminGroups.length === 0) && (
             <div className="bg-white/80 p-6 rounded-lg border-2 border-dashed border-[#bf9a2f] text-center">
               <p className="text-[#4a3b2a] font-medium">
                 You haven&apos;t created any holiday groups yet. <br />
@@ -141,16 +146,6 @@ export default async function GroupsPage() {
             <Gift size={20} className="text-[#bf9a2f]" />
           </div>
 
-          <div className="flex mb-6">
-            <Link
-              href="/groups/join"
-              className="bg-[#0b6b3a] text-white px-6 py-3 rounded-full 
-                transition-transform transform active:scale-95 hover:bg-[#08522e] shadow-md
-                flex items-center justify-center font-bold border-2 border-white"
-            >
-              <p>Join a Holiday Group 🎅</p>
-            </Link>
-          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {memberGroups?.map((memberGroup) => {
               const group = Array.isArray(memberGroup.group)
@@ -177,7 +172,7 @@ export default async function GroupsPage() {
 
                   <div className="pl-24 pr-5 py-6 relative z-0">
                     <div className="flex justify-between items-start mb-3">
-                      <h3 className="font-bold text-xl text-[#4a3b2a] font-raleway leading-tight truncate">
+                      <h3 className="font-bold text-xl text-[#4a3b2a] font-raleway leading-tight break-words min-w-0">
                         {group.name}
                       </h3>
                     </div>
@@ -206,7 +201,7 @@ export default async function GroupsPage() {
               );
             })}
           </div>
-          {(!memberGroups || memberGroups.length === 0) && (
+          {!memberError && (!memberGroups || memberGroups.length === 0) && (
             <div className="bg-white/80 p-6 rounded-lg border-2 border-dashed border-[#bf9a2f] text-center">
               <p className="text-[#4a3b2a] font-medium">
                 You&apos;re not a member of any groups yet. <br />
@@ -216,6 +211,7 @@ export default async function GroupsPage() {
           )}
         </section>
       </div>
+    </div>
     </div>
   );
 }
