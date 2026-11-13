@@ -38,7 +38,10 @@ export default function QuickClaim({
         if (start.current && Math.hypot(event.clientX - start.current.x, event.clientY - start.current.y) > 12) reset();
       }}
       onPointerCancel={reset}
-      onPointerLeave={reset}
+      onPointerLeave={(event) => {
+        // Touch pointers leave after every lift; retain the completed first tap.
+        if (start.current || event.pointerType === "mouse") reset();
+      }}
       onPointerUp={(event) => {
         const down = start.current;
         start.current = null;

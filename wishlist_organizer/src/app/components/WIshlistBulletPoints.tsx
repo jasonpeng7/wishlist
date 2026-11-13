@@ -117,7 +117,6 @@ const WishlistItemRow = React.memo(
               >
                 View
               </button>
-              {isMyList && <button type="button" onClick={() => onRemoveItem(item.id)} aria-label={`Delete ${item.name}`} className="min-h-11 min-w-11 p-2 text-red-800"><Trash2 size={18} aria-hidden="true" /></button>}
               {isMyList && (
                 <button
                   onClick={() => onFavoriteItem(item)}
@@ -178,6 +177,7 @@ const UserWishlistSection = React.memo(
                 </h3>
               </div>
 
+              {isMyList && <p className="text-sm text-slate_gray">Slide left to remove.</p>}
               {!isMyList && showGiftAssignments && <p className="text-sm text-slate_gray">Double-tap an available item to claim it.</p>}
               <p className="text-sm font-normal text-slate_gray/60">
                 ({items.length} {items.length === 1 ? "item" : "items"})
