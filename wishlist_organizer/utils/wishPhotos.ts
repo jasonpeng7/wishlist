@@ -1,4 +1,7 @@
+import { MAX_WISH_PHOTO_BYTES, WISH_PHOTO_SIZE_ERROR } from "./wishPhotoLimits";
+
 export async function prepareWishPhoto(file: File): Promise<File> {
+  if (file.size > MAX_WISH_PHOTO_BYTES) throw new Error(WISH_PHOTO_SIZE_ERROR);
   const isHeif = /^image\/(heic|heif)(-sequence)?$/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
   if (!isHeif) return file;
 

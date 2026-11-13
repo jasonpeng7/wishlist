@@ -6,6 +6,7 @@ import { supabase } from "../../../utils/supabase";
 import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import { prepareWishPhoto } from "../../../utils/wishPhotos";
+import { MAX_WISH_PHOTO_BYTES, WISH_PHOTO_SIZE_ERROR } from "../../../utils/wishPhotoLimits";
 
 export type Group = { id: string; name: string };
 
@@ -64,13 +65,19 @@ export default function WishlistForm({ userId, groups, loadingGroups, groupId, o
       if (imageFile && !imageUrl) {
         uploadingPhoto = true;
         setStatus("Uploading photo…");
-        const formData = new FormData();
-        formData.append("file", imageFile);
-        const response = await fetch("/api/upload", { method: "POST", body: formData });
-        if (response.status === 413) throw new Error("Your photo is too large to upload. Please choose a smaller photo.");
+        if (imageFile.size > MAX_WISH_PHOTO_BYTES) throw new Error(WISH_PHOTO_SIZE_ERROR);
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: imageFile.name, type: imageFile.type, size: imageFile.size }),
+        });
+        if (response.status === 413) throw new Error(WISH_PHOTO_SIZE_ERROR);
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || "Your photo could not be uploaded. Please try again.");
-        if (!data.url) throw new Error("Your photo could not be uploaded. Please try again.");
+        if (!data.url || !data.path || !data.token || !data.contentType) throw new Error("Your photo could not be uploaded. Please try again.");
+        const { error: uploadError } = await supabase.storage.from("wishlist-images")
+          .uploadToSignedUrl(data.path, data.token, imageFile, { contentType: data.contentType });
+        if (uploadError) throw new Error(uploadError.message || "Your photo could not be uploaded. Please try again.");
         imageUrl = data.url;
         setUploadedImageUrl(imageUrl);
         uploadingPhoto = false;
@@ -142,7 +149,7 @@ export default function WishlistForm({ userId, groups, loadingGroups, groupId, o
                 setPreparingPhoto(false);
                 setStatus("");
               }
-            }} className="block mt-2 w-full min-w-0 max-w-full text-sm" /><p className="mt-2 text-sm">iPhone HEIF/HEIC photos are converted to JPEG automatically.</p></div>
+            }} className="block mt-2 w-full min-w-0 max-w-full text-sm" /><p className="mt-2 text-sm">Up to 20 MB per photo. iPhone HEIF/HEIC photos are converted to JPEG automatically.</p></div>
             {imagePreview && <Image src={imagePreview} alt="Selected wish photo" width={120} height={120} className="rounded-lg object-contain" />}
             {imageFile && <button type="button" onClick={() => {
               setImageFile(null);
